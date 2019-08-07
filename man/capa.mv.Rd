@@ -30,6 +30,13 @@ An S4 class derived from type capa.class.
 \description{
 A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.
 }
+\examples{
+library(anomaly)
+data(simulated)
+res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
+collective_anomalies(res)
+
+}
 \references{
 \insertRef{2018arXiv180601947F}{anomaly}
 }

@@ -734,17 +734,9 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' 
 #' @examples
 #' library(anomaly)
-#' set.seed(2018)
-#' # Generate data typically following a normal distribution with mean 0 and variance 1.
-#' # Then introduce 3 anomaly windows and 4 point outliers.
-#' x = rnorm(5000)
-#' x[401:500] = rnorm(100,4,1)
-#' x[1601:1800] = rnorm(200,0,0.01)
-#' x[3201:3500] = rnorm(300,0,10)
-#' x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
-#' res<-capa(x)
-#' res # print a summary of the results
-#' plot(res) # visualise the results  
+#' data(acgh)
+#' res<-capa(acgh,type="mean",max_lag=5,transform=ac_corrected)
+#' plot(res,tile_plot=FALSE,subset=1:20)
 #'
 #' @export
 capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=NULL,max_lag=0,transform=robustscale)
@@ -992,7 +984,13 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' @return An S4 class derived from type capa.class. 
 #'
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
-#' 
+#'
+#' @examples
+#' library(anomaly)
+#' data(simulated)
+#' res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
+#' collective_anomalies(res)
+#'
 #' @export
 capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {

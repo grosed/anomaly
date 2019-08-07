@@ -44,3 +44,23 @@ NULL
 #' @references \insertRef{AHMAD2017134}{anomaly}
 #' 
 NULL
+
+#' Microarray data
+#' Microarray data for 41 individuals with a bladder tumour. The data was obtained from the \pkg{ecp} package \insertRef{ecp-package}{anomaly} and standardised using
+#' robust measures of mean and variance. 
+#'
+#' @name acgh
+#' 
+#' @docType data
+#'
+#' @keywords datasets
+#'
+#' @usage data(acgh)
+#'
+#' @rdname acgh-data
+#'
+#' @format A dataframe with 2215 rows and 41 columns. Each column contains data for one individual.
+#'
+#' @references \insertRef{ecp-package}{anomaly}
+#' 
+NULL
