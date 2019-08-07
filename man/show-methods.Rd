@@ -12,6 +12,6 @@
 \item{object}{An S4 object produced by \code{\link{pass}}.}
 }
 \description{
-Displays a summary of the S4 object produced by \code{\link{capa}}, \code{\link{uvcapa}}, \code{\link{mvcapa}} or \code{\link{pass}}.
+Displays a summary of the S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or \code{\link{pass}}.
 The information displayed is the same as that provided by the \code{summary} method. The method is used by the S4 system for automatic printing.
 }

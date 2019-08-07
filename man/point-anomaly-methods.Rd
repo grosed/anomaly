@@ -6,26 +6,26 @@
 \alias{point-anomaly,capa.class,ANY-method}
 \title{Point anomaly location and strength.}
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{uvcapa}} or \code{\link{mvcapa}}.}
+\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.}
 
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}} are sequential algorithms, it is possible to process a subset of the data
+\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 up to and including a given epoch. The default value for \code{epoch}is the length of the data series.}
 }
 \value{
 A data frame.
 }
 \description{
-Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}}. 
+Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}. 
 
 For an object produced by \code{\link{capa}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
 strength of the anomaly, for observations up to and including the value of \code{epoch}.
 
-For an object produced by \code{\link{mvcapa}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
+For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
 strength of the anomaly. 
 
-For an object produced by \code{\link{uvcapa}}, the output is a data frame  with columns containing the position and
+For an object produced by \code{\link{capa.uv}}, the output is a data frame  with columns containing the position and
 strength of the anomaly.
 }
 \seealso{
-\code{\link{capa}},\code{\link{uvcapa}},\code{\link{mvcapa}}.
+\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}.
 }

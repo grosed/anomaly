@@ -4,18 +4,21 @@
 \alias{pass}
 \title{Proportion Adaptive Segment Selection (PASS).}
 \usage{
-pass(Xi, Lmax, alpha, lambda, Lmin = 0)
+pass(x, alpha = 2, lambda = 15, Lmax = 10, Lmin = 0,
+  transform = robustscale)
 }
 \arguments{
-\item{Xi}{An n x N real matrix representing n observations of N variates. NOTE(should this be normalised in some way ?)}
+\item{x}{An n x m real matrix representing n observations of m variates.}
 
-\item{Lmax}{A positive integer > 0 indicating the maximum segment. (Is there a sensible/informed way of choosing a default ?)}
+\item{alpha}{A positive integer > 1. This value is used to stabilise the PASS procedure and control the familywise error for finite samples.}
 
-\item{alpha}{A positive integer > 1. This value is used to stabilise the PASS procedure and control the familywise error for finite samples. (How to choose - what default ?).}
+\item{lambda}{A positive real value setting the threshold value for the familywise Type 1 error. The default value is 15.0.}
 
-\item{lambda}{A positive real threshold value used to control the familywise Type 1 error to the desired level.}
+\item{Lmax}{A positive integer (\code{Lmax} > 1) corresponding to the maximum segment length. The default value is 10.}
 
-\item{Lmin}{A positive integer < Lmax indicating the minimum segment length. Default value is \code{Lmax=1}.}
+\item{Lmin}{A positive integer (\code{Lmax} > \code{Lmin} > 1) corresponding to the minimum segment length. The default value is 0. .}
+
+\item{transform}{A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.}
 }
 \value{
 An S4 object of type \code{.pass.class} containing the data \code{Xi}, procedure parameter values and the results.
@@ -26,7 +29,7 @@ Implements the Proportion Adaptive Segment Selection procedure of REF HERE to (w
 \examples{
 library(anomaly)
 data(simulated)
-res<-pass(sim.data,200,2,15.0)
+res<-pass(sim.data)
 summary(res)
 plot(res,variate_names=FALSE)
 

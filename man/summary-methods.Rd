@@ -4,24 +4,24 @@
 \name{summary}
 \alias{summary}
 \alias{summary,capa.class,ANY-method}
-\alias{summary,uvcapa.class-method}
-\alias{summary,mvcapa.class-method}
+\alias{summary,capa.uv.class-method}
+\alias{summary,capa.mv.class-method}
 \title{Summary of collective and point anomalies.}
 \usage{
 \S4method{summary}{capa.class}(object, epoch)
 
-\S4method{summary}{uvcapa.class}(object)
+\S4method{summary}{capa.uv.class}(object)
 
-\S4method{summary}{mvcapa.class}(object)
+\S4method{summary}{capa.mv.class}(object)
 }
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{uvcapa}}, \code{\link{mvcapa}} or \code{\link{pass}}.}
+\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or \code{\link{pass}}.}
 
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}} are sequential algorithms, it is possible to process a subset of the data
+\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 up to and including a given epoch. The default value for \code{epoch}is the length of the data series.}
 }
 \description{
-Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{uvcapa}}, \code{\link{mvcapa}} and \code{\link{pass}}.  The output displayed depends on
+Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} and \code{\link{pass}}.  The output displayed depends on
 the type of S4 object passed to summary. For all types, the output indicates whether the data is univariate or multivariate, the number of observations in the data, and the type of change
 being detected.
 
@@ -30,13 +30,13 @@ the location of the collective and point anomalies and the variates that they af
 and strength for each point anomaly. The table of collective anomalies contains seven columns showing the start and end position of the anomaly, the start and end lag for
 each anomaly, the variates affected by each anomaly, and the change in mean and variance for the anomaly.
 
-For an object produced by \code{\link{mvcapa}} the output of \code{summary} is the same as for an object produced by \code{\link{capa}} except that the epoch is not displayed.
+For an object produced by \code{\link{capa.mv}} the output of \code{summary} is the same as for an object produced by \code{\link{capa}} except that the epoch is not displayed.
 
-For an object produced by \code{\link{uvcapa}} the output of \code{summary} is the same as for an object produced by \code{\link{mvcapa}} except that the tables do not have a variate
+For an object produced by \code{\link{capa.uv}} the output of \code{summary} is the same as for an object produced by \code{\link{capa.mv}} except that the tables do not have a variate
 column (there is only one), or start and end lags.
 
 For an object produced by \code{\link{pass}} the output of \code{summary} is TODO
 }
 \seealso{
-\code{\link{capa}},\code{\link{uvcapa}},\code{\link{mvcapa}},\code{\link{pass}}.
+\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}.
 }

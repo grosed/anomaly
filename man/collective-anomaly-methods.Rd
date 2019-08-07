@@ -6,28 +6,28 @@
 \alias{collective-anomaly,capa.class,ANY-method}
 \title{Collective anomaly location, lag and mean/variance change.}
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{uvcapa}} or \code{\link{mvcapa}}.}
+\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.}
 
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}} are sequential algorithms, it is possible to process a subset of the data
+\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 up to and including a given epoch. The default value for \code{epoch}is the length of the data series.}
 }
 \value{
 A data frame.
 }
 \description{
-Creates a data frame containing collective anomaly locations, lags and changes in mean and variance  as detected by \code{\link{capa}}, \code{\link{uvcapa}}
-and \code{\link{mvcapa}}. 
+Creates a data frame containing collective anomaly locations, lags and changes in mean and variance  as detected by \code{\link{capa}}, \code{\link{capa.uv}}
+and \code{\link{capa.mv}}. 
 
 For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly. The results are calculated using data up to and including the
 value of \code{epoch}.
 
-For an object produced by \code{\link{mvcapa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
+For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly.
 
-For an object produced by \code{\link{uvcapa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
+For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 and end lag of the anomaly and the change in mean and variance due to the anomaly.
 }
 \seealso{
-\code{\link{capa}},\code{\link{uvcapa}},\code{\link{mvcapa}}.
+\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}.
 }

@@ -11,24 +11,24 @@ capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
 
 
 
-.uvcapa.class<-setClass("uvcapa.class",contains="capa.class",representation())
+.capa.uv.class<-setClass("capa.uv.class",contains="capa.class",representation())
 
 
-uvcapa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
+capa.uv.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
                      transform,anomaly_types,anomaly_positions,components,start_lags,end_lags,...)
 {
-.uvcapa.class(capa.class(data=data,beta=beta,beta_tilde=beta_tilde,min_seg_len=min_seg_len,max_seg_len=max_seg_len,max_lag=max_lag,type=type,
+.capa.uv.class(capa.class(data=data,beta=beta,beta_tilde=beta_tilde,min_seg_len=min_seg_len,max_seg_len=max_seg_len,max_lag=max_lag,type=type,
 			transform=transform,anomaly_types=anomaly_types,anomaly_positions=anomaly_positions,components=components,start_lags=start_lags,end_lags=end_lags)
 			,...)
 }
 
-.mvcapa.class<-setClass("mvcapa.class",contains="capa.class",representation())
+.capa.mv.class<-setClass("capa.mv.class",contains="capa.class",representation())
 
 
-mvcapa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
+capa.mv.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
                      transform,anomaly_types,anomaly_positions,components,start_lags,end_lags,...)
 {
-.mvcapa.class(capa.class(data=data,beta=beta,beta_tilde=beta_tilde,min_seg_len=min_seg_len,max_seg_len=max_seg_len,max_lag=max_lag,type=type,
+.capa.mv.class(capa.class(data=data,beta=beta,beta_tilde=beta_tilde,min_seg_len=min_seg_len,max_seg_len=max_seg_len,max_lag=max_lag,type=type,
 			transform=transform,anomaly_types=anomaly_types,anomaly_positions=anomaly_positions,components=components,start_lags=start_lags,end_lags=end_lags)
 			,...)
 }
@@ -38,28 +38,28 @@ mvcapa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type
 #'
 #' @name point_anomalies
 #'
-#' @description Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}}. 
+#' @description Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}. 
 #'
 #' For an object produced by \code{\link{capa}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
 #' strength of the anomaly, for observations up to and including the value of \code{epoch}.
 #'
-#' For an object produced by \code{\link{mvcapa}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
+#' For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
 #' strength of the anomaly. 
 #'
-#' For an object produced by \code{\link{uvcapa}}, the output is a data frame  with columns containing the position and
+#' For an object produced by \code{\link{capa.uv}}, the output is a data frame  with columns containing the position and
 #' strength of the anomaly. 
 #' 
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{uvcapa}} or \code{\link{mvcapa}}.
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}} are sequential algorithms, it is possible to process a subset of the data
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.
+#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
 #' 
 #' @rdname point-anomaly-methods
 #'
 #' @aliases point-anomaly,capa.class,ANY-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{uvcapa}},\code{\link{mvcapa}}.
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}.
 #'
 #' @return A data frame. 
 #' 
@@ -103,10 +103,10 @@ setMethod("point_anomalies",signature=list("capa.class"),
 #'
 #' @rdname point_anomaly-methods
 #'
-#' @aliases point_anomaly,uvcapa.class-method
+#' @aliases point_anomaly,capa.uv.class-method
 #'
 #' @export
-setMethod("point_anomalies",signature=list("uvcapa.class"),
+setMethod("point_anomalies",signature=list("capa.uv.class"),
           function(object)
           {
               return(callNextMethod(object)[,c(1,3)])
@@ -119,10 +119,10 @@ setMethod("point_anomalies",signature=list("uvcapa.class"),
 #'
 #' @rdname point_anomaly-methods
 #'
-#' @aliases point_anomaly,mvcapa.class-method
+#' @aliases point_anomaly,capa.mv.class-method
 #'
 #' @export
-setMethod("point_anomalies",signature=list("mvcapa.class"),
+setMethod("point_anomalies",signature=list("capa.mv.class"),
           function(object)
           {
               return(callNextMethod(object))
@@ -133,23 +133,23 @@ setMethod("point_anomalies",signature=list("mvcapa.class"),
 #'
 #' @name collective_anomalies
 #'
-#' @description Creates a data frame containing collective anomaly locations, lags and changes in mean and variance  as detected by \code{\link{capa}}, \code{\link{uvcapa}}
-#' and \code{\link{mvcapa}}. 
+#' @description Creates a data frame containing collective anomaly locations, lags and changes in mean and variance  as detected by \code{\link{capa}}, \code{\link{capa.uv}}
+#' and \code{\link{capa.mv}}. 
 #'
 #' For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 #' and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly. The results are calculated using data up to and including the
 #' value of \code{epoch}.
 #'
-#' For an object produced by \code{\link{mvcapa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
+#' For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 #' and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly.
 #'
-#' For an object produced by \code{\link{uvcapa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
+#' For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 #' and end lag of the anomaly and the change in mean and variance due to the anomaly.
 #' 
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{uvcapa}} or \code{\link{mvcapa}}.
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}} are sequential algorithms, it is possible to process a subset of the data
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.
+#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
 #'
 #' @return A data frame.
@@ -158,7 +158,7 @@ setMethod("point_anomalies",signature=list("mvcapa.class"),
 #'
 #' @aliases collective-anomaly,capa.class,ANY-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{uvcapa}},\code{\link{mvcapa}}. 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}. 
 #'
 #' @export
 if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",function(object,...) {standardGeneric("collective_anomalies")})}
@@ -252,10 +252,10 @@ setMethod("collective_anomalies",signature=list("capa.class"),
 #'
 #' @rdname point_anomaly-methods
 #'
-#' @aliases point_anomaly,mvcapa.class-method
+#' @aliases point_anomaly,capa.mv.class-method
 #'
 #' @export
-setMethod("collective_anomalies",signature=list("uvcapa.class"),
+setMethod("collective_anomalies",signature=list("capa.uv.class"),
           function(object)
           {
               return(callNextMethod(object)[,c(1:2,6:7)])
@@ -267,10 +267,10 @@ setMethod("collective_anomalies",signature=list("uvcapa.class"),
 #'
 #' @rdname point_anomaly-methods
 #'
-#' @aliases point_anomaly,mvcapa.class-method
+#' @aliases point_anomaly,capa.mv.class-method
 #'
 #' @export
-setMethod("collective_anomalies",signature=list("mvcapa.class"),
+setMethod("collective_anomalies",signature=list("capa.mv.class"),
           function(object)
           {
               return(callNextMethod(object))
@@ -282,7 +282,7 @@ setMethod("collective_anomalies",signature=list("mvcapa.class"),
 #'
 #' @name summary
 #'
-#' @description Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{uvcapa}}, \code{\link{mvcapa}} and \code{\link{pass}}.  The output displayed depends on
+#' @description Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} and \code{\link{pass}}.  The output displayed depends on
 #' the type of S4 object passed to summary. For all types, the output indicates whether the data is univariate or multivariate, the number of observations in the data, and the type of change
 #' being detected.
 #'
@@ -291,25 +291,25 @@ setMethod("collective_anomalies",signature=list("mvcapa.class"),
 #' and strength for each point anomaly. The table of collective anomalies contains seven columns showing the start and end position of the anomaly, the start and end lag for
 #' each anomaly, the variates affected by each anomaly, and the change in mean and variance for the anomaly.
 #'
-#' For an object produced by \code{\link{mvcapa}} the output of \code{summary} is the same as for an object produced by \code{\link{capa}} except that the epoch is not displayed.
+#' For an object produced by \code{\link{capa.mv}} the output of \code{summary} is the same as for an object produced by \code{\link{capa}} except that the epoch is not displayed.
 #'
-#' For an object produced by \code{\link{uvcapa}} the output of \code{summary} is the same as for an object produced by \code{\link{mvcapa}} except that the tables do not have a variate
+#' For an object produced by \code{\link{capa.uv}} the output of \code{summary} is the same as for an object produced by \code{\link{capa.mv}} except that the tables do not have a variate
 #' column (there is only one), or start and end lags.
 #'
 #' For an object produced by \code{\link{pass}} the output of \code{summary} is TODO 
 #'
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{uvcapa}}, \code{\link{mvcapa}} or \code{\link{pass}}.
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or \code{\link{pass}}.
 #' 
-#'@param epoch Numerical value. Since \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}} are sequential algorithms, it is possible to process a subset of the data
+#'@param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
 #'
 #' @rdname summary-methods
 #'
 #' @aliases summary,capa.class,ANY-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{uvcapa}},\code{\link{mvcapa}},\code{\link{pass}}. 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}. 
 #'
 #' @export
 setMethod("summary",signature=list("capa.class"),function(object,epoch)
@@ -359,10 +359,10 @@ setMethod("summary",signature=list("capa.class"),function(object,epoch)
 #'
 #' @rdname summary-methods
 #'
-#' @aliases summary,uvcapa.class-method
+#' @aliases summary,capa.uv.class-method
 #'
 #' @export
-setMethod("summary",signature=list("uvcapa.class"),function(object)
+setMethod("summary",signature=list("capa.uv.class"),function(object)
 {
     cat("Univariate ",sep="")
     cat("CAPA detecting changes in ",sep="")
@@ -400,10 +400,10 @@ setMethod("summary",signature=list("uvcapa.class"),function(object)
 #'
 #' @rdname summary-methods
 #'
-#' @aliases summary,mvcapa.class-method
+#' @aliases summary,capa.mv.class-method
 #' 
 #' @export
-setMethod("summary",signature=list("mvcapa.class"),function(object)
+setMethod("summary",signature=list("capa.mv.class"),function(object)
 {
     cat("Multivariate ",sep="")
     cat("CAPA detecting changes in ",sep="")
@@ -524,7 +524,7 @@ ac_corrected<-function(x)
 
   
 
-uvcapa_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=robustscale)
+capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=robustscale)
 {
     
     # error trapping
@@ -599,7 +599,7 @@ uvcapa_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,
 	       S)
     # construct the S4 capa class instance
     return(
-        uvcapa.class(array(x,c(length(x_dash),1)), # array(x_dash,c(length(x_dash),1)),
+        capa.uv.class(array(x,c(length(x_dash),1)), # array(x_dash,c(length(x_dash),1)),
 		     array(beta,c(length(beta),1)),
                      array(beta_tilde,c(1,1)),
                      as.integer(min_seg_len),
@@ -618,7 +618,7 @@ uvcapa_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,
 
 
 
-mvcapa_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=robustscale)
+capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=robustscale)
 {
     # error trapping
     x_dash<-x
@@ -908,17 +908,17 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     # call appropriate method
     if(univariate)
     {
-        return(uvcapa_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,transform))
+        return(capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,transform))
     }
     else
     {
-        return(mvcapa_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,transform))
+        return(capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,transform))
     }
     
 }
 
 
-#' uvcapa 
+#' capa.uv 
 #'
 #' A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.
 #' 
@@ -945,28 +945,18 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #' x[1601:1800] = rnorm(200,0,0.01)
 #' x[3201:3500] = rnorm(300,0,10)
 #' x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
-#' res<-uvcapa(x)
+#' res<-capa.uv(x)
 #' res # print a summary of the results
 #' plot(res) # visulaize the results
-#'
-#' # Real data example
-#' data(Lightcurves)
-#' ### Plot the data for Kepler 10965588: No transit apparent
-#' plot(Lightcurves$Kepler10965588$Day,Lightcurves$Kepler10965588$Brightness,xlab = "Day",pch=".")
-#' ### Examine a period of 62.9 days for Kepler 10965588
-#' binned_data = period_average(Lightcurves$Kepler10965588,62.9)
-#' inferred_anomalies = uvcapa(binned_data)
-#' plot(inferred_anomalies,xlab="Bin")
-#' # We found a planet! 
 #' 
 #' 
 #' @export
-uvcapa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf)
+capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf)
 {
-    res<-uvcapa_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,robustscale)
+    res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,robustscale)
     return(res)
     return(
-    uvcapa.class(data=res@data,
+    capa.uv.class(data=res@data,
                  beta=res@beta,
 	         beta_tilde=res@beta_tilde,
 	         min_seg_len=res@min_seg_len,
@@ -986,7 +976,7 @@ uvcapa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_s
 
 
 
-#' mvcapa 
+#' capa.mv 
 #'
 #' A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.
 #' 
@@ -1004,11 +994,11 @@ uvcapa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_s
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
 #' 
 #' @export
-mvcapa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
+capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
-    res<-mvcapa_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,robustscale)
+    res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,robustscale)
     return(
-    mvcapa.class(data=res@data,
+    capa.mv.class(data=res@data,
                  beta=res@beta,
 	         beta_tilde=res@beta_tilde,
 	         min_seg_len=res@min_seg_len,
@@ -1138,18 +1128,18 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @name plot
 #'
-#' @description Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{uvcapa}}, \code{\link{mvcapa}} and \code{\link{pass}}. 
+#' @description Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} and \code{\link{pass}}. 
 #'
 #' The plot can either be a line plot or a tileplot, the type produced depending on the options provided to the \code{plot} function and/or the dimensions of the
 #' data associated with the S4 object.
 #'
 #' @docType methods
 #'
-#' @param x An S4 class produced by \code{\link{capa}}, \code{\link{uvcapa}}, \code{\link{mvcapa}} or \code{\link{mvcapa}}.
+#' @param x An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or \code{\link{capa.mv}}.
 #' @param subset A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.
 #' @param variate_names Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 #' as it makes the visualisation easier to interpret. Default value is TRUE.
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{uvcapa}} and \code{\link{mvcapa}} are sequential algorithms, it is possible to process a subset of the data
+#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
 #' @param tile_plot Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
 #' This type of plot is useful when the data contains are large number of variates. The defaut value is TRUE if the number of variates is greater than 20.
@@ -1160,7 +1150,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @aliases plot,capa.class,ANY-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{uvcapa}},\code{\link{mvcapa}},\code{\link{pass}}.
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}.
 #'
 #' @export
 setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,epoch,tile_plot)
@@ -1231,10 +1221,10 @@ setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,ep
 #' 
 #' @rdname plot-methods
 #'
-#' @aliases plot,uvcapa.class,ANY-method
+#' @aliases plot,capa.uv.class,ANY-method
 #'
 #' @export
-setMethod("plot",signature=list("uvcapa.class"),function(x,variate_name)
+setMethod("plot",signature=list("capa.uv.class"),function(x,variate_name)
 {
     if(missing(variate_name))
     {
@@ -1250,10 +1240,10 @@ setMethod("plot",signature=list("uvcapa.class"),function(x,variate_name)
 #'
 #' @rdname plot-methods
 #'
-#' @aliases plot,mvcapa.class,ANY-method
+#' @aliases plot,capa.mv.class,ANY-method
 #'
 #' @export
-setMethod("plot",signature=list("mvcapa.class"),function(x,subset,variate_names,tile_plot)
+setMethod("plot",signature=list("capa.mv.class"),function(x,subset,variate_names,tile_plot)
 {
     if(missing(subset))
     {
