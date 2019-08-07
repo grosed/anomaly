@@ -46,7 +46,7 @@ NULL
 NULL
 
 #' Microarray data
-#' Microarray data for 41 individuals with a bladder tumour. The data was obtained from the \pkg{ecp} package \insertRef{ecp-package}{anomaly} and standardised using
+#' @description Microarray data for 41 individuals with a bladder tumour. The data was obtained from the \pkg{ecp} package \insertRef{ecp-package}{anomaly} and standardised using
 #' robust measures of mean and variance. 
 #'
 #' @name acgh
