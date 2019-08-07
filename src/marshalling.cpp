@@ -69,7 +69,6 @@ std::list<std::list<std::vector<double> > > marshall_bard(const std::list<std::v
   int count = 0;
   for(auto& y : data)
     {
-      std::cout << count << std::endl;
       try
 	{
 	  Rcpp::checkUserInterrupt();
