@@ -28,7 +28,7 @@ ac_corrected<-function(X)
             m<-dim(X)[2]
             if(m == 1)
             {
-                rcov<-covRob(matrix(c(X[2:n],X[1:(n-1)]),ncol=2),corr=TRUE,estim="M")
+                rcov<-covRob(matrix(c(X[2:n],X[1:(n-1)]),ncol=2),corr=TRUE)
                 psi<-rcov$cov[1,2]
                 correction_factor<-sqrt((1-psi)/(1+psi))
                 return(correction_factor)
@@ -43,3 +43,4 @@ ac_corrected<-function(X)
         X<-t(ac_corrections(X)*t(X))
         return(X)
   }
+  

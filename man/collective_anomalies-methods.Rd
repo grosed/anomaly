@@ -3,11 +3,14 @@
 \docType{methods}
 \name{collective_anomalies}
 \alias{collective_anomalies}
-\alias{collective_anomalies,capa.class,ANY-method}
+\alias{collective_anomalies,capa.class-method}
 \alias{collective_anomalies,capa.uv.class-method}
 \alias{collective_anomalies,capa.mv.class-method}
 \title{Collective anomaly location, lag and mean/variance change.}
 \usage{
+\S4method{collective_anomalies}{capa.class}(object,
+  epoch = dim(object@data)[1])
+
 \S4method{collective_anomalies}{capa.uv.class}(object)
 
 \S4method{collective_anomalies}{capa.mv.class}(object)

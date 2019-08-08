@@ -51,20 +51,24 @@ capa.mv.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,typ
 #' 
 #' @docType methods
 #'
+#' @rdname point_anomaly-methods
+#'
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}.
+#'
+if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,...) {standardGeneric("point_anomalies")})}
+
+#' @name point_anomalies
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.
 #' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
-#' 
-#' @rdname point-anomaly-methods
-#'
-#' @aliases point-anomaly,capa.class,ANY-method
-#' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}.
 #'
 #' @return A data frame. 
-#' 
+#'
+#' @rdname point_anomaly-methods
+#'
+#' @aliases point_anomalies,capa.class-method
+#'
 #' @export
-if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,...) {standardGeneric("point_anomalies")})}
 setMethod("point_anomalies",signature=list("capa.class"),
           function(object,epoch=dim(object@data)[1])
           {
@@ -103,7 +107,7 @@ setMethod("point_anomalies",signature=list("capa.class"),
 #'
 #' @rdname point_anomaly-methods
 #'
-#' @aliases point_anomaly,capa.uv.class-method
+#' @aliases point_anomalies,capa.uv.class-method
 #'
 #' @export
 setMethod("point_anomalies",signature=list("capa.uv.class"),
@@ -119,7 +123,7 @@ setMethod("point_anomalies",signature=list("capa.uv.class"),
 #'
 #' @rdname point_anomaly-methods
 #'
-#' @aliases point_anomaly,capa.mv.class-method
+#' @aliases point_anomalies,capa.mv.class-method
 #'
 #' @export
 setMethod("point_anomalies",signature=list("capa.mv.class"),
@@ -147,6 +151,11 @@ setMethod("point_anomalies",signature=list("capa.mv.class"),
 #' 
 #' @docType methods
 #'
+#' @rdname collective_anomalies-methods
+#'
+if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",function(object,...) {standardGeneric("collective_anomalies")})}
+
+#' @name collective_anomalies
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.
 #' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch} is the length of the data series.
@@ -155,12 +164,11 @@ setMethod("point_anomalies",signature=list("capa.mv.class"),
 #' 
 #' @rdname collective_anomalies-methods
 #'
-#' @aliases collective_anomalies,capa.class,ANY-method
+#' @aliases collective_anomalies,capa.class-method
 #' 
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}. 
 #'
 #' @export
-if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",function(object,...) {standardGeneric("collective_anomalies")})}
 setMethod("collective_anomalies",signature=list("capa.class"),
           function(object,epoch=dim(object@data)[1])
           {
@@ -301,12 +309,12 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #'
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or \code{\link{pass}}.
 #' 
-#'@param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
+#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
 #'
 #' @rdname summary-methods
 #'
-#' @aliases summary,capa.class,ANY-method
+#' @aliases summary,capa.class-method
 #' 
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}. 
 #'
@@ -436,6 +444,25 @@ setMethod("summary",signature=list("capa.mv.class"),function(object)
 
 
 
+#' Displays S4 objects produced by capa methods.
+#'
+#' @name show
+#'
+#' @description Displays S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} and \code{\link{pass}}. The information produced is the same as that provided by the
+#' summary method. The method is used by the S4 system for automatic printing.
+#'
+#' @docType methods
+#'
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or \code{\link{pass}}.
+#' 
+#' @rdname show-methods
+#'
+#' @aliases show,capa.class-method
+#' 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}. 
+#'
+#' @export
+#'
 setMethod("show",signature=list("capa.class"),function(object)
 {
     summary(object)

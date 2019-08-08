@@ -135,7 +135,7 @@ setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names,ti
 #'
 #' @docType methods
 #' 
-#' @rdname summary-method
+#' @rdname summary-methods
 #'
 #' @aliases summary,pass.class-method
 #'
@@ -156,14 +156,7 @@ setMethod("summary",signature=list("pass.class"),function(object)
 })
 
 
-#' Displays S4 objects produced by pass.
-#'
 #' @name show
-#'
-#' @description Displays a summary of the S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or \code{\link{pass}}.
-#' The information displayed is the same as that provided by the \code{summary} method. The method is used by the S4 system for automatic printing.
-#'
-#' @param object An S4 object produced by \code{\link{pass}}.
 #'
 #' @docType methods
 #'
