@@ -1,0 +1,37 @@
+#' robustscale
+#'
+#' Transforms the data X by centring and scaling using \eqn{X_{i}^{'} = \frac{X_{i}-\mu_{i}}{\sigma_{i}}} where \eqn{\mu_{i}} and \eqn{\sigma_{i}} are robust estimates for
+#' the mean and standard deviation of each variate (column) \eqn{X_{i}} of X calculated using the median and median absolute deviation. This method is the default value for the
+#' transform argument used by the \code{\link{capa}} function since the capa method assumes that the typical distribution of the data is standard normal.
+#' 
+#'
+#' @param X A numeric matrix containing the data to be transformed.
+#' 
+#' @return A numeric matrix containing the transformed data. 
+#' 
+#' @examples
+#' library(anomaly)
+#' data(simulated)
+#' # compare the medians of each variate and transformed variate
+#' head(apply(sim.data,2,median))
+#' head(apply(robustscale(sim.data),2,median))
+#' # compare the variances of each variate and transformed variate
+#' head(apply(sim.data,2,var))
+#' head(apply(robustscale(sim.data),2,var))
+#'
+#' @export
+robustscale<-function(X)
+{
+    if(is.vector(X))
+    {
+        return((X-median(X))/mad(X))
+    }
+    else if(is.matrix(X))
+    {
+        return(Reduce(cbind,Map(function(i) array(robustscale(X[,i]),c(nrow(X),1)),1:ncol(X))))  
+    }
+    else
+    {
+        # incorrect type - throw an exception
+    }
+}

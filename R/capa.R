@@ -128,7 +128,6 @@ setMethod("point_anomalies",signature=list("capa.mv.class"),
               return(callNextMethod(object))
           })
 
-
 #' Collective anomaly location, lag and mean/variance change.
 #'
 #' @name collective_anomalies
@@ -150,13 +149,13 @@ setMethod("point_anomalies",signature=list("capa.mv.class"),
 #'
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.
 #' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
-#' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
+#' up to and including a given epoch. The default value for \code{epoch} is the length of the data series.
 #'
 #' @return A data frame.
 #' 
-#' @rdname collective-anomaly-methods
+#' @rdname collective_anomalies-methods
 #'
-#' @aliases collective-anomaly,capa.class,ANY-method
+#' @aliases collective_anomalies,capa.class,ANY-method
 #' 
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}. 
 #'
@@ -246,13 +245,13 @@ setMethod("collective_anomalies",signature=list("capa.class"),
 
 
 
-#' @name point_anomalies
+#' @name collective_anomalies
 #'
 #' @docType methods
 #'
-#' @rdname point_anomaly-methods
+#' @rdname collective_anomalies-methods
 #'
-#' @aliases point_anomaly,capa.mv.class-method
+#' @aliases collective_anomalies,capa.uv.class-method
 #'
 #' @export
 setMethod("collective_anomalies",signature=list("capa.uv.class"),
@@ -261,13 +260,13 @@ setMethod("collective_anomalies",signature=list("capa.uv.class"),
               return(callNextMethod(object)[,c(1:2,6:7)])
           })
 
-#' @name point_anomalies
+#' @name collective_anomalies
 #'
 #' @docType methods
 #'
-#' @rdname point_anomaly-methods
+#' @rdname collective_anomalies-methods
 #'
-#' @aliases point_anomaly,capa.mv.class-method
+#' @aliases collective_anomalies,capa.mv.class-method
 #'
 #' @export
 setMethod("collective_anomalies",signature=list("capa.mv.class"),
@@ -479,49 +478,6 @@ anomalies<-function(x,epoch=NULL)
 }
 
 
-robustscale<-function(X)
-{
-    if(is.vector(X))
-    {
-        return((X-median(X))/mad(X))
-    }
-    else if(is.matrix(X))
-    {
-        return(Reduce(cbind,Map(function(i) array(robustscale(X[,i]),c(nrow(X),1)),1:ncol(X))))  
-    }
-    else
-    {
-        # incorrect type - throw an exception
-    }
-}
-
-
-ac_corrected<-function(x)
-    {
-        ac_corrections<-function(x)
-        {
-            x<-as.matrix(x)
-            n<-dim(x)[1]
-            m<-dim(x)[2]
-            if(m == 1)
-            {
-                rcov<-covRob(matrix(c(x[2:n],x[1:(n-1)]),ncol=2),corr=TRUE,estim="M")
-                psi<-rcov$cov[1,2]
-                correction_factor<-sqrt((1-psi)/(1+psi))
-                return(correction_factor)
-            }
-            else
-            {
-                return(unlist(Map(function(i) ac_corrections(as.matrix(x[,i])),1:m)))
-            }
-            
-        }
-        x<-robustscale(x)
-        x<-t(ac_corrections(x)*t(x))
-        return(x)
-  }
-
-
   
 
 capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=robustscale)
@@ -727,6 +683,9 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Default value is 0.
+#' @param transform A function used to transform the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data. Importantly, the
+#' untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
+#' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}. 
 #' 
 #' @return An S4 class of type capa.class. 
 #'
@@ -1015,6 +974,8 @@ capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 
 capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@data),variate_names=TRUE)
 {
+    # creating null entries for ggplot global variables so as to pass CRAN checks
+    x<-value<-ymin<-ymax<-x1<-x2<-y1<-y2<-x1<-x2<-y1<-y2<-NULL
     data_df<-as.data.frame(object@data)
     names<-paste("y",1:ncol(object@data),sep="")
     colnames(data_df)<-names
@@ -1077,7 +1038,7 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
 capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],subset=1:ncol(object@data))
 {
     # nulling out variables used in ggplot to get the package past CRAN checks
-    variable<-value<-NULL
+    x1<-y1<-x2<-y2<-variable<-value<-NULL
     df<-as.data.frame(object@data)
     df<-as.data.frame(df[,subset,drop=FALSE])
     # normalise data

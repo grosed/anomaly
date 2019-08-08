@@ -3,13 +3,20 @@
 \docType{methods}
 \name{collective_anomalies}
 \alias{collective_anomalies}
-\alias{collective-anomaly,capa.class,ANY-method}
+\alias{collective_anomalies,capa.class,ANY-method}
+\alias{collective_anomalies,capa.uv.class-method}
+\alias{collective_anomalies,capa.mv.class-method}
 \title{Collective anomaly location, lag and mean/variance change.}
+\usage{
+\S4method{collective_anomalies}{capa.uv.class}(object)
+
+\S4method{collective_anomalies}{capa.mv.class}(object)
+}
 \arguments{
 \item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.}
 
 \item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
-up to and including a given epoch. The default value for \code{epoch}is the length of the data series.}
+up to and including a given epoch. The default value for \code{epoch} is the length of the data series.}
 }
 \value{
 A data frame.
