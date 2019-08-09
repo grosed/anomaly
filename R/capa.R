@@ -132,6 +132,29 @@ setMethod("point_anomalies",signature=list("capa.mv.class"),
               return(callNextMethod(object))
           })
 
+# helper for collective_anomaies with object of type capa.class
+merge_collective_anomalies<-function(object,epoch)
+{
+   if(object@type != "mean")
+    {
+        stop("merge=TRUE option only available when type=mean")
+    }
+   canoms<-collective_anomalies(object,epoch,merged=FALSE)
+   # get the location (start,end) for each collective anomaly
+   locations<-unique(canoms[,1:2])
+   # get the sum of the test statistic over the variates affected by each collective anomaly
+   sums<-unlist(Map(function(start) sum(canoms[canoms[,1] == start,]$test.statistic),locations[,1]))
+   # order the locations
+   locations<-locations[order(sums,decreasing=TRUE),]
+   # sort the sums
+   sums<-sort(sums,decreasing=TRUE)
+   # divide sums by the sum of the betas
+   sums<-sums/sum(object@beta)
+   return(data.frame("start"=locations[,1],"end"=locations[,2],"test.statistic"=sums))
+}
+
+
+
 #' Collective anomaly location, lag and mean/variance change.
 #'
 #' @name collective_anomalies
@@ -141,7 +164,8 @@ setMethod("point_anomalies",signature=list("capa.mv.class"),
 #'
 #' For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 #' and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly. The results are calculated using data up to and including the
-#' value of \code{epoch}.
+#' value of \code{epoch}. If the value of \code{merged=FALSE} (the default) then all the collective anomalies are processed individualy even if they are common across multiple variates.
+#' If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 #'
 #' For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 #' and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly.
@@ -159,7 +183,9 @@ if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",functi
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.
 #' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch} is the length of the data series.
-#'
+#' @param merged Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
+#' of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.  
+#' 
 #' @return A data frame.
 #' 
 #' @rdname collective_anomalies-methods
@@ -170,8 +196,12 @@ if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",functi
 #'
 #' @export
 setMethod("collective_anomalies",signature=list("capa.class"),
-          function(object,epoch=dim(object@data)[1])
+          function(object,epoch=dim(object@data)[1],merged=FALSE)
           {
+              if(merged)
+              {
+                  return(merge_collective_anomalies(object,epoch))
+              }
               # get the anomalies
               anoms<-anomalies(object,epoch)
               # transform data

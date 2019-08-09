@@ -9,7 +9,7 @@
 \title{Collective anomaly location, lag and mean/variance change.}
 \usage{
 \S4method{collective_anomalies}{capa.class}(object,
-  epoch = dim(object@data)[1])
+  epoch = dim(object@data)[1], merged = FALSE)
 
 \S4method{collective_anomalies}{capa.uv.class}(object)
 
@@ -20,6 +20,9 @@
 
 \item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
 up to and including a given epoch. The default value for \code{epoch} is the length of the data series.}
+
+\item{merged}{Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
+of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.}
 }
 \value{
 A data frame.
@@ -30,7 +33,8 @@ and \code{\link{capa.mv}}.
 
 For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly. The results are calculated using data up to and including the
-value of \code{epoch}.
+value of \code{epoch}. If the value of \code{merged=FALSE} (the default) then all the collective anomalies are processed individualy even if they are common across multiple variates.
+If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 
 For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
 and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly.
