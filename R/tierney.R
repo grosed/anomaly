@@ -3,12 +3,12 @@ tierney<-function(X,burnin=10)
 {
     if(is.vector(X))
     {
-        ests<-sequential_ests(X)
+        ests<-sequential_ests(X,burnin)
         return((X-ests[[1]])/ests[[2]])
     }
     else if(is.matrix(X))
     {
-        return(Reduce(cbind,Map(function(i) array(tierney(X[,i]),c(nrow(X),1)),1:ncol(X))))  
+        return(Reduce(cbind,Map(function(i) array(tierney(X[,i],burnin),c(nrow(X),1)),1:ncol(X))))  
     }
     else
     {
