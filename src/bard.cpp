@@ -11,11 +11,11 @@
 #include "bard.h"
 
 
+
 state_type prune_bard_result(state_type S,
 			       const double& alpha,
 			       boost::variate_generator<base_generator_type&, boost::uniform_real<> >& uni)
 {
-  
   // to make things more readable - unpack the state (should be a zero cost operation when using move semantics)
   std::list<std::tuple<double,double,int> > R(std::move(std::get<0>(S)));
   int t(std::move(std::move(std::get<1>(S))));
@@ -37,6 +37,7 @@ state_type prune_bard_result(state_type S,
   auto logalpha = log(alpha);
   // auto logu = log(alpha) + log(uni());
   auto logu = log(alpha) + log(0.5);
+
 
   
   for(auto& r : R)

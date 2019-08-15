@@ -61,6 +61,7 @@ std::list<std::list<std::vector<double> > > marshall_bard(const std::list<std::v
   auto SYY = SY;
   std::list<std::tuple<double,double,int> > R;
 
+  
   // initialise state
   auto S = std::make_tuple(R,t,SY,SYY,museq,paffected,pi_N,pi_A,p_N,p_A,k_N,k_A,N);
   // run sequential bard accumulating the pruned R values from each iteration
@@ -73,7 +74,7 @@ std::list<std::list<std::vector<double> > > marshall_bard(const std::list<std::v
 	{
 	  Rcpp::checkUserInterrupt();
 	  S = bard(std::move(S),y);
-	  S = prune_bard_result(std::move(S),alpha,uni);
+	  // S = prune_bard_result(std::move(S),alpha,uni);
 	  R = std::get<0>(S);
 	  // convert tuples to vectors for marshalling through Rcpp
 	  std::list<std::vector<double> > vR;
