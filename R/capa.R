@@ -33,6 +33,28 @@ capa.mv.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,typ
 			,...)
 }
 
+# utility function to coerce data to an array structure
+to_array<-function(X)
+{
+  if(!is.data.frame(X))
+  {
+     X<-as.array(X)
+  }
+  else
+  {
+    X<-as.array(array(X))
+  }
+  dims<-dim(X)
+  if(length(dims) == 1)
+  {
+    X<-array(X,c(dims,1))
+  }
+  if(length(dims) > 2)
+  {
+    stop("data in array structures with dimension > 2 not supported") 
+  }
+  return(X)
+}
 
 #' Point anomaly location and strength.
 #'
@@ -547,6 +569,16 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
         x_dash = transform(x)
         # error trap x_dash
     }
+    # check it is univariate
+    
+    if(is.array(x_dash))
+    {
+       dims<-dim(x_dash)
+       if((length(dims) > 1) & (dims[2] > 1))
+       {
+	   stop("multivariate data used in univariate method - use capa.mv")
+       }
+    }
     # convert to vector structure
     if(is.array(x_dash))
     {
@@ -612,7 +644,8 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 	       S)
     # construct the S4 capa class instance
     return(
-        capa.uv.class(array(x,c(length(x_dash),1)), # array(x_dash,c(length(x_dash),1)),
+        # capa.uv.class(array(x,c(length(x_dash),1)), # array(x_dash,c(length(x_dash),1)),
+	capa.class(array(x,c(length(x_dash),1)), # array(x_dash,c(length(x_dash),1)),
 		     array(beta,c(length(beta),1)),
                      array(beta_tilde,c(1,1)),
                      as.integer(min_seg_len),
@@ -757,8 +790,8 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @export
 capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=NULL,max_lag=0,transform=robustscale)
 {
-    # check the data
-    x<-as.array(as.matrix(x))
+    # data needs to be in the form of an array
+    x<-to_array(x)
     if(!is_array(x))
     {
         stop("cannot convert x to an array")
@@ -961,8 +994,10 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #' @export
 capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf)
 {
+    # data needs to be in the form of an array
+    x<-to_array(x)
     res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,robustscale)
-    return(res)
+    # return(res)
     return(
     capa.uv.class(data=res@data,
                  beta=res@beta,
@@ -1010,6 +1045,8 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' @export
 capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
+    # data needs to be in the form of an array
+    x<-to_array(x)
     res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,robustscale)
     return(
     capa.mv.class(data=res@data,
