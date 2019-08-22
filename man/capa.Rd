@@ -2,7 +2,7 @@
 % Please edit documentation in R/capa.R
 \name{capa}
 \alias{capa}
-\title{capa}
+\title{A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.}
 \usage{
 capa(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
   min_seg_len = 10, max_seg_len = NULL, max_lag = 0,
@@ -25,15 +25,16 @@ variance (the default), "mean" for collective anomalies characterised by changes
 
 \item{max_lag}{A non-negative integer indicating the maximum start or end lag. Default value is 0.}
 
-\item{transform}{A function used to transform the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data. Importantly, the
-untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
+\item{transform}{A function used to transform the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
+Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}.}
 }
 \value{
 An S4 class of type capa.class.
 }
 \description{
-A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.
+A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al. This is a generic method that can be used for both univariate
+and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
 }
 \examples{
 library(anomaly)

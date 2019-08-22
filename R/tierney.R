@@ -1,4 +1,26 @@
-
+#' tierney
+#' 
+#' Transforms the data X by centring and scaling using \eqn{X_{ij}^{'} = \frac{X_{ij}-\mu_{ij}}{\sigma_{ij}}} where \eqn{\mu_{ij}} and \eqn{\sigma_{ij}} are sequential estimates for
+#' the mean and standard deviation of each variate (column) \eqn{X_{i}} of X calculated up to time j. The estimates \eqn{\mu_{ij}} and \eqn{\sigma_{ij}} are
+#' calculated from sequential estimates for quantiles developed by Tierney et al (1983).  This method is the default value for the
+#' transform argument used by the \code{\link{scapa.uv}} and \code{\link{scapa.mv}} functions.
+#' 
+#'
+#' @param X A numeric matrix containing the data to be transformed.
+#' @param burnin Specifies the period used to stabalise the quantile estimates. Default value is 10 
+#' 
+#' @return A numeric matrix containing the transformed data. 
+#'
+#' @references \insertRef{Schruben:1983:OTI:2771114.2771123}{anomaly}
+#' 
+#' @examples
+#' library(anomaly)
+#' data(machinetemp)
+#' attach(machinetemp)
+#' plot(temperature)
+#' temperature<-tierney(temperature,burnin=4305)
+#' plot(temperature)
+#' @export
 tierney<-function(X,burnin=10)
 {
     if(is.vector(X))
@@ -51,7 +73,7 @@ sequential_ests<-function(data,burnin = 10)
   
   if(!(is.integer(burnin))){
     burnin = as.integer(burnin)
-    warning("non-integer input for burnin. The input was converted to an integer using as.integer.")
+    # warning("non-integer input for burnin. The input was converted to an integer using as.integer.")
   }
   
   if (burnin < 10){

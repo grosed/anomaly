@@ -2,15 +2,17 @@ Package: anomaly
 Type: Package
 Title: Detecting Anomalies in Data
 Version: 3.0.0
-Date: 2019-08-12
+Date: 2019-08-20
 Authors@R: c(person("Alex","Fisch",email="a.t.fisch@lancaster.ac.uk",role=c("aut")),
              person("Daniel","Grose",email="dan.grose@lancaster.ac.uk",role=c("ctb","cre")),
+	     person("Lawrence","Bardwell",email="l.bardwell@lancaster.ac.uk",role=c("ctb")),	
 	     person("Idris","Eckley",email="i.eckley@lancaster.ac.uk",role=c("ths")),
 	     person("Paul","Fearnhead",email="p.fearnhead@lancaster.ac.uk",role=c("ths")))	
-Description: An implementation of CAPA (Collective And Point Anomaly) for the detection of anomalies in time series data. The package also contains Kepler lightcurve data and shows how CAPA can be applied to detect exoplanets.
+Description: Implementations of Collective And Point Anomaly (CAPA), Proportion Adaptive Segment Selection (PASS), and Bayesian Abnormal Region Detector (BARD) for the detection of anomalies in time series data. 
 License: GPL
 Imports: dplyr,rlang,methods,assertive,Rdpack,ggplot2,reshape2,Rcpp (>= 0.12.18),robust
 LinkingTo: Rcpp,BH
+Suggests: magrittr
 NeedsCompilation: yes
 RoxygenNote: 6.1.1
 RdMacros: Rdpack

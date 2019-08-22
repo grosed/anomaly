@@ -2,7 +2,7 @@
 % Please edit documentation in R/ac_corrected.R
 \name{ac_corrected}
 \alias{ac_corrected}
-\title{ac_corrected}
+\title{Transforms the data X to account for autocorrelation.}
 \usage{
 ac_corrected(X)
 }
@@ -13,8 +13,9 @@ ac_corrected(X)
 A numeric matrix containing the transformed data.
 }
 \description{
-Transforms the data X to account for autocorrelation by centring and scaling using \eqn{X_{i}^{'} = \frac{X_{i}-\mu_{i}}{k_{i}\sigma_{i}}}. Here \eqn{\mu_{i}} and \eqn{\sigma_{i}} are robust estimates for
-the mean and standard deviation of each variate (column) \eqn{X_{i}} of X calculated using the median and median absolute deviation and \eqn{k_{i} = \surd{\left( \frac{1+\phi_{i}}{1-\phi_{i}} \right)}} with
+Transforms the data X to account for autocorrelation by centring and scaling using \eqn{ X_{i}^{'} = \frac{X_{i}-\mu_{i}}{k_{i}\sigma_{i}}}. Here \eqn{\mu_{i}}
+and \eqn{\sigma_{i}} are robust estimates for the mean and standard deviation of each variate (column) \eqn{X_{i}} of X calculated using the median and median
+absolute deviation and \eqn{k_{i} = \surd{\left( \frac{1+\phi_{i}}{1-\phi_{i}} \right)}} with
 \eqn{\phi_{i}} a robust estimate for the autocorrelation.
 }
 \examples{

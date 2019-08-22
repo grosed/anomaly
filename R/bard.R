@@ -402,13 +402,36 @@ draw.from.post <- function( logprobs , cpt.locs , types , params ){
 # TODO - to be renamed and a S$ class returned with relevant stuff in it
 post_process_bard<-function(bard.result)
 {
-   R<-bard.result@Rs
-   params<-c(bard.result@k_N,bard.result@p_N,bard.result@k_A,bard.result@p_A,bard.result@pi_N,1-bard.result@pi_N)
-   filtering<-format_output(R)
-   # vector of probabilities
-   pvec<-get.probvec(filtering, params, no.draws = 1000)
-   df<-data.frame("time"=seq(1,length(pvec)),"probability"=pvec)
-   p<-ggplot(data=df,aes(x=time,y=probability))
-   p<-p+geom_line()
-   return(p)
+   # creating null entries for ggplot global variables so as to pass CRAN checks 
+    time<-probability<-NULL
+    R<-bard.result@Rs
+    params<-c(bard.result@k_N,bard.result@p_N,bard.result@k_A,bard.result@p_A,bard.result@pi_N,1-bard.result@pi_N)
+    filtering<-format_output(R)
+    # vector of probabilities
+    pvec<-get.probvec(filtering, params, no.draws = 1000)
+    df<-data.frame("time"=seq(1,length(pvec)),"probability"=pvec)
+    p<-ggplot(data=df,aes(x=time,y=probability))
+    p<-p+geom_line()
+    return(p)
 }
+
+##### BARD example to use in documentation
+
+#library(anomaly)
+#data(simulated)
+#
+## parameters
+#p_N<-0.05
+#p_A<-0.5
+#k_N<-10
+#k_A<-10
+#pi_N<-0.9
+#alpha<-0.0001
+#paffected<-10/200
+#lower<-0.5
+#upper<-1.5
+#h<-0.25
+#
+## run bard
+#res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+#p<-post_process_bard(res)

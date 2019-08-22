@@ -16,9 +16,9 @@
 \S4method{collective_anomalies}{capa.mv.class}(object)
 }
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} or \code{\link{capa.mv}}.}
+\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}} or \code{\link{scapa.mv}}.}
 
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}} are sequential algorithms, it is possible to process a subset of the data
+\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
 up to and including a given epoch. The default value for \code{epoch} is the length of the data series.}
 
 \item{merged}{Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
@@ -28,20 +28,26 @@ of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note
 A data frame.
 }
 \description{
-Creates a data frame containing collective anomaly locations, lags and changes in mean and variance  as detected by \code{\link{capa}}, \code{\link{capa.uv}}
-and \code{\link{capa.mv}}. 
+Creates a data frame containing collective anomaly locations, lags and changes in mean and variance  as detected by
+\code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.uv}} and \code{\link{capa}}. 
 
-For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
-and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly. The results are calculated using data up to and including the
-value of \code{epoch}. If the value of \code{merged=FALSE} (the default) then all the collective anomalies are processed individualy even if they are common across multiple variates.
-If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
+For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
+due to the anomaly, and when \code{type="meanvar"}, the change in variance due to the anomaly.
+
+For an object produced by \code{\link{scapa.uv}} the results are the same as for those produced by \code{\link{capa.uv}} except that the results are only calculated using only data up to
+and including the value of \code{epoch}.
 
 For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
-and end lag of the anomaly, the variates affected by the anomaly, and the change in mean and variance due to the anomaly.
+and end lag of the anomaly and the variates affected by the anomaly. When \code{type="mean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
+change in variance are included. If the value of \code{merged=FALSE} (the default) then all the collective anomalies are processed individually even if they are common across multiple variates.
+If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 
-For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
-and end lag of the anomaly and the change in mean and variance due to the anomaly.
+For an object produced by \code{\link{scapa.mv}} the results are the same as for those produced by \code{\link{capa.mv}} except that the results are only calculated using only data up to
+and including the value of \code{epoch}.
+
+For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, or the same results as
+\code{\link{scapa.uv}} when the data is multiivariate.
 }
 \seealso{
-\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}.
+\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}}.
 }
