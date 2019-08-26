@@ -39,15 +39,15 @@ as it makes the visualisation easier to interpret. Default value is TRUE.}
 up to and including a given epoch. The default value for \code{epoch}is the length of the data series.}
 
 \item{tile_plot}{Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
-This type of plot is useful when the data contains are large number of variates. The defaut value is TRUE if the number of variates is greater than 20.}
+This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.}
 
-\item{variate_name}{Logical value indicating if the variate name should be displayed. Defualt value is \code{variate.name=TRUE}.}
+\item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.}
 }
 \value{
 A ggplot object.
 }
 \description{
-Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} and \code{\link{pass}}. 
+Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and \code{\link{pass}}. 
 
 The plot can either be a line plot or a tile plot, the type produced depending on the options provided to the \code{plot} function and/or the dimensions of the
 data associated with the S4 object.

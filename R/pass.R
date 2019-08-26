@@ -1,17 +1,19 @@
-#' Proportion Adaptive Segment Selection (PASS).
+#' Detection of multivariate anomalous segments using PASS.
 #'
 #'
-#' Implements the Proportion Adaptive Segment Selection procedure of REF HERE to (what does it do ???)
+#' Implements the PASS (Proportion Adaptive Segment Selection) procedure of Jeng et al. (2012). PASS uses a higher criticism statistic to pool the information about the 
+#' presece or absence of a collective anomaly across the components. It uses Circular Binary Segmentation to detect multiple collective anomalies.
 #' 
 #' 
 #' @param x An n x m real matrix representing n observations of m variates.
-#' @param alpha A positive integer > 1. This value is used to stabilise the PASS procedure and control the familywise error for finite samples. 
+#' @param alpha A positive integer > 0. This value is used to stabilise the higher criticism based test statistic used by PASS leading to a better finite sample familywise error rate. 
+#' Anomalies affecting fewer than alpha components will however in all likelihood escape detection.
 #' @param lambda A positive real value setting the threshold value for the familywise Type 1 error. The default value is 15.0. 
-#' @param Lmax A positive integer (\code{Lmax} > 1) corresponding to the maximum segment length. The default value is 10.
-#' @param Lmin A positive integer (\code{Lmax} > \code{Lmin} > 1) corresponding to the minimum segment length. The default value is 0. . 
+#' @param Lmax A positive integer (\code{Lmax} > 0) corresponding to the maximum segment length. The default value is 10.
+#' @param Lmin A positive integer (\code{Lmax} >= \code{Lmin} > 0) corresponding to the minimum segment length. The default value is 1. 
 #' @param transform A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
 #'
-#' @return An S4 object of type \code{.pass.class} containing the data \code{Xi}, procedure parameter values and the results.
+#' @return An S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
 #' 
 #' @references \insertRef{10.1093/biomet/ass059}{anomaly}
 #' 
@@ -24,7 +26,7 @@
 #'
 #' @export
 
-pass<-function(x,alpha=2,lambda=15.0,Lmax=10,Lmin=0,transform=robustscale)
+pass<-function(x,alpha=2,lambda=15.0,Lmax=10,Lmin=1,transform=robustscale)
 {
     # check the data
     x<-as.array(as.matrix(x))

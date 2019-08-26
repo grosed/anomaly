@@ -2,7 +2,7 @@
 % Please edit documentation in R/anomaly_series.R
 \name{anomaly_series}
 \alias{anomaly_series}
-\title{A technique for detecting anomalous segments based on CAPA (Collective And Point Anomaly) by Fisch et al.}
+\title{A technique for detecting anomalous segments based on CAPA.}
 \usage{
 anomaly_series(x, penaltywindow = NULL, penaltyanomaly = NULL,
   minimumsegmentlength = 10, warnings = TRUE, method = "meanvar")

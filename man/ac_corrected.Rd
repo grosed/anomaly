@@ -7,16 +7,16 @@
 ac_corrected(X)
 }
 \arguments{
-\item{X}{A numeric matrix containing the data to be transformed.}
+\item{X}{A numeric matrix containing the potentially multivariate data to be transformed. Each column corresponds to a component and each row to an observation.}
 }
 \value{
-A numeric matrix containing the transformed data.
+A numeric matrix of the same dimension as X containing the transformed data.
 }
 \description{
-Transforms the data X to account for autocorrelation by centring and scaling using \eqn{ X_{i}^{'} = \frac{X_{i}-\mu_{i}}{k_{i}\sigma_{i}}}. Here \eqn{\mu_{i}}
-and \eqn{\sigma_{i}} are robust estimates for the mean and standard deviation of each variate (column) \eqn{X_{i}} of X calculated using the median and median
-absolute deviation and \eqn{k_{i} = \surd{\left( \frac{1+\phi_{i}}{1-\phi_{i}} \right)}} with
-\eqn{\phi_{i}} a robust estimate for the autocorrelation.
+Transforms the data X to account for autocorrelation by centring and scaling. It uses the transformation \eqn{ X_{i}^{'} = \frac{X_{i}-\mu_{i}}{k_{i}\sigma_{i}}}, were \eqn{\mu_{i}}
+and \eqn{\sigma_{i}} are robust estimates for the mean and standard deviation of each variate (column), \eqn{X_{i}}, of X. The estimates are calculated using the median and median
+absolute deviation. The scaling \eqn{k_{i} = \surd{\left( \frac{1+\phi_{i}}{1-\phi_{i}} \right)}}, with
+\eqn{\phi_{i}} a robust estimate for the autocorrelation at lag 1, is used to account for AR(1) structure in the noise.
 }
 \examples{
 library(anomaly)

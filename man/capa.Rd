@@ -2,7 +2,7 @@
 % Please edit documentation in R/capa.R
 \name{capa}
 \alias{capa}
-\title{A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.}
+\title{A technique for detecting anomalous segments and points based on CAPA.}
 \usage{
 capa(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
   min_seg_len = 10, max_seg_len = NULL, max_lag = 0,
@@ -17,15 +17,15 @@ Fisch, Eckley and Fearnhead (2018). If p > 1, type = "mean" and max_lag = 0 it d
 \item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.}
 
 \item{type}{A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-variance (the default), "mean" for collective anomalies characterised by changes in mean only, and "poisson" if the collective anomalies are characterised by an a-typical poisson parameter.}
+variance (the default) or "mean" for collective anomalies characterised by changes in mean only.}
 
 \item{min_seg_len}{An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.}
 
 \item{max_seg_len}{An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.}
 
-\item{max_lag}{A non-negative integer indicating the maximum start or end lag. Default value is 0.}
+\item{max_lag}{A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.}
 
-\item{transform}{A function used to transform the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
+\item{transform}{A function used to center the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
 Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}.}
 }
@@ -33,7 +33,7 @@ the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), b
 An S4 class of type capa.class.
 }
 \description{
-A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al. This is a generic method that can be used for both univariate
+A technique for detecting anomalous segments and points based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). This is a generic method that can be used for both univariate
 and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
 }
 \examples{

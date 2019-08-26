@@ -3,7 +3,7 @@
 \docType{data}
 \name{machinetemp}
 \alias{machinetemp}
-\title{Machine temperature.}
+\title{Machine temperature data.}
 \format{A dataframe with 22695 rows and 2 columns. The first column contains the date and time of the temperature measurement. The second column contains the
 machine temperature.}
 \usage{

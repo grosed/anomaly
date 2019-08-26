@@ -7,15 +7,16 @@
 robustscale(X)
 }
 \arguments{
-\item{X}{A numeric matrix containing the data to be transformed.}
+\item{X}{A numeric matrix containing the data to be transformed. Each column corresponds to a component and each row to an observation.}
 }
 \value{
 A numeric matrix containing the transformed data.
 }
 \description{
 Transforms the data X by centring and scaling using \eqn{X_{ij}^{'} = \frac{X_{i}-\mu_{i}}{\sigma_{i}}} where \eqn{\mu_{i}} and \eqn{\sigma_{i}} are robust estimates for
-the mean and standard deviation of each variate (column) \eqn{X_{i}} of X calculated using the median and median absolute deviation. This method is the default value for the
-transform argument used by the \code{\link{capa}} function since the capa method assumes that the typical distribution of the data is standard normal.
+the mean and standard deviation of each variate (column), \eqn{X_{i}}, of the multivariate time series X. The estimates are calculated using the median and median absolute deviation. 
+This method is the default value for the
+transform argument used by the \code{\link{capa}} function, since the capa method assumes that the typical distribution of the data is standard normal.
 }
 \examples{
 library(anomaly)

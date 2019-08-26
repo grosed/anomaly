@@ -2,7 +2,7 @@
 % Please edit documentation in R/capa.R
 \name{scapa.uv}
 \alias{scapa.uv}
-\title{Detection of univariate anomalous segments using sequential CAPA}
+\title{Detection of univariate anomalous segments using SCAPA.}
 \usage{
 scapa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
   min_seg_len = 10, max_seg_len = Inf, transform = tierney)
@@ -15,7 +15,7 @@ scapa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
 \item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.}
 
 \item{type}{A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-variance (the default), "mean" for collective anomalies characterised by changes in mean only, and "poisson" if the collective anomalies are characterised by an a-typical poisson parameter.}
+variance (the default) or "mean" for collective anomalies characterised by changes in mean only.}
 
 \item{min_seg_len}{An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.}
 
@@ -23,15 +23,15 @@ variance (the default), "mean" for collective anomalies characterised by changes
 
 \item{transform}{A function used to transform the data prior to analysis by \code{\link{scapa.uv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
 Importantly, the untransformed data remains available for post processing results obtained using \code{\link{scapa.uv}}. The package includes several methods that are commonly used for
-the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=tierney}.}
+the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default value is \code{transform=tierney}.}
 }
 \value{
 An S4 class of type capa.class.
 }
 \description{
-A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al. This version of \code{capa.uv} has a default value
+An offline as-if-online implementation of SCAPA (Sequential Collective And Point Anomalies) by Bardwell et al. (2019) for online collective and point anomaly detection. This version of \code{capa.uv} has a default value
 \code{transform=tierney} which uses sequential estimates for transforming the data prior to analysis. It also returns an S4 class which allows the results to be postprocessed
-as if the data had been analysed in an online fashion.
+at different time points as if the data had been analysed in an online fashion up to that point.
 }
 \examples{
 library(anomaly)

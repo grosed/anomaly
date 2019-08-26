@@ -16,22 +16,22 @@
 \S4method{point_anomalies}{capa.mv.class}(object)
 }
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}} or \code{\link{scapa.mv}}.}
+\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.}
 
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-up to and including a given epoch. The default value for \code{epoch}is the length of the data series.}
+\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
+up to and including a given epoch. The default value for \code{epoch} is the length of the data series.}
 }
 \value{
 A data frame.
 }
 \description{
 Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
-\code{\link{scapa.uv}} and \code{\link{scapa.mv}}. 
+\code{\link{scapa.uv}}, and \code{\link{scapa.mv}}. 
 
 For an object produced by \code{\link{capa.uv}}, the output is a data frame  with columns containing the position and
 strength of the anomaly. 
 
-For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
+For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate, and
 strength of the anomaly. 
 
 For an object produced by \code{\link{scapa.uv}}, the output is a data frame  with columns containing the position and
@@ -40,9 +40,9 @@ strength of the anomaly for observations up to and including the value of \code{
 For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
 strength of the anomaly for observations up to and including the value of \code{epoch}.
 
-For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, or the same results as
+For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, and the same results as
 \code{\link{scapa.uv}} when the data is multiivariate.
 }
 \seealso{
-\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}}.
+\code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}.
 }

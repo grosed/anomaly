@@ -8,7 +8,7 @@ Authors@R: c(person("Alex","Fisch",email="a.t.fisch@lancaster.ac.uk",role=c("aut
 	     person("Lawrence","Bardwell",email="l.bardwell@lancaster.ac.uk",role=c("ctb")),	
 	     person("Idris","Eckley",email="i.eckley@lancaster.ac.uk",role=c("ths")),
 	     person("Paul","Fearnhead",email="p.fearnhead@lancaster.ac.uk",role=c("ths")))	
-Description: Implements Collective And Point Anomaly (CAPA), Proportion Adaptive Segment Selection (PASS), and Bayesian Abnormal Region Detector (BARD) methods for the detection of anomalies in time series data. 
+Description: Implements Collective And Point Anomaly (CAPA), Multi-Variate Collective And Point Anomaly (MVCAPA), Proportion Adaptive Segment Selection (PASS), and Bayesian Abnormal Region Detector (BARD) methods for the detection of anomalies in time series data. 
 License: GPL
 Imports: dplyr,rlang,methods,assertive,Rdpack,ggplot2,reshape2,Rcpp (>= 0.12.18),robust
 LinkingTo: Rcpp,BH

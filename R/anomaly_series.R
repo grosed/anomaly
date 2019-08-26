@@ -1,7 +1,7 @@
 
 setClass("anomaly_series")
 
-#' A technique for detecting anomalous segments based on CAPA (Collective And Point Anomaly) by Fisch et al.
+#' A technique for detecting anomalous segments based on CAPA.
 #'
 #' @name anomaly_series
 #' 

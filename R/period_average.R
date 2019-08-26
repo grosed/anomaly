@@ -6,10 +6,10 @@
 #' times are taken modulo the period and then binned. An average is then taken within each bin, those averages then stored as a vector and returned. If the orbital period of an
 #' exoplanet (or an integer fraction thereof) is used as argument for "period", the signal to noise ratio of the transit is improved, which can allow for the planet's detection.
 #'
-#' @param data A dataframe with one column named "Day" and the other "Brightness", such as Kepler10965588 (included in the package)
-#' @param period A numeric which is larger than 0 representing the period (in days) which is to be examined
+#' @param data A dataframe with one column named "Day" and the other "Brightness", such as Kepler10965588 (included in the package).
+#' @param period A numeric which is larger than 0 representing the period (in days) which is to be examined.
 #'
-#' @return A vector of numerics
+#' @return A vector of numerics.
 #'
 #' @examples
 #' library(anomaly)

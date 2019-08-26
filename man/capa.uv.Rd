@@ -2,7 +2,7 @@
 % Please edit documentation in R/capa.R
 \name{capa.uv}
 \alias{capa.uv}
-\title{Detection of univariate anomalous segments using CAPA}
+\title{Detection of univariate anomalous segments and points using CAPA.}
 \usage{
 capa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
   min_seg_len = 10, max_seg_len = Inf, transform = robustscale)
@@ -15,7 +15,7 @@ capa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
 \item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.}
 
 \item{type}{A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-variance (the default), "mean" for collective anomalies characterised by changes in mean only, and "poisson" if the collective anomalies are characterised by an a-typical poisson parameter.}
+variance (the default) or "mean" for collective anomalies characterised by changes in mean only.}
 
 \item{min_seg_len}{An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.}
 
@@ -29,7 +29,11 @@ the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), b
 An S4 class of type capa.uv.class.
 }
 \description{
-A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.
+A technique for detecting anomalous segments and points in univeriate time series data based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). CAPA assumes that the data has a certain mean and variance for most
+timepoints and detects segments in which the mean and/or variance deviates from the typical mean and variance as collective anomalies. It also detects point
+outliers and returns a measure of strength for the changes in mean and variance. If the number of anomalous windows scales linearly with the number of
+data points, CAPA scales linearly with the number of data points. At
+worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, the computational cost of CAPA scales quadratically with the number of data points.
 }
 \examples{
 library(anomaly)

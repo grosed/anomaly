@@ -61,12 +61,12 @@ to_array<-function(X)
 #' @name point_anomalies
 #'
 #' @description Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
-#' \code{\link{scapa.uv}} and \code{\link{scapa.mv}}. 
+#' \code{\link{scapa.uv}}, and \code{\link{scapa.mv}}. 
 #'
 #' For an object produced by \code{\link{capa.uv}}, the output is a data frame  with columns containing the position and
 #' strength of the anomaly. 
 #' 
-#' For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
+#' For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate, and
 #' strength of the anomaly. 
 #'
 #' For an object produced by \code{\link{scapa.uv}}, the output is a data frame  with columns containing the position and
@@ -75,22 +75,22 @@ to_array<-function(X)
 #' For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
 #' strength of the anomaly for observations up to and including the value of \code{epoch}.
 #' 
-#' For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, or the same results as
-#' \code{\link{scapa.uv}} when the data is multiivariate.
+#' For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, and the same results as
+#' \code{\link{scapa.uv}} when the data is multivariate.
 #'
 #' 
 #' @docType methods
 #'
 #' @rdname point_anomaly-methods
 #'
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}}.
+#' @seealso \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}.
 #'
 if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,...) {standardGeneric("point_anomalies")})}
 
 #' @name point_anomalies
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}} or \code{\link{scapa.mv}}.
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-#' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.
+#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
+#' up to and including a given epoch. The default value for \code{epoch} is the length of the data series.
 #'
 #' @return A data frame. 
 #'
@@ -185,29 +185,29 @@ merge_collective_anomalies<-function(object,epoch)
 
 
 
-#' Collective anomaly location, lag and mean/variance change.
+#' Collective anomaly location, lags, and mean/variance changes.
 #'
 #' @name collective_anomalies
 #'
-#' @description Creates a data frame containing collective anomaly locations, lags and changes in mean and variance  as detected by
-#' \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.uv}} and \code{\link{capa}}. 
+#' @description Creates a data frame containing collective anomaly locations, lags and changes in mean and variance as detected by
+#' \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.uv}}, and \code{\link{capa}}. 
 #'
 #' For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
-#' due to the anomaly, and when \code{type="meanvar"}, the change in variance due to the anomaly.
+#' due to the anomaly. When \code{type="meanvar"}, the change in variance due to the anomaly is also returned in an additional column.
 #' 
-#' For an object produced by \code{\link{scapa.uv}} the results are the same as for those produced by \code{\link{capa.uv}} except that the results are only calculated using only data up to
+#' For an object produced by \code{\link{scapa.uv}} the results are the same as for those produced by \code{\link{capa.uv}}. However, the results are calculated using only data up to
 #' and including the value of \code{epoch}.
 #'
-#' For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the start
-#' and end lag of the anomaly and the variates affected by the anomaly. When \code{type="mean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
-#' change in variance are included. If the value of \code{merged=FALSE} (the default) then all the collective anomalies are processed individually even if they are common across multiple variates.
+#' For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the variates 
+#' affected by the anomaly, as well as their the start and end lags. When \code{type="mean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
+#' change in variance are included. If \code{merged=FALSE} (the default), then all the collective anomalies are processed individually even if they are common across multiple variates.
 #' If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 #'
-#' For an object produced by \code{\link{scapa.mv}} the results are the same as for those produced by \code{\link{capa.mv}} except that the results are only calculated using only data up to
+#' For an object produced by \code{\link{scapa.mv}} the results are the same as for those produced by \code{\link{capa.mv}}. However, the results are only calculated using only data up to
 #' and including the value of \code{epoch}.
 #'
 #' For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, or the same results as
-#' \code{\link{scapa.uv}} when the data is multiivariate.
+#' \code{\link{scapa.mv}} when the data is multivariate.
 #'
 #' 
 #' @docType methods
@@ -217,8 +217,8 @@ merge_collective_anomalies<-function(object,epoch)
 if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",function(object,...) {standardGeneric("collective_anomalies")})}
 
 #' @name collective_anomalies
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}} or \code{\link{scapa.mv}}.
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.
+#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch} is the length of the data series.
 #' @param merged Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
 #' of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.  
@@ -784,11 +784,11 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
         )
 }
 
-#' A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.
+#' A technique for detecting anomalous segments and points based on CAPA.
 #'
 #' @name capa 
 #'
-#' @description A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al. This is a generic method that can be used for both univariate
+#' @description A technique for detecting anomalous segments and points based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). This is a generic method that can be used for both univariate
 #' and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
@@ -796,11 +796,11 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' Fisch, Eckley and Fearnhead (2018). If p > 1, type = "mean" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2018).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, and "poisson" if the collective anomalies are characterised by an a-typical poisson parameter.
+#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
-#' @param max_lag A non-negative integer indicating the maximum start or end lag. Default value is 0.
-#' @param transform A function used to transform the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
+#' @param max_lag A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.
+#' @param transform A function used to center the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
 #' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 #' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}. 
 #' 
@@ -988,17 +988,22 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 }
 
 
-#' Detection of univariate anomalous segments using CAPA
+#' Detection of univariate anomalous segments and points using CAPA.
 #'
 #' @name capa.uv
 #' 
-#' @description A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.
+#' @description A technique for detecting anomalous segments and points in univeriate time series data based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). CAPA assumes that the data has a certain mean and variance for most
+#' timepoints and detects segments in which the mean and/or variance deviates from the typical mean and variance as collective anomalies. It also detects point
+#' outliers and returns a measure of strength for the changes in mean and variance. If the number of anomalous windows scales linearly with the number of
+#' data points, CAPA scales linearly with the number of data points. At
+#' worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, the computational cost of CAPA scales quadratically with the number of data points.
+#' 
 #' 
 #' @param x A numeric vector containing the data which is to be inspected.
 #' @param beta A numeric constant indicating the penalty for adding an additional epidemic changepoint. It defaults to a BIC style penalty if no argument is provided.
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, and "poisson" if the collective anomalies are characterised by an a-typical poisson parameter.
+#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only. 
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
 #' @param transform A function used to transform the data prior to analysis by \code{\link{capa.uv}}. This can, for example, be used to compensate for the effects of autocorrelation
@@ -1050,24 +1055,24 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 }
 
 
-#' Detection of univariate anomalous segments using sequential CAPA
+#' Detection of univariate anomalous segments using SCAPA.
 #'
 #' @name scapa.uv 
 #'
-#' @description A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al. This version of \code{capa.uv} has a default value
+#' @description An offline as-if-online implementation of SCAPA (Sequential Collective And Point Anomalies) by Bardwell et al. (2019) for online collective and point anomaly detection. This version of \code{capa.uv} has a default value
 #' \code{transform=tierney} which uses sequential estimates for transforming the data prior to analysis. It also returns an S4 class which allows the results to be postprocessed
-#' as if the data had been analysed in an online fashion.
+#' at different time points as if the data had been analysed in an online fashion up to that point.
 #' 
 #' @param x A numeric vector containing the data which is to be inspected.
 #' @param beta A numeric constant indicating the penalty for adding an additional epidemic changepoint. It defaults to a BIC style penalty if no argument is provided.
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, and "poisson" if the collective anomalies are characterised by an a-typical poisson parameter.
+#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
 #' @param transform A function used to transform the data prior to analysis by \code{\link{scapa.uv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
-#' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{scapa.uv}}. The package includes several methods that are commonly used for
-#' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=tierney}. 
+#' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{scapa.uv}}. The package includes a method which can be used for
+#' the transform, (see \code{\link{tierney}}, the default), but a user defined (ideally sequential) function can be specified.  
 #'
 #' @return An S4 class of type capa.class. 
 #'
@@ -1106,28 +1111,31 @@ scapa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max
 }
 
 
-#'  Detection of multivariate anomalous segments using CAPA
+#'  Detection of multivariate anomalous segments and points using MVCAPA.
 #'
 #' @name capa.mv
 #' 
-#' @description A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al.
+#' @description This function implements MVCAPA (Multi-Variate Collective And Point Anomaly) from Fisch et al. (2019). 
+#' It detects potentially lagged collective anomalies as well as point anomalies in multivariate time series data.  
+#' The runtime of MVCAPA scales linearly (up to logarithmic factors) in \code{ncol(x)} and \code{maxlag}. If \code{max_seg_len} is not set, the runtime scales quadratically at worst and linearly 
+#' at best in \code{nrow(x)}. If \code{max_seg_len} is set the runtime scales like \code{nrow(x)*max_seg_len}.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
 #' @param beta A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean" and maxlag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley and Fearnhead (2018). If type = "mean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2018).
+#' Fisch, Eckley and Fearnhead (2019). If type = "mean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, and "poisson" if the collective anomalies are characterised by an a-typical poisson parameter.
+#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only. 
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Default value is 0.
 #' @param transform A function used to transform the data prior to analysis by \code{\link{capa.mv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data. Importantly, the
 #' untransformed data remains available for post processing results obtained using \code{\link{capa.mv}}. The package includes several methods that are commonly used for
-#' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}.
+#' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default value is \code{transform=robust_scale}.
 #' 
 #' @return An S4 class of type capa.mv.class. 
 #'
-#' @references \insertRef{2018arXiv180601947F}{anomaly}
+#' @references \insertRef{2019MVCAPA}{anomaly}
 #'
 #' @examples
 #' library(anomaly)
@@ -1158,30 +1166,31 @@ capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
            )
 }
 
-#' Detection of multivariate anomalous segments using sequential CAPA
+#' Online detection of multivariate anomalous segments and points using SMVCAPA.
 #' 
 #' @name scapa.mv 
 #'
-#' @description A technique for detecting anomalous segments based on CAPA (Collective And Point Anomalies) by Fisch et al. This version of \code{capa.uv} has a default value
+#' @description This function implements SMVCAPA from Fisch et al. (2019) in an as-if-online way. It detects potentially lagged collective anomalies as well as point anomalies in streaming data. 
+#' The runtime scales linearly (up to logarithmic factors) in \code{ncol(x)}, \code{max_lag}, and \code{max_seg_len}. This version of \code{capa.uv} has a default value
 #' \code{transform=tierney} which uses sequential estimates for transforming the data prior to analysis. It also returns an S4 class which allows the results to be postprocessed
 #' as if the data had been analysed in an online fashion.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
 #' @param beta A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean" and maxlag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley and Fearnhead (2018). If type = "mean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2018).
+#' Fisch, Eckley and Fearnhead (2019). If type = "mean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, and "poisson" if the collective anomalies are characterised by an a-typical poisson parameter.
+#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Default value is 0.
 #' @param transform A function used to transform the data prior to analysis by \code{\link{scapa.mv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data. Importantly, the
-#' untransformed data remains available for post processing results obtained using \code{\link{scapa.mv}}. The package includes several methods that are commonly used for
-#' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=tierney}.
+#' untransformed data remains available for post processing results obtained using \code{\link{scapa.mv}}. The package includes a method which can be used for
+#' the transform, (see \code{\link{tierney}}, the default), but a user defined (ideally sequential) function can be specified.  
 #'
 #' @return An S4 class of type capa.class. 
 #' 
-#' @references \insertRef{2018arXiv180601947F}{anomaly}
+#' @references \insertRef{2019MVCAPA}{anomaly}
 #'
 #' @examples
 #' library(anomaly)
@@ -1324,7 +1333,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @name plot
 #'
-#' @description Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} and \code{\link{pass}}. 
+#' @description Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and \code{\link{pass}}. 
 #'
 #' The plot can either be a line plot or a tile plot, the type produced depending on the options provided to the \code{plot} function and/or the dimensions of the
 #' data associated with the S4 object.
@@ -1338,7 +1347,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
 #' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
 #' @param tile_plot Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
-#' This type of plot is useful when the data contains are large number of variates. The defaut value is TRUE if the number of variates is greater than 20.
+#' This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.
 #' 
 #' @return A ggplot object.
 #'
@@ -1413,7 +1422,7 @@ setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,ep
 #'
 #' @docType methods
 #'
-#' @param variate_name Logical value indicating if the variate name should be displayed. Defualt value is \code{variate.name=TRUE}.
+#' @param variate_name Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.
 #' 
 #' @rdname plot-methods
 #'

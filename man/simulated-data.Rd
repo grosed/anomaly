@@ -10,7 +10,7 @@ data(simulated)
 }
 \description{
 Simulated data for 200 variates with 500 observations containing three recurrent variants located at [100: 105], [200, 205], and [300:305]
-with carrier proportions 0.04, 0.06, and 0.08 respectively. (add reference here)
+with carrier proportions 0.04, 0.06, and 0.08 respectively.
 }
 \references{
 \insertRef{10.1093/biomet/ass059}{anomaly}

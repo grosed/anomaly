@@ -7,12 +7,12 @@
 period_average(data, period)
 }
 \arguments{
-\item{data}{A dataframe with one column named "Day" and the other "Brightness", such as Kepler10965588 (included in the package)}
+\item{data}{A dataframe with one column named "Day" and the other "Brightness", such as Kepler10965588 (included in the package).}
 
-\item{period}{A numeric which is larger than 0 representing the period (in days) which is to be examined}
+\item{period}{A numeric which is larger than 0 representing the period (in days) which is to be examined.}
 }
 \value{
-A vector of numerics
+A vector of numerics.
 }
 \description{
 The signal of transiting planets is very weak, especially if the planet is small. This function amplifies it by exploiting the periodicity of the signal. All observations
