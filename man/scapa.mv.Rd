@@ -26,8 +26,8 @@ variance (the default) or "mean" for collective anomalies characterised by chang
 \item{max_lag}{A non-negative integer indicating the maximum start or end lag. Default value is 0.}
 
 \item{transform}{A function used to transform the data prior to analysis by \code{\link{scapa.mv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data. Importantly, the
-untransformed data remains available for post processing results obtained using \code{\link{scapa.mv}}. The package includes several methods that are commonly used for
-the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default value is \code{transform=tierney}.}
+untransformed data remains available for post processing results obtained using \code{\link{scapa.mv}}. The package includes a method which can be used for
+the transform, (see \code{\link{tierney}}, the default), but a user defined (ideally sequential) function can be specified.}
 }
 \value{
 An S4 class of type capa.class.

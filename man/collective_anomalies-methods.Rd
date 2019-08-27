@@ -46,7 +46,7 @@ For an object produced by \code{\link{scapa.mv}} the results are the same as for
 and including the value of \code{epoch}.
 
 For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, or the same results as
-\code{\link{scapa.mv}} when the data is multiivariate.
+\code{\link{scapa.mv}} when the data is multivariate.
 }
 \seealso{
 \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}}.

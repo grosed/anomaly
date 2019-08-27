@@ -22,8 +22,8 @@ variance (the default) or "mean" for collective anomalies characterised by chang
 \item{max_seg_len}{An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.}
 
 \item{transform}{A function used to transform the data prior to analysis by \code{\link{scapa.uv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
-Importantly, the untransformed data remains available for post processing results obtained using \code{\link{scapa.uv}}. The package includes several methods that are commonly used for
-the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default value is \code{transform=tierney}.}
+Importantly, the untransformed data remains available for post processing results obtained using \code{\link{scapa.uv}}. The package includes a method which can be used for
+the transform, (see \code{\link{tierney}}, the default), but a user defined (ideally sequential) function can be specified.}
 }
 \value{
 An S4 class of type capa.class.

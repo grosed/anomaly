@@ -8,7 +8,8 @@
 #' @param x An n x m real matrix representing n observations of m variates.
 #' @param alpha A positive integer > 0. This value is used to stabilise the higher criticism based test statistic used by PASS leading to a better finite sample familywise error rate. 
 #' Anomalies affecting fewer than alpha components will however in all likelihood escape detection.
-#' @param lambda A positive real value setting the threshold value for the familywise Type 1 error. The default value is 15.0. 
+#' @param lambda A positive real value setting the threshold value for the familywise Type 1 error. The default value
+#' is \eqn{(1.1 {\rm log}(n \times Lmax) +2 {\rm log}({\rm log}(m))) / \sqrt{{\rm log}({\rm log}(m))}}. 
 #' @param Lmax A positive integer (\code{Lmax} > 0) corresponding to the maximum segment length. The default value is 10.
 #' @param Lmin A positive integer (\code{Lmax} >= \code{Lmin} > 0) corresponding to the minimum segment length. The default value is 1. 
 #' @param transform A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
@@ -26,7 +27,7 @@
 #'
 #' @export
 
-pass<-function(x,alpha=2,lambda=15.0,Lmax=10,Lmin=1,transform=robustscale)
+pass<-function(x,alpha=2,lambda=NULL,Lmax=10,Lmin=1,transform=robustscale)
 {
     # check the data
     x<-as.array(as.matrix(x))
@@ -45,7 +46,7 @@ pass<-function(x,alpha=2,lambda=15.0,Lmax=10,Lmin=1,transform=robustscale)
     if(!is_numeric(x))
     {
         stop("x must be of type numeric")
-    }
+    }        
     # transform data
     Xi<-transform(x)
     # check dimensions,types and values
@@ -59,11 +60,17 @@ pass<-function(x,alpha=2,lambda=15.0,Lmax=10,Lmin=1,transform=robustscale)
     }
     if(!is_positive(Lmax-Lmin))
     {
-        stop("Lmin must be greater than Lmin")
+        stop("Lmax must be greater than Lmin")
     }
     if(!(is_whole_number(alpha) && is_non_negative(alpha)))
     {
         stop("alpha must be a non-negative whole number")
+    }
+    if(is.null(lambda))
+    {
+        n_rows<-dim(x)[1]
+        n_cols<-dim(x)[2]
+        lambda<-(3.0*log(n_rows*Lmax) + 2*log(log(n_cols)))/sqrt(2*log(log(n_cols)))
     }
     if(!(is_numeric(lambda) && is_positive(lambda)))
     {

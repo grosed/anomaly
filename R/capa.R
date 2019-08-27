@@ -397,6 +397,10 @@ setMethod("summary",signature=list("capa.class"),function(object,epoch)
     {
         epoch=dim(object@data)[1]
     }
+    if(epoch > dim(object@data)[1])
+    {
+       stop("epoch can not be greater than the length of the data") 
+    }
     cat("CAPA detecting changes in ",sep="")
     if(object@type == "meanvar")
     {
@@ -407,14 +411,7 @@ setMethod("summary",signature=list("capa.class"),function(object,epoch)
         cat("mean.","\n",sep="") 
     }
     cat("observations = ",dim(object@data)[1],sep="")
-    if(epoch != dim(object@data)[1])
-    {
-	cat(" : Epoch = ",epoch,"\n",sep="")
-    }
-    else
-    {
-        cat("\n",sep="")
-    }
+    cat(" : Epoch = ",epoch,"\n",sep="")
     cat("variates = ",dim(object@data)[2],"\n",sep="")	
     p_anoms<-point_anomalies(object,epoch)
     c_anoms<-collective_anomalies(object,epoch)
@@ -610,31 +607,24 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     {
         marshaller = marshall_MeanAnomaly
     }
-    else if(type == "poisson")
+    else if(type != "meanvar")
     {
-        marshaller = marshall_PoissonAnomaly
+        stop("type can be either mean or meanvar")
     }
-    else
-    {
-        # error - invalid type 
-    }
+
     if(max_seg_len == Inf)
     {
         max_seg_len = length(x_dash)
     }
     if(is.null(beta))
     {
-        if(type == "mean" || type == "poisson")
+        if(type == "mean")
         {
             beta = 3*log(length(x_dash))
         }
-        else if(type == "meanvar")
+        else 
         {
             beta = 4*log(length(x_dash))
-        }
-        else
-        {
-            # error - invalid type
         }
     }
     if(length(beta) == 1)

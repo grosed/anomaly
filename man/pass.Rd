@@ -4,7 +4,7 @@
 \alias{pass}
 \title{Detection of multivariate anomalous segments using PASS.}
 \usage{
-pass(x, alpha = 2, lambda = 15, Lmax = 10, Lmin = 1,
+pass(x, alpha = 2, lambda = NULL, Lmax = 10, Lmin = 1,
   transform = robustscale)
 }
 \arguments{
@@ -13,7 +13,8 @@ pass(x, alpha = 2, lambda = 15, Lmax = 10, Lmin = 1,
 \item{alpha}{A positive integer > 0. This value is used to stabilise the higher criticism based test statistic used by PASS leading to a better finite sample familywise error rate. 
 Anomalies affecting fewer than alpha components will however in all likelihood escape detection.}
 
-\item{lambda}{A positive real value setting the threshold value for the familywise Type 1 error. The default value is 15.0.}
+\item{lambda}{A positive real value setting the threshold value for the familywise Type 1 error. The default value
+is \eqn{(1.1 {\rm log}(n \times Lmax) +2 {\rm log}({\rm log}(m))) / \sqrt{{\rm log}({\rm log}(m))}}.}
 
 \item{Lmax}{A positive integer (\code{Lmax} > 0) corresponding to the maximum segment length. The default value is 10.}
 
@@ -22,7 +23,7 @@ Anomalies affecting fewer than alpha components will however in all likelihood e
 \item{transform}{A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.}
 }
 \value{
-An S4 object of type \code{.pass.class} containing the data \code{Xi}, procedure parameter values and the results.
+An S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
 }
 \description{
 Implements the PASS (Proportion Adaptive Segment Selection) procedure of Jeng et al. (2012). PASS uses a higher criticism statistic to pool the information about the 

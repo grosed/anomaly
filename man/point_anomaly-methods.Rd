@@ -41,7 +41,7 @@ For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns 
 strength of the anomaly for observations up to and including the value of \code{epoch}.
 
 For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, and the same results as
-\code{\link{scapa.uv}} when the data is multiivariate.
+\code{\link{scapa.uv}} when the data is multivariate.
 }
 \seealso{
 \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}.
