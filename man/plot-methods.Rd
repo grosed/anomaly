@@ -22,7 +22,7 @@
 \S4method{plot}{pass.class,ANY}(x, subset, variate_names, tile_plot)
 }
 \arguments{
-\item{x}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}} or \code{\link{scapa.mv}}.}
+\item{x}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}.}
 
 \item{xlab}{Character string containing label for the x-axis.}
 
@@ -50,5 +50,5 @@ The plot can either be a line plot or a tile plot, the type produced depending o
 data associated with the S4 object.
 }
 \seealso{
-\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}},\code{\link{pass}}.
+\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}.
 }

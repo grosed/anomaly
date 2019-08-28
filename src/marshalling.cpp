@@ -13,89 +13,14 @@
 
 #include "MeanVarAnomaly.h"
 #include "MeanAnomaly.h"
-#include "PoissonAnomaly.h" 
 #include "sequential_quantiles.h"
 #include "recursive_anomalies.h"
 #include "recursive_mvanomalies.h"
 #include "MultivariateCOD.h"
 #include "MeanAnomalyMV.h"
 #include "pass.h"
-#include "bard.h"
 
 
-//[[Rcpp::export]]
-std::list<std::list<std::vector<double> > > marshall_bard(const std::list<std::vector<double> >& data,
-								    const double& p_N,
-								    const double& p_A,
-								    const double& k_N,
-								    const double& k_A,
-								    const double& pi_N,
-								    const double& alpha,
-								    const double& paffected,
-								    const double& lower,
-								    const double& upper,
-								    const double& h,
-								    const int& seed)
-{
-  base_generator_type generator(seed);
-  boost::uniform_real<> uni_dist(0,1);
-  boost::variate_generator<base_generator_type&, boost::uniform_real<> > uni(generator, uni_dist);
-  auto pi_A = 1.0 - pi_N;
-  int t = 0;
-  int N = data.front().size();
-  // helper for creating the equivalent tof a python arange
-  auto arange = [](const double& a,const double& b,const double& s)
-    {
-      auto n = int(0.5 + (b-a)/s);
-      std::vector<double> res(n);
-      double val = a;
-      for(int i = 0; i < n; i++)
-	{
-	  res[i] = val;
-	  val += s;
-	}
-      return res;
-    };
-  auto museq = arange(lower,upper,h);
-  auto SY = std::list<std::vector<double> >(1,std::vector<double>(N,0));
-  auto SYY = SY;
-  std::list<std::tuple<double,double,int> > R;
-
-  
-  // initialise state
-  auto S = std::make_tuple(R,t,SY,SYY,museq,paffected,pi_N,pi_A,p_N,p_A,k_N,k_A,N);
-  // run sequential bard accumulating the pruned R values from each iteration
-  std::list<std::list<std::vector<double> > > Rs;
-
-  int count = 0;
-  for(auto& y : data)
-    {
-      try
-	{
-	  Rcpp::checkUserInterrupt();
-	  S = bard(std::move(S),y);
-	  // S = prune_bard_result(std::move(S),alpha,uni);
-	  R = std::get<0>(S);
-	  // convert tuples to vectors for marshalling through Rcpp
-	  std::list<std::vector<double> > vR;
-	  for(auto& r : R)
-	    {
-	      std::vector<double> vr(3);
-	      vr[0] = std::get<0>(r);
-	      vr[1] = std::get<1>(r);
-	      vr[2] = std::get<2>(r);
-	      vR.push_back(vr);
-	    }
-	  Rs.push_back(vR);
-	  count++;
-	}
-      catch(...)
-	{
-	  throw(std::exception());
-	}
-    }
-  return Rs;
-}
 
 
 //[[Rcpp::export]]
@@ -122,18 +47,6 @@ std::vector<int> marshall_MeanAnomaly(SEXP a,
 				      SEXP g)
 {
   return MeanAnomaly(a,b,c,d,e,f,g);
-}
-
-//[[Rcpp::export]]
-std::vector<int> marshall_PoissonAnomaly(SEXP a,
-				      SEXP b,
-				      SEXP c,
-				      SEXP d,
-				      SEXP e,
-				      SEXP f,
-				      SEXP g)
-{
-  return PoissonAnomaly(a,b,c,d,e,f,g);
 }
 
 

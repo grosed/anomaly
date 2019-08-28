@@ -60,8 +60,8 @@ to_array<-function(X)
 #'
 #' @name point_anomalies
 #'
-#' @description Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
-#' \code{\link{scapa.uv}}, and \code{\link{scapa.mv}}. 
+#' @description Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.
+#' 
 #'
 #' For an object produced by \code{\link{capa.uv}}, the output is a data frame  with columns containing the position and
 #' strength of the anomaly. 
@@ -69,26 +69,21 @@ to_array<-function(X)
 #' For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate, and
 #' strength of the anomaly. 
 #'
-#' For an object produced by \code{\link{scapa.uv}}, the output is a data frame  with columns containing the position and
-#' strength of the anomaly for observations up to and including the value of \code{epoch}. 
-#'
-#' For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate and
-#' strength of the anomaly for observations up to and including the value of \code{epoch}.
 #' 
-#' For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, and the same results as
-#' \code{\link{scapa.uv}} when the data is multivariate.
+#' For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{capa.uv}} when the data is univariate, and the same results as
+#' \code{\link{capa.uv}} when the data is multivariate.
 #'
 #' 
 #' @docType methods
 #'
 #' @rdname point_anomaly-methods
 #'
-#' @seealso \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}.
+#' @seealso \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}.
 #'
 if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,...) {standardGeneric("point_anomalies")})}
 
 #' @name point_anomalies
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.
 #' 
 #' @return A data frame. 
 #'
@@ -189,24 +184,20 @@ merge_collective_anomalies<-function(object,epoch)
 #' @name collective_anomalies
 #'
 #' @description Creates a data frame containing collective anomaly locations, lags and changes in mean and variance as detected by
-#' \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.uv}}, and \code{\link{capa}}. 
+#' \code{\link{capa.uv}}, \code{\link{capa.mv}}, and \code{\link{capa}}. 
 #'
 #' For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
 #' due to the anomaly. When \code{type="meanvar"}, the change in variance due to the anomaly is also returned in an additional column.
 #' 
-#' For an object produced by \code{\link{scapa.uv}} the results are the same as for those produced by \code{\link{capa.uv}}. However, the results are calculated using only data up to
-#' and including the value of \code{epoch}.
 #'
 #' For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the variates 
 #' affected by the anomaly, as well as their the start and end lags. When \code{type="mean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
 #' change in variance are included. If \code{merged=FALSE} (the default), then all the collective anomalies are processed individually even if they are common across multiple variates.
 #' If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 #'
-#' For an object produced by \code{\link{scapa.mv}} the results are the same as for those produced by \code{\link{capa.mv}}. However, the results are only calculated using only data up to
-#' and including the value of \code{epoch}.
 #'
-#' For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, or the same results as
-#' \code{\link{scapa.mv}} when the data is multivariate.
+#' For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{capa.uv}} when the data is univariate, or the same results as
+#' \code{\link{capa.mv}} when the data is multivariate.
 #'
 #' 
 #' @docType methods
@@ -216,7 +207,7 @@ merge_collective_anomalies<-function(object,epoch)
 if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",function(object,...) {standardGeneric("collective_anomalies")})}
 
 #' @name collective_anomalies
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}.
 #' @param merged Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
 #' of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.  
 #' 
@@ -226,7 +217,7 @@ if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",functi
 #'
 #' @aliases collective_anomalies,capa.class-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}}. 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}}. 
 #'
 #' @export
 setMethod("collective_anomalies",signature=list("capa.class"),
@@ -363,7 +354,7 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #'
 #' @name summary
 #'
-#' @description Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}
+#' @description Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
 #' and \code{\link{pass}}.  The output displayed depends on the type of S4 object passed to summary. For all types, the output indicates whether the data is univariate or
 #' multivariate, the number of observations in the data, and the type of change being detected.
 #'
@@ -372,18 +363,18 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #' produced by \code{\link{point_anomalies}} and \code{\link{collective_anomalies}}.
 #' 
 #' 
-#' For an object produced by \code{\link{capa}}, \code{\link{scapa.uv}} or \code{\link{scapa.mv}} the output of \code{summary} is the same as for an object produced by \code{\link{capa.uv}}
-#' or \code{\link{capa.mv}} except that the the results are only processed up to and including the value of \code{epoch}. 
+#' For an object produced by \code{\link{capa}} is the same as for an object produced by \code{\link{capa.uv}}
+#' or \code{\link{capa.mv}}. 
 #'
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}} or \code{\link{pass}}.
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.
 #' 
 #' @rdname summary-methods
 #'
 #' @aliases summary,capa.class-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}},\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}. 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}. 
 #'
 #' @export
 setMethod("summary",signature=list("capa.class"),function(object)
@@ -505,18 +496,18 @@ setMethod("summary",signature=list("capa.mv.class"),function(object)
 #'
 #' @name show
 #'
-#' @description Displays S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}} and
+#' @description Displays S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and
 #' \code{\link{pass}}. The information produced is the same as that provided by the summary method. The method is used by the S4 system for automatic printing.
 #'
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}} or \code{\link{pass}}.
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.
 #' 
 #' @rdname show-methods
 #'
 #' @aliases show,capa.class-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}},\code{\link{pass}}. 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}. 
 #'
 #' @export
 #'
@@ -1213,7 +1204,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @docType methods
 #'
-#' @param x An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}} or \code{\link{scapa.mv}}.
+#' @param x An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}.
 #' @param subset A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.
 #' @param variate_names Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 #' as it makes the visualisation easier to interpret. Default value is TRUE.
@@ -1226,7 +1217,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @aliases plot,capa.class,ANY-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}},\code{\link{pass}}.
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}.
 #'
 #' @export 
 setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,tile_plot)

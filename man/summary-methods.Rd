@@ -21,12 +21,12 @@
 \S4method{summary}{pass.class}(object)
 }
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}} or \code{\link{pass}}.}
+\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.}
 
 \item{...}{Other parameters to be passed to summary methods.}
 }
 \description{
-Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}
+Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
 and \code{\link{pass}}.  The output displayed depends on the type of S4 object passed to summary. For all types, the output indicates whether the data is univariate or
 multivariate, the number of observations in the data, and the type of change being detected.
 
@@ -35,9 +35,9 @@ For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{
 produced by \code{\link{point_anomalies}} and \code{\link{collective_anomalies}}.
 
 
-For an object produced by \code{\link{capa}}, \code{\link{scapa.uv}} or \code{\link{scapa.mv}} the output of \code{summary} is the same as for an object produced by \code{\link{capa.uv}}
-or \code{\link{capa.mv}} except that the the results are only processed up to and including the value of \code{epoch}.
+For an object produced by \code{\link{capa}} is the same as for an object produced by \code{\link{capa.uv}}
+or \code{\link{capa.mv}}.
 }
 \seealso{
-\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}},\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}.
+\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}.
 }
