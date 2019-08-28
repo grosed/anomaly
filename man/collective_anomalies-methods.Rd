@@ -8,8 +8,7 @@
 \alias{collective_anomalies,capa.mv.class-method}
 \title{Collective anomaly location, lags, and mean/variance changes.}
 \usage{
-\S4method{collective_anomalies}{capa.class}(object,
-  epoch = dim(object@data)[1], merged = FALSE)
+\S4method{collective_anomalies}{capa.class}(object, merged = FALSE)
 
 \S4method{collective_anomalies}{capa.uv.class}(object)
 
@@ -17,9 +16,6 @@
 }
 \arguments{
 \item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.}
-
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-up to and including a given epoch. The default value for \code{epoch} is the length of the data series.}
 
 \item{merged}{Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
 of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.}

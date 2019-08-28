@@ -89,9 +89,7 @@ if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,
 
 #' @name point_anomalies
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-#' up to and including a given epoch. The default value for \code{epoch} is the length of the data series.
-#'
+#' 
 #' @return A data frame. 
 #'
 #' @rdname point_anomaly-methods
@@ -100,8 +98,9 @@ if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,
 #'
 #' @export
 setMethod("point_anomalies",signature=list("capa.class"),
-          function(object,epoch=dim(object@data)[1])
+          function(object)
           {
+              epoch=dim(object@data)[1]
               # get the anomalies
               anoms<-anomalies(object,epoch)
               # transform data
@@ -169,7 +168,7 @@ merge_collective_anomalies<-function(object,epoch)
     {
         stop("merge=TRUE option only available when type=mean")
     }
-   canoms<-collective_anomalies(object,epoch,merged=FALSE)
+   canoms<-collective_anomalies(object,merged=FALSE)
    # get the location (start,end) for each collective anomaly
    locations<-unique(canoms[,1:2])
    # get the sum of the test statistic over the variates affected by each collective anomaly
@@ -218,8 +217,6 @@ if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",functi
 
 #' @name collective_anomalies
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-#' up to and including a given epoch. The default value for \code{epoch} is the length of the data series.
 #' @param merged Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
 #' of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.  
 #' 
@@ -233,8 +230,9 @@ if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",functi
 #'
 #' @export
 setMethod("collective_anomalies",signature=list("capa.class"),
-          function(object,epoch=dim(object@data)[1],merged=FALSE)
+          function(object,merged=FALSE)
           {
+              epoch=dim(object@data)[1] 
               if(merged)
               {
                   return(merge_collective_anomalies(object,epoch))
@@ -381,9 +379,6 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #'
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}} or \code{\link{pass}}.
 #' 
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-#' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
-#'
 #' @rdname summary-methods
 #'
 #' @aliases summary,capa.class-method
@@ -391,16 +386,9 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}},\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}. 
 #'
 #' @export
-setMethod("summary",signature=list("capa.class"),function(object,epoch)
+setMethod("summary",signature=list("capa.class"),function(object)
 {
-    if(missing(epoch))
-    {
-        epoch=dim(object@data)[1]
-    }
-    if(epoch > dim(object@data)[1])
-    {
-       stop("epoch can not be greater than the length of the data") 
-    }
+    epoch=dim(object@data)[1]
     cat("CAPA detecting changes in ",sep="")
     if(object@type == "meanvar")
     {
@@ -411,10 +399,10 @@ setMethod("summary",signature=list("capa.class"),function(object,epoch)
         cat("mean.","\n",sep="") 
     }
     cat("observations = ",dim(object@data)[1],sep="")
-    cat(" : Epoch = ",epoch,"\n",sep="")
+    cat("\n",sep="")
     cat("variates = ",dim(object@data)[2],"\n",sep="")	
-    p_anoms<-point_anomalies(object,epoch)
-    c_anoms<-collective_anomalies(object,epoch)
+    p_anoms<-point_anomalies(object)
+    c_anoms<-collective_anomalies(object)
     if(!Reduce("|",is.na(p_anoms)))
     {
         cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
@@ -805,6 +793,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' plot(res,tile_plot=FALSE,subset=1:20)
 #'
 #' @export
+#'
 capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=NULL,max_lag=0,transform=robustscale)
 {
     # make sure the callable transform object is of type function
@@ -1045,61 +1034,6 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 }
 
 
-#' Detection of univariate anomalous segments using SCAPA.
-#'
-#' @name scapa.uv 
-#'
-#' @description An offline as-if-online implementation of SCAPA (Sequential Collective And Point Anomalies) by Bardwell et al. (2019) for online collective and point anomaly detection. This version of \code{capa.uv} has a default value
-#' \code{transform=tierney} which uses sequential estimates for transforming the data prior to analysis. It also returns an S4 class which allows the results to be postprocessed
-#' at different time points as if the data had been analysed in an online fashion up to that point.
-#' 
-#' @param x A numeric vector containing the data which is to be inspected.
-#' @param beta A numeric constant indicating the penalty for adding an additional epidemic changepoint. It defaults to a BIC style penalty if no argument is provided.
-#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
-#' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
-#' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
-#' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
-#' @param transform A function used to transform the data prior to analysis by \code{\link{scapa.uv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
-#' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{scapa.uv}}. The package includes a method which can be used for
-#' the transform, (see \code{\link{tierney}}, the default), but a user defined (ideally sequential) function can be specified.  
-#'
-#' @return An S4 class of type capa.class. 
-#'
-#' @references \insertRef{2018arXiv180601947F}{anomaly}
-#' 
-#' @examples
-#' library(anomaly)
-#' # Simulated data example
-#' set.seed(2018)
-#' # Generate data typically following a normal distribution with mean 0 and variance 1.
-#' # Then introduce 3 anomaly windows and 4 point outliers.
-#' x = rnorm(5000)
-#' x[401:500] = rnorm(100,4,1)
-#' x[1601:1800] = rnorm(200,0,0.01)
-#' x[3201:3500] = rnorm(300,0,10)
-#' x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
-#' # add some initial data to burnin the sequential estimates
-#' x<-c(rnorm(100,0,1),x)
-#' # use magrittr to pipe the data to the transform
-#' library(magrittr)
-#' trans<-.%>%tierney(1000)
-#' res<-scapa.uv(x,transform=trans)
-#' res # print a summary of the results
-#' plot(res) # visualise the results
-#' # visualise the results up to t=1500
-#' plot(res,epoch=1500) 
-#' 
-#' 
-#' @export
-scapa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=tierney)
-{
-    # data needs to be in the form of an array
-    x<-to_array(x)
-    res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,transform)
-    return(res)
-}
-
 
 #'  Detection of multivariate anomalous segments and points using MVCAPA.
 #'
@@ -1130,7 +1064,7 @@ scapa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max
 #' @examples
 #' library(anomaly)
 #' data(simulated)
-#' res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
+#' res<-capa.mv(sim.data,type="mean",min_seg_len=2,max_lag=5)
 #' collective_anomalies(res)
 #'
 #' @export
@@ -1156,57 +1090,6 @@ capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
            )
 }
 
-#' Online detection of multivariate anomalous segments and points using SMVCAPA.
-#' 
-#' @name scapa.mv 
-#'
-#' @description This function implements SMVCAPA from Fisch et al. (2019) in an as-if-online way. It detects potentially lagged collective anomalies as well as point anomalies in streaming data. 
-#' The runtime scales linearly (up to logarithmic factors) in \code{ncol(x)}, \code{max_lag}, and \code{max_seg_len}. This version of \code{capa.uv} has a default value
-#' \code{transform=tierney} which uses sequential estimates for transforming the data prior to analysis. It also returns an S4 class which allows the results to be postprocessed
-#' as if the data had been analysed in an online fashion.
-#' 
-#' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
-#' @param beta A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean" and maxlag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley and Fearnhead (2019). If type = "mean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
-#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
-#' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
-#' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
-#' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
-#' @param max_lag A non-negative integer indicating the maximum start or end lag. Default value is 0.
-#' @param transform A function used to transform the data prior to analysis by \code{\link{scapa.mv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data. Importantly, the
-#' untransformed data remains available for post processing results obtained using \code{\link{scapa.mv}}. The package includes a method which can be used for
-#' the transform, (see \code{\link{tierney}}, the default), but a user defined (ideally sequential) function can be specified.  
-#'
-#' @return An S4 class of type capa.class. 
-#' 
-#' @references \insertRef{2019MVCAPA}{anomaly}
-#'
-#' @examples
-#' library(anomaly)
-#' data(simulated)
-#' sim.data<-rbind(array(rnorm(1000*200),c(1000,200)),sim.data)
-#' res<-scapa.mv(sim.data,type="mean",min_seg_len=2,max_lag=5)
-#' # process results
-#' plot(res)
-#' collective_anomalies(res)
-#' # process results up to time t = 1200
-#' plot(res,epoch=1200)
-#' collective_anomalies(res,epoch=1200)
-#'
-#' @export
-scapa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=tierney)
-{
-    # data needs to be in the form of an array
-    x<-to_array(x)
-    res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,transform)
-    return(res)
-}
-
-
-
-
-
 
 capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@data),variate_names=TRUE)
 {
@@ -1224,7 +1107,7 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
     out<-out+aes(x=x,y=value)
     out<-out+geom_point()
     # highlight the collective anomalies
-    c_anoms<-collective_anomalies(object,epoch)
+    c_anoms<-collective_anomalies(object)
     c_anoms<-c_anoms[c_anoms$variate %in% subset,]
     if(!any(is.na(c_anoms)) & nrow(c_anoms) > 0)
     {
@@ -1240,7 +1123,7 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
     }
     # out<-out+facet_grid(variable~.,scales="free_y")
     # highlight the point anomalies
-    p_anoms<-point_anomalies(object,epoch)
+    p_anoms<-point_anomalies(object)
     p_anoms<-p_anoms[p_anoms$variate %in% subset,]
     if(!any(is.na(p_anoms)) & nrow(p_anoms) > 0)
         {
@@ -1287,7 +1170,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
     out<-ggplot(molten.data, aes(n,variable))
     out<-out+geom_tile(aes(fill=value))
     # get any collective anomalies
-    c_anoms<-collective_anomalies(object,epoch=epoch)
+    c_anoms<-collective_anomalies(object)
     c_anoms<-c_anoms[c_anoms$variate %in% subset,]
     c_anoms<-unique(c_anoms[,1:2])
     if(!any(is.na(c_anoms)) & nrow(c_anoms) > 0)
@@ -1334,8 +1217,6 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #' @param subset A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.
 #' @param variate_names Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 #' as it makes the visualisation easier to interpret. Default value is TRUE.
-#' @param epoch Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-#' up to and including a given epoch. The default value for \code{epoch}is the length of the data series.
 #' @param tile_plot Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
 #' This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.
 #' 
@@ -1348,7 +1229,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{scapa.uv}},\code{\link{scapa.mv}},\code{\link{pass}}.
 #'
 #' @export 
-setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,epoch,tile_plot)
+setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,tile_plot)
 {
     if(missing(subset))
     {
@@ -1358,10 +1239,7 @@ setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,ep
     {
         variate_names<-NULL
     }
-    if(missing(epoch))
-    {
-        epoch<-nrow(x@data)
-    }
+    epoch<-nrow(x@data)
     if(missing(tile_plot))
     {
         tile_plot<-NULL

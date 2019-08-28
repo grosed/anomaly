@@ -13,7 +13,7 @@
 \usage{
 \S4method{plot}{anomaly_series,ANY}(x, xlab = "", ylab = "", ...)
 
-\S4method{plot}{capa.class,ANY}(x, subset, variate_names, epoch, tile_plot)
+\S4method{plot}{capa.class,ANY}(x, subset, variate_names, tile_plot)
 
 \S4method{plot}{capa.uv.class,ANY}(x, variate_name)
 
@@ -34,9 +34,6 @@
 
 \item{variate_names}{Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 as it makes the visualisation easier to interpret. Default value is TRUE.}
-
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-up to and including a given epoch. The default value for \code{epoch}is the length of the data series.}
 
 \item{tile_plot}{Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
 This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.}

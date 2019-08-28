@@ -12,7 +12,7 @@
 \usage{
 \S4method{summary}{anomaly_series}(object)
 
-\S4method{summary}{capa.class}(object, epoch)
+\S4method{summary}{capa.class}(object)
 
 \S4method{summary}{capa.uv.class}(object)
 
@@ -22,9 +22,6 @@
 }
 \arguments{
 \item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}} or \code{\link{pass}}.}
-
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}} and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-up to and including a given epoch. The default value for \code{epoch}is the length of the data series.}
 
 \item{...}{Other parameters to be passed to summary methods.}
 }

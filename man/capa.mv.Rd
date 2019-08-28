@@ -41,7 +41,7 @@ at best in \code{nrow(x)}. If \code{max_seg_len} is set the runtime scales like 
 \examples{
 library(anomaly)
 data(simulated)
-res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
+res<-capa.mv(sim.data,type="mean",min_seg_len=2,max_lag=5)
 collective_anomalies(res)
 
 }

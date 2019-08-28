@@ -8,8 +8,7 @@
 \alias{point_anomalies,capa.mv.class-method}
 \title{Point anomaly location and strength.}
 \usage{
-\S4method{point_anomalies}{capa.class}(object,
-  epoch = dim(object@data)[1])
+\S4method{point_anomalies}{capa.class}(object)
 
 \S4method{point_anomalies}{capa.uv.class}(object)
 
@@ -17,9 +16,6 @@
 }
 \arguments{
 \item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, or \code{\link{scapa.mv}}.}
-
-\item{epoch}{Numerical value. Since \code{\link{capa}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}} are sequential algorithms, it is possible to process a subset of the data
-up to and including a given epoch. The default value for \code{epoch} is the length of the data series.}
 }
 \value{
 A data frame.
