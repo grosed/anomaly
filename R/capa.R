@@ -769,20 +769,21 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.
-#' @param transform A function used to center the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
+#' @param transform A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
 #' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 #' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}. 
 #' 
 #' @return An S4 class of type capa.class. 
 #'
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
-#' 
+#'
+#'
 #' @examples
 #' library(anomaly)
-#' data(acgh)
-#' res<-capa(acgh,type="mean",max_lag=5,transform=ac_corrected)
-#' plot(res,tile_plot=FALSE,subset=1:20)
-#'
+#' data(simulated)
+#' res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
+#' collective_anomalies(res)
+#' 
 #' @export
 #'
 capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=NULL,max_lag=0,transform=robustscale)
@@ -962,8 +963,8 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #'
 #' @name capa.uv
 #' 
-#' @description A technique for detecting anomalous segments and points in univeriate time series data based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). CAPA assumes that the data has a certain mean and variance for most
-#' timepoints and detects segments in which the mean and/or variance deviates from the typical mean and variance as collective anomalies. It also detects point
+#' @description A technique for detecting anomalous segments and points in univariate time series data based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). CAPA assumes that the data has a certain mean and variance for most
+#' time points and detects segments in which the mean and/or variance deviates from the typical mean and variance as collective anomalies. It also detects point
 #' outliers and returns a measure of strength for the changes in mean and variance. If the number of anomalous windows scales linearly with the number of
 #' data points, CAPA scales linearly with the number of data points. At
 #' worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, the computational cost of CAPA scales quadratically with the number of data points.

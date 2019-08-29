@@ -25,7 +25,7 @@ variance (the default) or "mean" for collective anomalies characterised by chang
 
 \item{max_lag}{A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.}
 
-\item{transform}{A function used to center the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
+\item{transform}{A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
 Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}.}
 }
@@ -38,9 +38,9 @@ and multivariate data. The specific method that is used for the analysis is dedu
 }
 \examples{
 library(anomaly)
-data(acgh)
-res<-capa(acgh,type="mean",max_lag=5,transform=ac_corrected)
-plot(res,tile_plot=FALSE,subset=1:20)
+data(simulated)
+res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
+collective_anomalies(res)
 
 }
 \references{

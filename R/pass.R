@@ -2,7 +2,7 @@
 #'
 #'
 #' Implements the PASS (Proportion Adaptive Segment Selection) procedure of Jeng et al. (2012). PASS uses a higher criticism statistic to pool the information about the 
-#' presece or absence of a collective anomaly across the components. It uses Circular Binary Segmentation to detect multiple collective anomalies.
+#' presence or absence of a collective anomaly across the components. It uses Circular Binary Segmentation to detect multiple collective anomalies.
 #' 
 #' 
 #' @param x An n x m real matrix representing n observations of m variates.

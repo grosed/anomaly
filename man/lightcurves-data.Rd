@@ -12,7 +12,7 @@ data(Lightcurves)
 \description{
 One of the most successful approaches for the detection of exoplanets is the so called transit method: A star's brightness is continuously measured over time by a
 powerful telescope. If one or multiple planets orbit this star the recorded luminosity of the star will exhibit periodically recurring dips due to the transits of the planet in
-front of the telescope's lense -- an effect comparable to that of an eclipse. Given how small planets are compared to stars the transit signals are known to be very weak. 
+front of the telescope's lens -- an effect comparable to that of an eclipse. Given how small planets are compared to stars the transit signals are known to be very weak. 
 
 The stars included in this file all have known exoplanets with the following periods: 
 

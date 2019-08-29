@@ -13,14 +13,16 @@
 #'
 #' @examples
 #' library(anomaly)
-#' data(simulated)
+#' data(acgh)
+#' # use the first three individuals
+#' X<-acgh[,1:3]
 #' # compare the medians of each variate and transformed variate
-#' head(apply(sim.data,2,median))
-#' head(apply(ac_corrected(sim.data),2,median))
+#' head(apply(X,2,median))
+#' head(apply(ac_corrected(X),2,median))
 #' # compare the variances of each variate and transformed variate
-#' head(apply(sim.data,2,var))
-#' head(apply(ac_corrected(sim.data),2,var))
-#' 
+#' head(apply(X,2,var))
+#' head(apply(ac_corrected(X),2,var))
+#'
 #' @export
 ac_corrected<-function(X)
     {

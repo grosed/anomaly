@@ -29,8 +29,8 @@ the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), b
 An S4 class of type capa.uv.class.
 }
 \description{
-A technique for detecting anomalous segments and points in univeriate time series data based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). CAPA assumes that the data has a certain mean and variance for most
-timepoints and detects segments in which the mean and/or variance deviates from the typical mean and variance as collective anomalies. It also detects point
+A technique for detecting anomalous segments and points in univariate time series data based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). CAPA assumes that the data has a certain mean and variance for most
+time points and detects segments in which the mean and/or variance deviates from the typical mean and variance as collective anomalies. It also detects point
 outliers and returns a measure of strength for the changes in mean and variance. If the number of anomalous windows scales linearly with the number of
 data points, CAPA scales linearly with the number of data points. At
 worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, the computational cost of CAPA scales quadratically with the number of data points.
