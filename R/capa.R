@@ -762,7 +762,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
 #' @param beta A numeric vector of length p, giving the marginal penalties. If p > 1, type ="meanvar" or type = "mean" and max_lag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley and Fearnhead (2018). If p > 1, type = "mean" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2018).
+#' Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
 #' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
