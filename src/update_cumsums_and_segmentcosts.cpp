@@ -12,7 +12,7 @@ void update_cumsums_and_segmentcosts(struct orderedobservationlist *list, int ii
 	
 	int jj = 0, start;
 	struct orderedobservationlist* current = NULL;
-	double *observation, *observationsquared, factor, varianceestimate;
+	double factor, varianceestimate;
 	double *means, *means_squared, *segmentcosts, *new_observation, *new_observationsquared;
 
 	current = list[0].next;

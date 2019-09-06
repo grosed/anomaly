@@ -51,7 +51,7 @@ std::tuple<std::list<std::tuple<int,int> >, std::list<double> > pass(const std::
   std::list<std::tuple<int,int> > J;
   for(int k = Lmin; k < Lmax+1; k++)
     {
-      for(int j = 0; j < T-k; j++)
+      for(unsigned int j = 0; j < T-k; j++)
 	{
 	  auto p = std::make_tuple(j,j+k);
 	  J.push_back(p);
@@ -65,7 +65,7 @@ std::tuple<std::list<std::tuple<int,int> >, std::list<double> > pass(const std::
   auto sqrtN = std::sqrt(N);
   double dN = (double)N;
   std::vector<int> index(N);
-  for(int i = 0; i < N; i++)
+  for(unsigned int i = 0; i < N; i++)
     {
       index[i]=i+1;
     }

@@ -11,7 +11,7 @@ void update_cumsums_and_segmentcosts_mean(struct orderedobservationlist_mean *li
 	
 	int jj = 0, start;
 	struct orderedobservationlist_mean* current = NULL;
-	double *observation, factor;
+	double factor;
 	double *means, *segmentcosts, *new_observation;
 
 	current = list[0].next;

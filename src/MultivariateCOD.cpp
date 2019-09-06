@@ -29,7 +29,7 @@ std::vector<int> MeanVarAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminl
 	PROTECT(Rmaxlength) ;
 	PROTECT(Ronline) ;
 	
-  	int n = 0, p = 0, l = 0, minlength = 0, ii = 0, jj = 0, status = 0, maxlength = 0, online = 0;
+  	int n = 0, p = 0, l = 0, minlength = 0, ii = 0, status = 0, maxlength = 0, online = 0;
   	double betaanomaly = 0.0;
   	double* x = NULL;
   	double* betachange_DUMMY = NULL;
