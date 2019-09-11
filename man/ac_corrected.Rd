@@ -20,9 +20,10 @@ absolute deviation. The scaling \eqn{k_{i} = \surd{\left( \frac{1+\phi_{i}}{1-\p
 }
 \examples{
 library(anomaly)
-data(acgh)
-# use the first three individuals
-X<-acgh[,1:3]
+# generate some multivariate data
+set.seed(0)
+X<-simulate(n=1000,p=4,mu=10,locations=c(200,400,600),
+            duration=100,proportions=c(0.25,0.5,0.75))
 # compare the medians of each variate and transformed variate
 head(apply(X,2,median))
 head(apply(ac_corrected(X),2,median))

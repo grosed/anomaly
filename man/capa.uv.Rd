@@ -37,19 +37,16 @@ worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, t
 }
 \examples{
 library(anomaly)
-# Simulated data example
-set.seed(2018)
-# Generate data typically following a normal distribution with mean 0 and variance 1.
-# Then introduce 3 anomaly windows and 4 point outliers.
-x = rnorm(5000)
-x[401:500] = rnorm(100,4,1)
-x[1601:1800] = rnorm(200,0,0.01)
-x[3201:3500] = rnorm(300,0,10)
-x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
-res<-capa.uv(x)
-res 
-plot(res) 
-
+data(machinetemp)
+attach(machinetemp)
+res<-capa.uv(temperature,type="mean")
+canoms<-collective_anomalies(res)
+dim(canoms)[1] # over fitted due to autocorrelation
+psi<-0.98 # computed using covRob
+inflated_penalty<-3*(1+psi)/(1-psi)*log(length(temperature))
+res<-capa.uv(temperature,type="mean",beta=inflated_penalty,
+             beta_tilde=inflated_penalty)
+res
 
 }
 \references{

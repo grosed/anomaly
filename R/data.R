@@ -1,25 +1,3 @@
-#' Simulated data.
-#'
-#' @description Simulated data for 200 variates with 500 observations containing three recurrent variants located at [100: 105], [200, 205], and [300:305]
-#' with carrier proportions 0.04, 0.06, and 0.08 respectively.
-#' 
-#' @name sim.data
-#' 
-#' @docType data
-#'
-#' @keywords datasets
-#'
-#' @usage data(simulated)
-#'
-#' @rdname simulated-data
-#'
-#' @format A matrix with 500 rows and 200 columns.
-#'
-#' @references \insertRef{10.1093/biomet/ass059}{anomaly}
-#' 
-NULL
-
-
 
 #' Machine temperature data.
 #'
@@ -42,28 +20,6 @@ NULL
 #' machine temperature.
 #'
 #' @references \insertRef{AHMAD2017134}{anomaly}
-#' 
-NULL
-
-#' Microarray data.
-#' @description Microarray data for 41 individuals with a bladder tumour. The data consists of a log-likelihood-ratio statistic testing for the presence of a copy 
-#' number variation evaluated along each individual's genome. The data was obtained from the \pkg{ecp} package (James and Mattesson, 2014) and standardised using
-#' robust measures of mean and variance. 
-#'
-#' @name acgh
-#' 
-#' @docType data
-#'
-#' @keywords datasets
-#'
-#' @usage data(acgh)
-#'
-#' @rdname acgh-data
-#'
-#' @format A dataframe with 2215 rows and 41 columns. Each column contains data for one individual. 
-#' 
-#'
-#' @references \insertRef{ecp-package}{anomaly}
 #' 
 NULL
 

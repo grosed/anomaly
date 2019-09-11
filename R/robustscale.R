@@ -12,13 +12,16 @@
 #' 
 #' @examples
 #' library(anomaly)
-#' data(simulated)
+#' # generate some multivariate data
+#' set.seed(0)
+#' X<-simulate(n=1000,p=4,mu=10,locations=c(200,400,600),
+#'             duration=100,proportions=c(0.25,0.5,0.75))
 #' # compare the medians of each variate and transformed variate
-#' head(apply(sim.data,2,median))
-#' head(apply(robustscale(sim.data),2,median))
+#' head(apply(X,2,median))
+#' head(apply(robustscale(X),2,median))
 #' # compare the variances of each variate and transformed variate
-#' head(apply(sim.data,2,var))
-#' head(apply(robustscale(sim.data),2,var))
+#' head(apply(X,2,var))
+#' head(apply(robustscale(X),2,var))
 #'
 #' @export
 robustscale<-function(X)

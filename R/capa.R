@@ -780,7 +780,10 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #'
 #' @examples
 #' library(anomaly)
-#' data(simulated)
+#' # generate some multivariate data
+#' set.seed(0)
+#' sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
+#'                    duration=6,proportions=c(0.04,0.06,0.08))
 #' res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
 #' collective_anomalies(res)
 #' 
@@ -987,20 +990,17 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #' 
 #' @examples
 #' library(anomaly)
-#' # Simulated data example
-#' set.seed(2018)
-#' # Generate data typically following a normal distribution with mean 0 and variance 1.
-#' # Then introduce 3 anomaly windows and 4 point outliers.
-#' x = rnorm(5000)
-#' x[401:500] = rnorm(100,4,1)
-#' x[1601:1800] = rnorm(200,0,0.01)
-#' x[3201:3500] = rnorm(300,0,10)
-#' x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
-#' res<-capa.uv(x)
-#' res 
-#' plot(res) 
-#' 
-#' 
+#' data(machinetemp)
+#' attach(machinetemp)
+#' res<-capa.uv(temperature,type="mean")
+#' canoms<-collective_anomalies(res)
+#' dim(canoms)[1] # over fitted due to autocorrelation
+#' psi<-0.98 # computed using covRob
+#' inflated_penalty<-3*(1+psi)/(1-psi)*log(length(temperature))
+#' res<-capa.uv(temperature,type="mean",beta=inflated_penalty,
+#'              beta_tilde=inflated_penalty)
+#' res
+#'
 #' @export
 capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=robustscale)
 {
@@ -1055,7 +1055,10 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #'
 #' @examples
 #' library(anomaly)
-#' data(simulated)
+#' # generate some multivariate data
+#' set.seed(0)
+#' sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
+#'                    duration=6,proportions=c(0.04,0.06,0.08))
 #' res<-capa.mv(sim.data,type="mean",min_seg_len=2,max_lag=5)
 #' collective_anomalies(res)
 #'
@@ -1324,6 +1327,8 @@ setMethod("plot",signature=list("capa.mv.class"),function(x,subset,variate_names
     }
     return(plot(as(x,"capa.class"),subset=subset,variate_names=variate_names,tile_plot=tile_plot))
 })
+
+
 
 
 
