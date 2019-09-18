@@ -51,7 +51,7 @@ std::tuple<double,double,double,double,int> update_quantile( std::tuple<double,d
   int i = std::get<4>(state);
 
   zeta = zeta - ( d/(i+1) ) * ( Z( x , zeta ) - alpha );
-  fn = ( 1.0/(i+1) )*( i*fn + I( zeta , x , 1.0/sqrt(i+1) )/(2.0/sqrt(i+1)) );
+  fn = ( 1.0/(i+1) )*( i*fn + I( zeta , x , 1.0/sqrt((double)(i+1)) )/(2.0/sqrt((double)(i+1))) );
   d = std::min( 1.0/fn , d0*pow( i+1 , a ) );
      
   int counter = i+1;

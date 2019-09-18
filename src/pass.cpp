@@ -86,7 +86,7 @@ std::tuple<std::list<std::tuple<int,int> >, std::list<double> > pass(const std::
       std::vector<double> pJ(N);
       std::transform(cumsums.begin(),cumsums.end(),pJ.begin(),[&a,&b,&norm](auto& C)
     {
-      return 2*cdf(complement(norm, fabs((C[b+1]-C[a])/sqrt(b-a+1))));
+      return 2*cdf(complement(norm, fabs((C[b+1]-C[a])/sqrt((double)(b-a+1)))));
     });
       sort(pJ.begin(),pJ.end());
       std::transform(pJ.begin(),pJ.end(),index.begin(),pJ.begin(),[&sqrtN,&dN](auto& p, auto& i)
