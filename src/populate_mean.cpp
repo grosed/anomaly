@@ -65,7 +65,6 @@ void populate_mean(struct orderedobservationlist_mean **list, double* x , int n,
 		for (jj = 0; jj < p; jj ++)
 		{
 
-			mylist[ii].observation[jj]        = x[n*jj+ii-1];
 			mylist[ii].mean_of_xs[jj]         = 0.0;
 			mylist[ii].best_end_costs[jj]     = 100;
 
@@ -84,6 +83,18 @@ void populate_mean(struct orderedobservationlist_mean **list, double* x , int n,
 
 		mylist[ii].next        = &(mylist[ii+1]);
 		mylist[ii].previous    = &(mylist[ii-1]);
+
+	}
+
+	for (ii = 1; ii < n+1; ii++)
+	{
+
+		for (jj = 0; jj < p; jj ++)
+		{
+
+			mylist[ii].observation[jj]        = x[n*jj+ii-1];
+
+		}
 
 	}
 

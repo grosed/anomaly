@@ -50,7 +50,6 @@ void populate(struct orderedobservationlist **list, double* x , int n, int p, in
 	mylist[0].next       = &(mylist[1]);
 	mylist[n+l+1].previous = &(mylist[n+l]);
 
-
 	for (ii = 1; ii < n+l+1; ii++)
 	{
 
@@ -69,8 +68,6 @@ void populate(struct orderedobservationlist **list, double* x , int n, int p, in
 		for (jj = 0; jj < p; jj ++)
 		{
 
-			mylist[ii].observation[jj]        = x[n*jj+ii-1];
-			mylist[ii].observationsquared[jj] = x[n*jj+ii-1]*x[n*jj+ii-1];
 			mylist[ii].mean_of_xs[jj]         = 0.0;
 			mylist[ii].mean_of_xs_squared[jj] = 0.0;
 			mylist[ii].best_end_costs[jj]     = 100;
@@ -92,6 +89,20 @@ void populate(struct orderedobservationlist **list, double* x , int n, int p, in
 		mylist[ii].previous    = &(mylist[ii-1]);
 
 	}
+
+	for (ii = 1; ii < n+1; ii++)
+	{
+
+		for (jj = 0; jj < p; jj ++)
+		{
+
+			mylist[ii].observation[jj]        = x[n*jj+ii-1];
+			mylist[ii].observationsquared[jj] = x[n*jj+ii-1]*x[n*jj+ii-1];
+
+		}
+
+	}
+
 
 
 }
