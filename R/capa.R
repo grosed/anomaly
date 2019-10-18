@@ -605,15 +605,19 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
             beta = 4*log(length(x_dash))
         }
     }
+    if(length(beta) > 1 & length(beta) != (max_seg_len - min_seg_len + 1))
+    {
+        warning("beta has a number of entries larger than 1 but not equal to max_seg_len - min_seg_len + 1. Only the first one is kept.")
+        beta = beta[1]
+    }
     if(length(beta) == 1)
     {
-        beta = rep(beta,length(x_dash))
+        beta = rep(beta,max_seg_len - min_seg_len + 1)
     }
     if(is.null(beta_tilde))
     {
         beta_tilde = 3*log(length(x_dash))
     }
-    
     # call the underlying method
     S<-marshaller(x_dash,
                   as.integer(length(x_dash)),
@@ -970,10 +974,10 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #' outliers and returns a measure of strength for the changes in mean and variance. If the number of anomalous windows scales linearly with the number of
 #' data points, CAPA scales linearly with the number of data points. At
 #' worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, the computational cost of CAPA scales quadratically with the number of data points.
-#' 
-#' 
+#'  
 #' @param x A numeric vector containing the data which is to be inspected.
-#' @param beta A numeric constant indicating the penalty for adding an additional epidemic changepoint. It defaults to a BIC style penalty if no argument is provided.
+#' @param beta A numeric vector of length 1 or \code{max_seg_len - min_seg_len + 1} indicating the penalty for adding additional collective anomalies of all possible
+#' lengths. If an argument of length 1 is provided the same penalty is used for all collective anomalies irrespective of their length. The default is a BIC style penalty.
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
 #' variance (the default) or "mean" for collective anomalies characterised by changes in mean only. 

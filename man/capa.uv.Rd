@@ -10,7 +10,8 @@ capa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
 \arguments{
 \item{x}{A numeric vector containing the data which is to be inspected.}
 
-\item{beta}{A numeric constant indicating the penalty for adding an additional epidemic changepoint. It defaults to a BIC style penalty if no argument is provided.}
+\item{beta}{A numeric vector of length 1 or \code{max_seg_len - min_seg_len + 1} indicating the penalty for adding additional collective anomalies of all possible
+lengths. If an argument of length 1 is provided the same penalty is used for all collective anomalies irrespective of their length. The default is a BIC style penalty.}
 
 \item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.}
 
