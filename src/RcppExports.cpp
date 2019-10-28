@@ -5,6 +5,28 @@
 
 using namespace Rcpp;
 
+// marshall_bard
+std::list<std::list<std::vector<double> > > marshall_bard(const std::list<std::vector<double> >& data, const double& p_N, const double& p_A, const double& k_N, const double& k_A, const double& pi_N, const double& alpha, const double& paffected, const double& lower, const double& upper, const double& h, const int& seed);
+RcppExport SEXP _anomaly_marshall_bard(SEXP dataSEXP, SEXP p_NSEXP, SEXP p_ASEXP, SEXP k_NSEXP, SEXP k_ASEXP, SEXP pi_NSEXP, SEXP alphaSEXP, SEXP paffectedSEXP, SEXP lowerSEXP, SEXP upperSEXP, SEXP hSEXP, SEXP seedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::list<std::vector<double> >& >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< const double& >::type p_N(p_NSEXP);
+    Rcpp::traits::input_parameter< const double& >::type p_A(p_ASEXP);
+    Rcpp::traits::input_parameter< const double& >::type k_N(k_NSEXP);
+    Rcpp::traits::input_parameter< const double& >::type k_A(k_ASEXP);
+    Rcpp::traits::input_parameter< const double& >::type pi_N(pi_NSEXP);
+    Rcpp::traits::input_parameter< const double& >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type paffected(paffectedSEXP);
+    Rcpp::traits::input_parameter< const double& >::type lower(lowerSEXP);
+    Rcpp::traits::input_parameter< const double& >::type upper(upperSEXP);
+    Rcpp::traits::input_parameter< const double& >::type h(hSEXP);
+    Rcpp::traits::input_parameter< const int& >::type seed(seedSEXP);
+    rcpp_result_gen = Rcpp::wrap(marshall_bard(data, p_N, p_A, k_N, k_A, pi_N, alpha, paffected, lower, upper, h, seed));
+    return rcpp_result_gen;
+END_RCPP
+}
 // marshall_MeanVarAnomaly
 std::vector<int> marshall_MeanVarAnomaly(SEXP a, SEXP b, SEXP c, SEXP d, SEXP e, SEXP f, SEXP g);
 RcppExport SEXP _anomaly_marshall_MeanVarAnomaly(SEXP aSEXP, SEXP bSEXP, SEXP cSEXP, SEXP dSEXP, SEXP eSEXP, SEXP fSEXP, SEXP gSEXP) {
@@ -143,6 +165,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_anomaly_marshall_bard", (DL_FUNC) &_anomaly_marshall_bard, 12},
     {"_anomaly_marshall_MeanVarAnomaly", (DL_FUNC) &_anomaly_marshall_MeanVarAnomaly, 7},
     {"_anomaly_marshall_MeanAnomaly", (DL_FUNC) &_anomaly_marshall_MeanAnomaly, 7},
     {"_anomaly_marshall_recursive_anomalies", (DL_FUNC) &_anomaly_marshall_recursive_anomalies, 3},
