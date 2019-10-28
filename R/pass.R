@@ -5,13 +5,14 @@
 #' presence or absence of a collective anomaly across the components. It uses Circular Binary Segmentation to detect multiple collective anomalies.
 #' 
 #' 
-#' @param x An n x m real matrix representing n observations of m variates.
+#' @param x An n x p real matrix representing n observations of p variates.
 #' @param alpha A positive integer > 0. This value is used to stabilise the higher criticism based test statistic used by PASS leading to a better finite sample familywise error rate. 
 #' Anomalies affecting fewer than alpha components will however in all likelihood escape detection.
 #' @param lambda A positive real value setting the threshold value for the familywise Type 1 error. The default value
-#' is \eqn{(1.1 {\rm log}(n \times Lmax) +2 {\rm log}({\rm log}(m))) / \sqrt{{\rm log}({\rm log}(m))}}. 
-#' @param Lmax A positive integer (\code{Lmax} > 0) corresponding to the maximum segment length. The default value is 10.
-#' @param Lmin A positive integer (\code{Lmax} >= \code{Lmin} > 0) corresponding to the minimum segment length. The default value is 1. 
+#' is \eqn{(1.1 {\rm log}(n \times max\_seg\_len) +2 {\rm log}({\rm log}(p))) / \sqrt{{\rm log}({\rm log}(p))}}. 
+#' @param max_seg_len A positive integer (\code{max_seg_len} > 0) corresponding to the maximum segment length. This parameter corresponds to Lmax in Jeng et al. (2012). The default value is 10. 
+#' @param min_seg_len A positive integer (\code{max_seg_len} >= \code{min_seg_len} > 0) corresponding to the minimum segment length. This parameter corresponds to Lmin in Jeng et al. (2012).
+#' The default value is 1. 
 #' @param transform A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
 #'
 #' @return An S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
@@ -30,8 +31,11 @@
 #'
 #' @export
 
-pass<-function(x,alpha=2,lambda=NULL,Lmax=10,Lmin=1,transform=robustscale)
+pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robustscale)
 {
+    # reflect renamed variable
+    Lmax = max_seg_len
+    Lmin = min_seg_len
     # check the data
     x<-as.array(as.matrix(x))
     if(!is_array(x))
