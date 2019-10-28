@@ -4,21 +4,22 @@
 \alias{pass}
 \title{Detection of multivariate anomalous segments using PASS.}
 \usage{
-pass(x, alpha = 2, lambda = NULL, Lmax = 10, Lmin = 1,
-  transform = robustscale)
+pass(x, alpha = 2, lambda = NULL, max_seg_len = 10,
+  min_seg_len = 1, transform = robustscale)
 }
 \arguments{
-\item{x}{An n x m real matrix representing n observations of m variates.}
+\item{x}{An n x p real matrix representing n observations of p variates.}
 
 \item{alpha}{A positive integer > 0. This value is used to stabilise the higher criticism based test statistic used by PASS leading to a better finite sample familywise error rate. 
 Anomalies affecting fewer than alpha components will however in all likelihood escape detection.}
 
 \item{lambda}{A positive real value setting the threshold value for the familywise Type 1 error. The default value
-is \eqn{(1.1 {\rm log}(n \times Lmax) +2 {\rm log}({\rm log}(m))) / \sqrt{{\rm log}({\rm log}(m))}}.}
+is \eqn{(1.1 {\rm log}(n \times max\_seg\_len) +2 {\rm log}({\rm log}(p))) / \sqrt{{\rm log}({\rm log}(p))}}.}
 
-\item{Lmax}{A positive integer (\code{Lmax} > 0) corresponding to the maximum segment length. The default value is 10.}
+\item{max_seg_len}{A positive integer (\code{max_seg_len} > 0) corresponding to the maximum segment length. This parameter corresponds to Lmax in Jeng et al. (2012). The default value is 10.}
 
-\item{Lmin}{A positive integer (\code{Lmax} >= \code{Lmin} > 0) corresponding to the minimum segment length. The default value is 1.}
+\item{min_seg_len}{A positive integer (\code{max_seg_len} >= \code{min_seg_len} > 0) corresponding to the minimum segment length. This parameter corresponds to Lmin in Jeng et al. (2012).
+The default value is 1.}
 
 \item{transform}{A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.}
 }

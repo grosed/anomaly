@@ -72,7 +72,11 @@ std::list<std::list<std::vector<double> > > marshall_bard(const std::list<std::v
 	{
 	  Rcpp::checkUserInterrupt();
 	  S = bard(std::move(S),y);
-	  // S = prune_bard_result(std::move(S),alpha,uni);
+	  // ok - see if we can add the pruning
+	  if(std::get<1>(S) > 2) // do not prune until the probabilities have been normalized.
+	    {
+	      S = prune_bard_result(std::move(S),alpha,uni);
+	    }
 	  R = std::get<0>(S);
 	  // convert tuples to vectors for marshalling through Rcpp
 	  std::list<std::vector<double> > vR;

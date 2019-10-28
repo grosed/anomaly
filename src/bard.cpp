@@ -11,6 +11,8 @@
 #include "bard.h"
 
 
+#include <iostream>
+
 
 state_type prune_bard_result(state_type S,
 			       const double& alpha,
@@ -35,16 +37,17 @@ state_type prune_bard_result(state_type S,
   
   auto n = R.size();
   auto logalpha = log(alpha);
-  // auto logu = log(alpha) + log(uni());
-  auto logu = log(alpha) + log(0.5);
-
-
-  
+  auto logu = log(alpha) + log(uni());
+  // auto logu = log(alpha) + log(0.5);
+  // std::cout << logu << std::endl;
+  // std::cout << logalpha << std::endl;
+ 
   for(auto& r : R)
     {
       for(int j = 0; j < 2; j++)
 	{
 	  double logs = j == 0 ? std::get<0>(r) : std::get<1>(r);
+	  // std::cout << logs << std::endl;
 	  if(logs > logalpha)
 	    {
 	    }
@@ -53,7 +56,8 @@ state_type prune_bard_result(state_type S,
 	      auto c = std::max(logalpha,logs);
 	      auto logalphaweight = c + log(exp(logalpha-c)-exp(logs-c));
 	      c = std::max(logu,logalphaweight);
-	      logu = c + log(exp(logu-c)-exp(logalphaweight-c));
+	      // logu = c + log(exp(logu-c)-exp(logalphaweight-c));
+	      logu = c + log(exp(logu-c)+exp(logalphaweight-c));
 	      if(j == 0)
 		{
 		  std::get<0>(r) = logalpha;
@@ -79,11 +83,14 @@ state_type prune_bard_result(state_type S,
 	}      
     }
 
+
+  // std::cout << R.size() << std::endl;
   R.remove_if([&inf](const std::tuple<double,double,int>& r)
 	      {
+		// std::cout << std::get<0>(r) << " : " << std::get<1>(r) << std::endl;
 		return std::get<0>(r) == -inf && std::get<1>(r) == -inf;
 	      });
-
+  // std::cout << R.size() << std::endl;
    
   return std::make_tuple(std::move(R),
 			 std::move(t),
