@@ -52,6 +52,8 @@ sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
 res<-capa.mv(sim.data,type="mean",min_seg_len=2)
 plot(res)
 
+### generate some multivariate data
+
 set.seed(2018)
 x1 = rnorm(500)
 x2 = rnorm(500)

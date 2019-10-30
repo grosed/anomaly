@@ -48,6 +48,7 @@ inflated_penalty<-3*(1+psi)/(1-psi)*log(length(temperature))
 res<-capa.uv(temperature,type="mean",beta=inflated_penalty,
              beta_tilde=inflated_penalty)
 res
+plot(res)
 
 }
 \references{

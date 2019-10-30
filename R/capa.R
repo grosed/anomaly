@@ -789,6 +789,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #'                    duration=6,proportions=c(0.04,0.06,0.08))
 #' res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
 #' collective_anomalies(res)
+#' plot(res)
 #' 
 #' @export
 #'
@@ -1003,6 +1004,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #' res<-capa.uv(temperature,type="mean",beta=inflated_penalty,
 #'              beta_tilde=inflated_penalty)
 #' res
+#' plot(res)
 #'
 #' @export
 capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=robustscale)
@@ -1069,6 +1071,8 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' 
 #' res<-capa.mv(sim.data,type="mean",min_seg_len=2)
 #' plot(res)
+#' 
+#' ### generate some multivariate data
 #' 
 #' set.seed(2018)
 #' x1 = rnorm(500)
