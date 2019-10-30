@@ -684,7 +684,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     # process beta
     n = nrow(x)
     p = ncol(x)
-    s = log(n)
+    s = 1.5*log(n)
     if (is.null(beta))
     {            
         if(type == "mean")
@@ -766,7 +766,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
 #' @param beta A numeric vector of length p, giving the marginal penalties. If p > 1, type ="meanvar" or type = "mean" and max_lag > 0 it defaults to the penalty regime 2' described in 
 #' Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
-#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
+#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
 #' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
@@ -781,7 +781,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
 #'
 #'
-#' @les
+#' @examples
 #' library(anomaly)
 #' # generate some multivariate data
 #' set.seed(0)
@@ -978,7 +978,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #' @param x A numeric vector containing the data which is to be inspected.
 #' @param beta A numeric vector of length 1 or \code{max_seg_len - min_seg_len + 1} indicating the penalty for adding additional collective anomalies of all possible
 #' lengths. If an argument of length 1 is provided the same penalty is used for all collective anomalies irrespective of their length. The default is a BIC style penalty.
-#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
+#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
 #' variance (the default) or "mean" for collective anomalies characterised by changes in mean only. 
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
@@ -1062,7 +1062,7 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' set.seed(0)
 #' sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
 #'                    duration=6,proportions=c(0.04,0.06,0.08))
-#' res<-capa.mv(sim.data,type="mean",min_seg_len=2,max_lag=5)
+#' res<-capa.mv(sim.data,type="mean",min_seg_len=2)
 #' collective_anomalies(res)
 #'
 #' @export

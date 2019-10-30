@@ -14,7 +14,7 @@ capa(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
 \item{beta}{A numeric vector of length p, giving the marginal penalties. If p > 1, type ="meanvar" or type = "mean" and max_lag > 0 it defaults to the penalty regime 2' described in 
 Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).}
 
-\item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.}
+\item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.}
 
 \item{type}{A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
 variance (the default) or "mean" for collective anomalies characterised by changes in mean only.}
@@ -25,7 +25,7 @@ variance (the default) or "mean" for collective anomalies characterised by chang
 
 \item{max_lag}{A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.}
 
-\item{transform}{A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
+\item{transform}{A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for le, be used to compensate for the effects of autocorrelation in the data.
 Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}.}
 }

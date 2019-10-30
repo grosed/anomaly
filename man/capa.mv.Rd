@@ -44,7 +44,7 @@ library(anomaly)
 set.seed(0)
 sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
                    duration=6,proportions=c(0.04,0.06,0.08))
-res<-capa.mv(sim.data,type="mean",min_seg_len=2,max_lag=5)
+res<-capa.mv(sim.data,type="mean",min_seg_len=2)
 collective_anomalies(res)
 
 }
