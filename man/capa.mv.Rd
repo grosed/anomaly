@@ -40,12 +40,47 @@ at best in \code{nrow(x)}. If \code{max_seg_len} is set the runtime scales like 
 }
 \examples{
 library(anomaly)
-# generate some multivariate data
+
+### generate some multivariate data
+
 set.seed(0)
 sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
                    duration=6,proportions=c(0.04,0.06,0.08))
+                   
+### Apply MVCAPA
+
 res<-capa.mv(sim.data,type="mean",min_seg_len=2)
-collective_anomalies(res)
+plot(res)
+
+set.seed(2018)
+x1 = rnorm(500)
+x2 = rnorm(500)
+x3 = rnorm(500)
+x4 = rnorm(500)
+
+### Add two (lagged) collective anomalies
+
+x1[151:200] = x1[151:200]+2
+x2[171:200] = x2[171:200]+2
+x3[161:190] = x3[161:190]-3
+
+x1[351:390] = x1[371:390]+2
+x3[351:400] = x3[351:400]-3
+x4[371:400] = x4[371:400]+2
+
+### Add point anomalies
+
+x4[451] = x4[451]*max(1,abs(1/x4[451]))*5
+x4[100] = x4[100]*max(1,abs(1/x4[100]))*5
+x2[050] = x2[050]*max(1,abs(1/x2[050]))*5
+
+my_x = cbind(x1,x2,x3,x4)
+
+### Now apply MVCAPA
+
+res<-capa.mv(my_x,max_lag=20,type="mean")
+
+plot(res)
 
 }
 \references{
