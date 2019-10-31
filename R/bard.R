@@ -32,10 +32,56 @@ bard.class<-function(data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h,Rs,
 
 
 
-bard<-function(data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+#' Detection of multivariate anomalous segments using BARD.
+#'
+#' Implements the BARD (Bayesian Abnormal Region Detector) procedure of Bardwell and Fearnhead (2017). BARD is a fully Bayesian inference procedure which is able to give
+#' measures of uncertainty about the number and location of abnormal regions. It uses flexible prior distributions on the lengths of normal and abnormal regions as well as
+#' a prior distribution on the mean of the affected variates.
+#' 
+#' @param x - An $n$ by $p$ real matrix representing n observations of p variates. Each variate is scaled by BARD using the median and the median absolute deviation. This
+#' can be changed using the \code{transform} parameter. 
+#' @param p_N - Probability of success in each trial for the Negative Binomial distribution for the length of normal segments.
+#' @param k_N - Dispersion parameter for the Negative Binomial distribution for the length of normal segments.
+#' @param p_A - Probability of success in each trial for the Negative Binomial distribution for the length of abnormal segments.
+#' @param k_A - Dispersion parameter for the Negative Binomial distribution for the length of abnormal segments.
+#' @param pi_N - Probability that an abnormal segment is followed by a normal segment.
+#' @param alpha - Threshold used to control the resampling in the approximation of the posterior distribution at each time step.
+#' @param paffected - Proportion of the series believed to be affected by an abnormal segment.
+#' @param lower - The lower limit of the prior uniform distribution for \eqn{mu}.
+#' @param upper - The upper limit of the prior uniform distribution for \eqn{mu}.
+#' @param h - The step size in the numerical integration used to find the marginal likelihood. The quadrature points are located from lower to upper in steps of h.  
+#' @param transform - A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
+#' 
+#' @return An S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.
+#'
+#' @references  \insertRef{bardwell2017}{anomaly}
+#'
+#' @examples
+#' 
+#' library(anomaly)
+#' set.seed(0)
+#' sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
+#'                    duration=6,proportions=c(0.04,0.06,0.08))
+#' # parameters
+#' p_N<-0.05
+#' p_A<-0.5
+#' k_N<-10
+#' k_A<-10
+#' pi_N<-0.9
+#' alpha<-0.0001
+#' paffected<-10/200
+#' lower<-0.5
+#' upper<-1.5
+#' h<-0.25
+#' # run bard
+#' res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+#' sampler(res)
+#'
+#' @export
+bard<-function(x,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h,transform=robustscale)
 {
     # check the data
-    data<-as.array(as.matrix(data))
+    data<-as.array(as.matrix(x))
     if(!is_array(data))
     {
         stop("cannot convert data to an array")
@@ -52,6 +98,10 @@ bard<-function(data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
     {
         stop("x must be of type numeric")
     }
+
+    # transform the data
+    data<-transform(data)
+    
     # now convert the data to a list of vectors for marshalling to Rcpp
     data<-Map(function(i) unlist(data[i,]),1:nrow(data))
 
@@ -232,16 +282,16 @@ bard<-function(data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
 
 #### helper functions for post processing
 
-get.probvec <- function( filtering , params , no.draws=1000 )
+get.probvec <- function( filtering , params , num_draws=1000 )
 {
   logprobs <- filtering$weights
   cpt.locs <- filtering$locations
   types <- filtering$type
   n <- length(filtering$weights)
   vec<-numeric(n)
-  prob.states <- matrix(nrow=no.draws,ncol=n)
+  prob.states <- matrix(nrow=num_draws,ncol=n)
   
-  for (i in 1:no.draws){
+  for (i in 1:num_draws){
   
     f <- draw.from.post(logprobs, cpt.locs, types, params)
     segs <- f$draws
@@ -255,7 +305,7 @@ get.probvec <- function( filtering , params , no.draws=1000 )
     
   }
 
-  return( apply(prob.states,2,sum)/no.draws )
+  return( apply(prob.states,2,sum)/num_draws )
 
 }
 
@@ -399,21 +449,132 @@ draw.from.post <- function( logprobs , cpt.locs , types , params ){
 
 }
 
-# TODO - to be renamed and a S$ class returned with relevant stuff in it
-post_process_bard<-function(bard.result)
+## TODO - to be renamed and a S4 class returned with relevant stuff in it
+#post_process_bard<-function(bard.result)
+#{
+#   # creating null entries for ggplot global variables so as to pass CRAN checks 
+#    time<-probability<-NULL
+#    R<-bard.result@Rs
+#    params<-c(bard.result@k_N,bard.result@p_N,bard.result@k_A,bard.result@p_A,bard.result@pi_N,1-bard.result@pi_N)
+#    filtering<-format_output(R)
+#    # vector of probabilities
+#    pvec<-get.probvec(filtering, params, no.draws = 1000)
+#    df<-data.frame("time"=seq(1,length(pvec)),"probability"=pvec)
+#    p<-ggplot(data=df,aes(x=time,y=probability))
+#    p<-p+geom_line()
+#    return(p)
+#}
+
+
+
+
+#' Post processing of BARD results.
+#'
+#' Determines the locations of anomalous sections from the results produced by BARD.
+#'
+#' @param bard_result - An instance of the S4 class \code{.bard.class} containing a result returned by the \code{bard} function. 
+#' @param gamma - Parameter of loss function: cost of incorrectly assigning an abnormal point as being normal (false negative).
+#' @param num_draws - Number of samples to draw from the posterior distribution. 
+#' 
+#' @return A dataframe containing the start, end, and log marginal likelihood for each anomalous segment. 
+#'
+#' @references  \insertRef{bardwell2017}{anomaly}
+#'
+#' @examples
+#' library(anomaly)
+#' set.seed(0)
+#' sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
+#' duration=6,proportions=c(0.04,0.06,0.08))
+#' # parameters
+#' p_N<-0.05
+#' p_A<-0.5
+#' k_N<-10
+#' k_A<-10
+#' pi_N<-0.9
+#' alpha<-0.0001
+#' paffected<-10/200
+#' lower<-0.5
+#' upper<-1.5
+#' h<-0.25
+#' # run bard
+#' res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+#' # sample 
+#' sampler(res)
+#' # effect of sampling parameters
+#' sampler(res,gamma=10,num_draws=1000)
+#' sampler(res,gamma=10,num_draws=10)
+#' 
+#' @export
+sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
 {
+    P.A <- function(data, s, t, mu_seq, p)
+    {
+  
+        S = rbind( rep(0,dim(data)[2]) , apply(data , 2 , cumsum) )
+        S_2 = cumsum( c( 0 , rowSums(data^2) ) )
+        N = dim(data)[2]
+    
+        # prior value mu_dens
+        mu_dens <- 1/( tail(mu_seq,1) - mu_seq[1] )
+        
+        # width of rectangle
+        mu_wid <- diff(mu_seq)[1]
+        vec <- numeric(length(mu_seq))
+        
+        # evaluate at each point of grid
+        # do this as typically smaller than dimension
+        # evaluating log of quantity 
+        for (k in 1:length(mu_seq)){
+            vec[k] <- N*log(1-p) + sum( log( 1 + exp( mu_seq[k] * ( S[(t+1),] - S[s,]  -  mu_seq[k] * (t-s+1)/2 ) + log(p) - log(1-p) ) ) )
+        }
+        # finding sum of logs -- for numerical instability
+        cmax <- max( vec )
+        marg.like <- cmax + log( sum( exp( vec - cmax ) ) ) + log(mu_dens) + log(mu_wid)  
+        return(marg.like)   
+    }
+    
    # creating null entries for ggplot global variables so as to pass CRAN checks 
     time<-probability<-NULL
-    R<-bard.result@Rs
-    params<-c(bard.result@k_N,bard.result@p_N,bard.result@k_A,bard.result@p_A,bard.result@pi_N,1-bard.result@pi_N)
+    R<-bard_result@Rs
+    params<-c(bard_result@k_N,bard_result@p_N,bard_result@k_A,bard_result@p_A,bard_result@pi_N,1-bard_result@pi_N)
     filtering<-format_output(R)
     # vector of probabilities
-    pvec<-get.probvec(filtering, params, no.draws = 1000)
-    df<-data.frame("time"=seq(1,length(pvec)),"probability"=pvec)
-    p<-ggplot(data=df,aes(x=time,y=probability))
-    p<-p+geom_line()
-    return(p)
+    pvec<-get.probvec(filtering, params, num_draws = num_draws)
+    # get segmentation using loss function
+    segmentation <- loss(gamma, pvec)
+    # stuff to get marginal likelihood
+    lower = bard_result@lower
+    upper = bard_result@upper
+    h = bard_result@h
+    mu_seq = seq(lower, upper, by = h)
+    paffected = bard_result@paffected
+    data = bard_result@data
+    # put into data frame
+    df = data.frame("start"=NA, "end"=NA, "LogMargLike"=NA)
+    welem = which(segmentation == 1)
+    wdiff = c(0, which(diff(welem) != 1), length(welem))
+    for (i in 1:(length(wdiff)-1) ){
+      start = welem[(wdiff[i] + 1)]
+      end = welem[wdiff[(i+1)]]
+      ml = P.A(data, start, end, mu_seq, paffected)
+      tempdf = data.frame("start"=start,
+                          "end"=end,
+                          "LogMargLike"=ml)
+      df = rbind(df, tempdf)
+    }
+    df = df[-1,]
+    df = df[order(df$LogMargLike, decreasing = T), ]                                                                                                                              
+    return(df)
+    #df<-data.frame("time"=seq(1,length(pvec)),"probability"=pvec)
+    #p<-ggplot(data=df,aes(x=time,y=probability))
+    #p<-p+geom_line()
+    #return(p)
 }
+
+
+
+
+
 
 ##### BARD example to use in documentation
 
