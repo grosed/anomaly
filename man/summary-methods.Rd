@@ -31,8 +31,7 @@ and \code{\link{pass}}.  The output displayed depends on the type of S4 object p
 multivariate, the number of observations in the data, and the type of change being detected.
 
 
-For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{summary} displays a summary of the analysis type used and the results
-produced by \code{\link{point_anomalies}} and \code{\link{collective_anomalies}}.
+For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{summary} displays a summary of the analysis..
 
 
 For an object produced by \code{\link{capa}} is the same as for an object produced by \code{\link{capa.uv}}

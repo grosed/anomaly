@@ -102,7 +102,7 @@ setMethod("point_anomalies",signature=list("capa.class"),
               p_anoms<-Map(function(x) x[1],Filter(function(x) x[1] == x[2],anoms))
               if(length(p_anoms) == 0)
               {
-                  return(data.frame("location"=NA,"variate"=NA,"strength"=NA))
+                  return(data.frame("location"=integer(0),"variate"=integer(0),"strength"=integer(0)))
               }
               return(
                   Reduce(rbind,
@@ -234,7 +234,7 @@ setMethod("collective_anomalies",signature=list("capa.class"),
               c_anoms<-Filter(function(x) x[1] != x[2],anoms)
               if(length(c_anoms) == 0)
               {                      
-                  return(data.frame("start"=NA,"end"=NA,"variate"=NA,"start.lag"=NA,"end.lag"=NA,"mean.change"=NA,"variance.change" = NA))
+                  return(data.frame("start"=integer(0),"end"=integer(0),"variate"=integer(0),"start.lag"=integer(0),"end.lag"=integer(0),"mean.change"=integer(0),"variance.change" = integer(0)))
               }
               res<-Reduce(rbind,
                           Map(
@@ -358,8 +358,7 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #' multivariate, the number of observations in the data, and the type of change being detected.
 #'
 #'
-#' For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{summary} displays a summary of the analysis type used and the results
-#' produced by \code{\link{point_anomalies}} and \code{\link{collective_anomalies}}.
+#' For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{summary} displays a summary of the analysis..
 #' 
 #' 
 #' For an object produced by \code{\link{capa}} is the same as for an object produced by \code{\link{capa.uv}}
@@ -393,16 +392,8 @@ setMethod("summary",signature=list("capa.class"),function(object)
     cat("variates = ",dim(object@data)[2],"\n",sep="")	
     p_anoms<-point_anomalies(object)
     c_anoms<-collective_anomalies(object)
-    if(!Reduce("|",is.na(p_anoms)))
-    {
-        cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-        print(p_anoms)
-    }
-    if(!Reduce("|",is.na(c_anoms)))
-    {
-        cat("Collective anomalies detected : ",length(unique(Map(function(a,b) c(a,b),c_anoms[,1],c_anoms[,2]))),"\n",sep="")
-        print(c_anoms)
-    }
+    cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
+    cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
     invisible()
 })
 
@@ -434,16 +425,8 @@ setMethod("summary",signature=list("capa.uv.class"),function(object)
     cat("maximum segment length = ",object@max_seg_len,'\n',sep="")
     p_anoms<-point_anomalies(object)
     c_anoms<-collective_anomalies(object)
-    if(!Reduce("|",is.na(p_anoms)))
-    {
-        cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-        print(p_anoms)
-    }
-    if(!Reduce("|",is.na(c_anoms)))
-    {
-        cat("Collective anomalies detected : ",length(unique(Map(function(a,b) c(a,b),c_anoms[,1],c_anoms[,2]))),"\n",sep="")
-        print(c_anoms)
-    }
+    cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
+    cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
     invisible()
 })
 
@@ -476,46 +459,142 @@ setMethod("summary",signature=list("capa.mv.class"),function(object)
     cat("maximum lag = ",object@max_lag[1],'\n',sep="")
     p_anoms<-point_anomalies(object)
     c_anoms<-collective_anomalies(object)
-    if(!Reduce("|",is.na(p_anoms)))
-    {
-        cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-        print(p_anoms)
-    }
-    if(!Reduce("|",is.na(c_anoms)))
-    {
-        cat("Collective anomalies detected : ",length(unique(Map(function(a,b) c(a,b),c_anoms[,1],c_anoms[,2]))),"\n",sep="")
-        print(c_anoms)
-    }
+    cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
+    cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
     invisible()
 })
-
-
 
 #' Displays S4 objects produced by capa methods.
 #'
 #' @name show
 #'
 #' @description Displays S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and
-#' \code{\link{pass}}. The information produced is the same as that provided by the summary method. The method is used by the S4 system for automatic printing.
+#' \code{\link{pass}}. The output displayed depends on the type of S4 object passed to the method For all types, the output indicates whether the data is univariate or
+#' multivariate, the number of observations in the data, and the type of change being detected.
 #'
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, or \code{\link{capa.mv}}.
 #' 
 #' @rdname show-methods
 #'
 #' @aliases show,capa.class-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}. 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}. 
 #'
 #' @export
-#'
 setMethod("show",signature=list("capa.class"),function(object)
 {
-    summary(object)
+  epoch=dim(object@data)[1]
+  cat("CAPA detecting changes in ",sep="")
+  if(object@type == "meanvar")
+  {
+    cat("mean and variance.","\n",sep="") 
+  }
+  if(object@type == "mean")
+  {
+    cat("mean.","\n",sep="") 
+  }
+  cat("observations = ",dim(object@data)[1],sep="")
+  cat("\n",sep="")
+  cat("variates = ",dim(object@data)[2],"\n",sep="")	
+  p_anoms<-point_anomalies(object)
+  c_anoms<-collective_anomalies(object)
+  cat("\n",sep="")
+  cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
+  if (nrow(p_anoms)>0){
+  print(p_anoms)
+  }
+  cat("\n",sep="")
+  cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+  if (nrow(c_anoms)>0){
+    print(c_anoms)
+  }
+  invisible()
 })
 
 
+#' @name show
+#'
+#' @docType methods
+#'
+#' @rdname show-methods
+#'
+#' @aliases show,capa.uv.class-method
+#'
+#' @export
+setMethod("show",signature=list("capa.uv.class"),function(object)
+{
+  cat("Univariate ",sep="")
+  cat("CAPA detecting changes in ",sep="")
+  if(object@type == "meanvar")
+  {
+    cat("mean and variance.","\n",sep="") 
+  }
+  if(object@type == "mean")
+  {
+    cat("mean.","\n",sep="") 
+  }
+  cat("observations = ",dim(object@data)[1],'\n',sep="")
+  cat("variates = ",dim(object@data)[2],'\n',sep="")	
+  cat("minimum segment length = ",object@min_seg_len,'\n',sep="")
+  cat("maximum segment length = ",object@max_seg_len,'\n',sep="")
+  p_anoms<-point_anomalies(object)
+  c_anoms<-collective_anomalies(object)
+  cat("\n",sep="")
+  cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
+  if (nrow(p_anoms)>0){
+    print(p_anoms)
+  }
+  cat("\n",sep="")
+  cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+  if (nrow(c_anoms)>0){
+    print(c_anoms)
+  }
+  invisible()
+})
+
+
+#' @name show
+#'
+#' @docType methods
+#'
+#' @rdname show-methods
+#'
+#' @aliases show,capa.mv.class-method
+#' 
+#' @export
+setMethod("show",signature=list("capa.mv.class"),function(object)
+{
+  cat("Multivariate ",sep="")
+  cat("CAPA detecting changes in ",sep="")
+  if(object@type == "meanvar")
+  {
+    cat("mean and variance.","\n",sep="") 
+  }
+  if(object@type == "mean")
+  {
+    cat("mean.","\n",sep="") 
+  }
+  cat("observations = ",dim(object@data)[1],'\n',sep="")
+  cat("variates = ",dim(object@data)[2],'\n',sep="")	
+  cat("minimum segment length = ",object@min_seg_len,'\n',sep="")
+  cat("maximum segment length = ",object@max_seg_len,'\n',sep="")
+  cat("maximum lag = ",object@max_lag[1],'\n',sep="")
+  p_anoms<-point_anomalies(object)
+  c_anoms<-collective_anomalies(object)
+  cat("\n",sep="")
+  cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
+  if (nrow(p_anoms)>0){
+    print(p_anoms)
+  }
+  cat("\n",sep="")
+  cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+  if (nrow(c_anoms)>0){
+    print(c_anoms)
+  }
+  invisible()
+})
 
 anomalies<-function(x,epoch=NULL)
 {
