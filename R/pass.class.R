@@ -1,5 +1,3 @@
-
-
 .pass.class<-setClass("pass.class",representation(data="matrix",results="data.frame",Lmax="numeric",Lmin="numeric",alpha="numeric",lambda="numeric"))
 
 pass.class<-function(data,results,Lmax,Lmin,alpha,lambda)
@@ -150,8 +148,6 @@ setMethod("summary",signature=list("pass.class"),function(object)
     cat("alpha = ",object@alpha,"\n",sep="") # tuning parameter
     cat("lambda = ",object@lambda,"\n",sep="")
     cat("Collective anomalies detected : ",nrow(object@results),"\n")
-    print(object@results)
-    cat("\n")
     invisible()
 })
 
@@ -167,6 +163,16 @@ setMethod("summary",signature=list("pass.class"),function(object)
 #' @export
 setMethod("show",signature=list("pass.class"),function(object)
 {
-    summary(object)
+  cat("PASS detecting change in mean","\n")
+  cat("observations = ",nrow(object@data),"\n",sep="")
+  cat("variates = ",ncol(object@data),"\n",sep="")
+  cat("minimum segment length = ",object@Lmin,"\n",sep="")
+  cat("maximum segment length = ",object@Lmax,"\n",sep="")
+  cat("alpha = ",object@alpha,"\n",sep="") # tuning parameter
+  cat("lambda = ",object@lambda,"\n",sep="")
+  cat("Collective anomalies detected : ",nrow(object@results),"\n")
+  print(object@results)
+  cat("\n")
+  invisible()
 })
 
