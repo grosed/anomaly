@@ -1246,7 +1246,7 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
             p_anoms_data_df<-Reduce(rbind,Map(function(a,b) data_df[data_df$variable==names[a] & data_df$x==b,],p_anoms$variate,p_anoms$location))
             out<-out+geom_point(data=p_anoms_data_df,colour="red", size=1.5)
         }
-    out<-out+facet_grid(factor(variable,levels=rev(names)) ~ .,scales="free_y")
+    out<-out+facet_grid(factor(variable,levels=(names)) ~ .,scales="free_y")
     # grey out the data after epoch
     if(epoch != nrow(object@data))
         {
@@ -1275,7 +1275,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
     # nulling out variables used in ggplot to get the package past CRAN checks
     x1<-y1<-x2<-y2<-variable<-value<-NULL
     df<-as.data.frame(object@data)
-    df<-as.data.frame(df[,subset,drop=FALSE])
+    df<-as.data.frame(df[,rev(subset),drop=FALSE])
     # normalise data
     for(i in 1:ncol(df))
     {

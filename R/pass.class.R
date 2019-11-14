@@ -41,7 +41,7 @@ pass.tile.plot<-function(x,subset=1:ncol(x@data),variate_names=TRUE)
 {
     # nulling out variables used in ggplot to get the package past CRAN checks
     variable<-value<-NULL
-    df<-as.data.frame(x@data[,subset])
+    df<-as.data.frame(x@data[,rev(subset)])
     # normalise data
     for(i in 1:ncol(df))
     {
