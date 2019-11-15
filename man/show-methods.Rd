@@ -5,6 +5,8 @@
 \alias{show}
 \alias{show,anomaly_series-method}
 \alias{show,capa.class-method}
+\alias{show,capa.uv.class-method}
+\alias{show,capa.mv.class-method}
 \alias{show,pass.class-method}
 \title{Displays S4 objects produced by capa methods.}
 \usage{
@@ -12,15 +14,20 @@
 
 \S4method{show}{capa.class}(object)
 
+\S4method{show}{capa.uv.class}(object)
+
+\S4method{show}{capa.mv.class}(object)
+
 \S4method{show}{pass.class}(object)
 }
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.}
+\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, or \code{\link{capa.mv}}.}
 }
 \description{
 Displays S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and
-\code{\link{pass}}. The information produced is the same as that provided by the summary method. The method is used by the S4 system for automatic printing.
+\code{\link{pass}}. The output displayed depends on the type of S4 object passed to the method For all types, the output indicates whether the data is univariate or
+multivariate, the number of observations in the data, and the type of change being detected.
 }
 \seealso{
-\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}.
+\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}.
 }
