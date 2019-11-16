@@ -284,9 +284,9 @@ setMethod("collective_anomalies",signature=list("capa.class"),
                                  function(variate,start,end,start_lag,end_lag)
                                  {
                                      mean_change<-mean(data_dash[(start+start_lag):(end-end_lag),variate])^2
-                                     # variance_change<-mean_change*((end-end_lag)-(start+start_lag)+1) 
-                                     # return(array(c(mean_change,variance_change),c(1,2)))
-                                     return(array(c(mean_change),c(1,1)))    
+                                     variance_change<-mean_change*((end-end_lag)-(start+start_lag)+1) 
+                                     return(array(c(mean_change,variance_change),c(1,2)))
+                                     # return(array(c(mean_change),c(1,1)))    
                                  },
                                  res$variate,
                                  res$start,
@@ -295,8 +295,8 @@ setMethod("collective_anomalies",signature=list("capa.class"),
                                  res$end.lag)
                              ),row.names=NULL
                   )
-                  # names(changes)<-c("mean.change","test.statistic")
-                  names(changes)<-c("mean.change")
+                  names(changes)<-c("mean.change","test.statistic")
+                  # names(changes)<-c("mean.change")
               }
               else
               {
@@ -322,14 +322,7 @@ setMethod("collective_anomalies",signature=list("capa.class"),
 setMethod("collective_anomalies",signature=list("capa.uv.class"),
           function(object)
           {
-              if(object@type == "mean")
-                  {
-                      return(callNextMethod(object)[,c(1:2,6)])
-                  }
-              if(object@type == "meanvar")
-                  {
-                      return(callNextMethod(object)[,c(1:2,6:7)])
-                  }
+	      return(callNextMethod(object)[,c(1:2,6:7)])              
           })
 
 #' @name collective_anomalies
@@ -344,6 +337,10 @@ setMethod("collective_anomalies",signature=list("capa.uv.class"),
 setMethod("collective_anomalies",signature=list("capa.mv.class"),
           function(object)
           {
+	      if(object@type == "mean")
+                  {
+                      return(callNextMethod(object)[,1:6])
+                  }
               return(callNextMethod(object))
           })
 
@@ -366,7 +363,7 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #'
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.
+#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}, or an S3 class produced by \code{\link{anomaly_series}}.
 #' 
 #' @rdname summary-methods
 #'
@@ -1329,7 +1326,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @docType methods
 #'
-#' @param x An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}.
+#' @param x An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or an S3 class produced by \code{\link{anomaly_series}}.
 #' @param subset A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.
 #' @param variate_names Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 #' as it makes the visualisation easier to interpret. Default value is TRUE.

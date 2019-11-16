@@ -3,15 +3,16 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,anomaly_series,ANY-method}
+\alias{plot.anomaly_series}
+\alias{plot,anomaly_series-method}
 \alias{plot,capa.class,ANY-method}
 \alias{plot,capa.uv.class,ANY-method}
 \alias{plot,capa.mv.class,ANY-method}
 \alias{plot-pass.class}
 \alias{plot,pass.class,ANY-method}
-\title{Visualisation of data, collective and point anomalies.}
+\title{Plots an anomaly_series object.}
 \usage{
-\S4method{plot}{anomaly_series,ANY}(x, xlab = "", ylab = "", ...)
+plot.anomaly_series(x, xlab = "", ylab = "", ...)
 
 \S4method{plot}{capa.class,ANY}(x, subset, variate_names, tile_plot)
 
@@ -22,7 +23,7 @@
 \S4method{plot}{pass.class,ANY}(x, subset, variate_names, tile_plot)
 }
 \arguments{
-\item{x}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}.}
+\item{x}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or an S3 class produced by \code{\link{anomaly_series}}.}
 
 \item{xlab}{Character string containing label for the x-axis.}
 
@@ -44,10 +45,28 @@ This type of plot is useful when the data contains are large number of variates.
 A ggplot object.
 }
 \description{
+Plot method for anomaly_series objects as returned by the \code{\link{anomaly_series}} method.
+
 Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and \code{\link{pass}}. 
 
 The plot can either be a line plot or a tile plot, the type produced depending on the options provided to the \code{plot} function and/or the dimensions of the
 data associated with the S4 object.
+}
+\examples{
+\donttest{
+library(anomaly)
+set.seed(2018)
+# Generate data typically followig a normal distribution with mean 0 and variance 1. 
+# Then introduce 3 anomaly windows and 4 point outliers.
+x  = rnorm(5000)
+x[401:500]   = rnorm(100,4,1)
+x[1601:1800] = rnorm(200,0,0.01)
+x[3201:3500] = rnorm(300,0,10)
+x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
+inferred_anomalies = anomaly_series(x)
+plot(inferred_anomalies)
+}
+
 }
 \seealso{
 \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}.

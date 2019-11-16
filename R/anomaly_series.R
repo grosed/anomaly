@@ -17,7 +17,10 @@ setClass("anomaly_series")
 #'
 #' @return An anomaly_series object.
 #'
+#' @rdname anomaly_series
+#'
 #' @examples
+#' \donttest{
 #' library(anomaly)
 #' set.seed(2018)
 #' # Generate data typically following a normal distribution with mean 0 and variance 1. 
@@ -50,27 +53,65 @@ setClass("anomaly_series")
 #' inferred_anomalies = anomaly_series(binned_data)
 #' plot(inferred_anomalies,xlab="Bin")
 #' # We found a planet!
-#'
+#' }
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
 #' 
 #' @export
 anomaly_series<-function(x,penaltywindow=NULL,penaltyanomaly=NULL,minimumsegmentlength=10,warnings=TRUE,method="meanvar")
 {
+    .Deprecated("capa.uv")
     res<-capa.uv(x=x,beta=penaltywindow,beta_tilde=penaltyanomaly,min_seg_len=minimumsegmentlength,type=method,max_seg_len=Inf,transform=robustscale)
-    res@type="meanvar" # mutate the object so as to always calculate a variance change
     canoms<-collective_anomalies(res)
     panoms<-point_anomalies(res)
+    anomalies_strength<-data.frame("mean_change"=canoms$mean.change)
+    if(res@type == "mean")
+    {
+       anomalies_strength$test_statistic<-canoms$test.statistic	
+    }
+    else
+    {
+           anomalies_strength<-cbind(data.frame("variance_change"=canoms$variance.change),anomalies_strength)		
+    }
     res<-list("x"=x,
-              "anomalies_strength"=data.frame("variance_change"=canoms$variance.change,"mean_change"=canoms$mean.change),
+	      "anomalies_strength"=anomalies_strength,
               "pointanomalies_strength"=panoms$strength,
               "pointanomalies"=panoms$location, 
-              "anomalywindows"=canoms[,1:2])
+              "anomalywindows"=canoms[,1:2],
+	      "method"=res@type)
     class(res)<-"anomaly_series"
     return(res)
 }
 
-
-
+#' Plots an anomaly_series object.
+#'
+#' Plot method for anomaly_series objects as returned by the \code{\link{anomaly_series}} method.
+#'
+#' @name plot
+#'
+#' @param xlab Character string containing label for the x-axis.
+#' @param ylab Character string containing label for the y-axis.
+#' @param ... Other parameters to be passed to plotting methods.
+#'
+#' @rdname plot-methods
+#'
+#' @aliases plot,anomaly_series-method
+#'
+#' @examples
+#' \donttest{
+#' library(anomaly)
+#' set.seed(2018)
+#' # Generate data typically followig a normal distribution with mean 0 and variance 1. 
+#' # Then introduce 3 anomaly windows and 4 point outliers.
+#' x  = rnorm(5000)
+#' x[401:500]   = rnorm(100,4,1)
+#' x[1601:1800] = rnorm(200,0,0.01)
+#' x[3201:3500] = rnorm(300,0,10)
+#' x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
+#' inferred_anomalies = anomaly_series(x)
+#' plot(inferred_anomalies)
+#' }
+#'
+#' @export
 plot.anomaly_series = function(x,xlab="",ylab="",...){
  anomaly_object = x
   
@@ -101,7 +142,34 @@ plot.anomaly_series = function(x,xlab="",ylab="",...){
   
 }
 
-
+#' Print function for anomaly_series objects.
+#'
+#' Prints the contents of an anomaly_series object as returned by the \code{\link{anomaly_series}} method.
+#'
+#' @name print
+#'
+#' @param x An anomaly_series object
+#' @param ... Other parameters to be passed to print methods.
+#'
+#'
+#' @rdname print-methods
+#'
+#' @examples
+#' \donttest{
+#' library(anomaly)
+#' set.seed(2018)
+#' # Generate data typically followig a normal distribution with mean 0 and variance 1. 
+#' # Then introduce 3 anomaly windows and 4 point outliers.
+#' x  = rnorm(5000)
+#' x[401:500]   = rnorm(100,4,1)
+#' x[1601:1800] = rnorm(200,0,0.01)
+#' x[3201:3500] = rnorm(300,0,10)
+#' x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
+#' inferred_anomalies = anomaly_series(x)
+#' print(inferred_anomalies)
+#' }
+#'
+#' @export
 print.anomaly_series = function(x,...){
   
   anomaly_object = x
@@ -133,7 +201,12 @@ print.anomaly_series = function(x,...){
   cat("start\t")
   cat("end\t")
   cat("mean change\t")
-  cat("variance change\t")
+  if(anomaly_object$method == "meanvar"){
+    cat("variance change\t")
+  }
+  if(anomaly_object$method == "mean"){
+    cat("test-statistic\t")
+  }
   cat("\n")
   if (nrow(anomaly_object[["anomalywindows"]]) > 0){
     for (ii in 1:nrow(anomaly_object[["anomalywindows"]]) ){
@@ -143,7 +216,12 @@ print.anomaly_series = function(x,...){
       cat("\t")
       cat(anomaly_object[["anomalies_strength"]][ii,"mean_change"])
       cat("\t")
-      cat(anomaly_object[["anomalies_strength"]][ii,"variance_change"])
+      if(anomaly_object$method == "meanvar"){
+        cat(anomaly_object[["anomalies_strength"]][ii,"variance_change"])
+      }
+      if(anomaly_object$method == "mean"){
+        cat(anomaly_object[["anomalies_strength"]][ii,"test_statistic"])
+      }
       cat("\n")
     }
   }
@@ -151,6 +229,33 @@ print.anomaly_series = function(x,...){
 }
 
 
+#' Summary method for anomaly_series objects.
+#'
+#' A function summarising the content of an anomaly_object as produced by the \code{\link{anomaly_series}} method. It prints the number of detected anomalous windows and point anomalies.
+#'
+#' @name summary
+#'
+#' @param ... Other parameters to be passed to summary methods.
+#'
+#' @rdname summary-methods
+#'
+#' @aliases summary,anomaly_series-method
+#' @examples
+#' \donttest{
+#' library(anomaly)
+#' set.seed(2018)
+#' # Generate data typically followig a normal distribution with mean 0 and variance 1. 
+#' # Then introduce 3 anomaly windows and 4 point outliers.
+#' x  = rnorm(5000)
+#' x[401:500]   = rnorm(100,4,1)
+#' x[1601:1800] = rnorm(200,0,0.01)
+#' x[3201:3500] = rnorm(300,0,10)
+#' x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
+#' inferred_anomalies = anomaly_series(x)
+#' summary(inferred_anomalies)
+#' }
+#'
+#' @export
 summary.anomaly_series = function(object,...){
   
   
@@ -170,54 +275,8 @@ summary.anomaly_series = function(object,...){
 }
 
 
-#' @name plot
-#'
-#' @docType methods
-#'
-#' @param xlab Character string containing label for the x-axis.
-#' @param ylab Character string containing label for the y-axis.
-#' @param ... Other parameters to be passed to plotting methods.
-#' 
-#' @rdname plot-methods
-#'
-#' @aliases plot,anomaly_series,ANY-method
-#'
-#' @export
-setMethod("plot",signature=list("anomaly_series"),function(x,xlab="",ylab="",...)
-{
-    return(plot.anomaly_series(x,xlab,ylab))
-})
 
 
-#' @name summary
-#'
-#' @docType methods
-#'
-#' @param ... Other parameters to be passed to summary methods.
-#' 
-#' @rdname summary-methods
-#'
-#' @aliases summary,anomaly_series-method
-#'
-#' @export
-setMethod("summary",signature=list("anomaly_series"),function(object)
-{
-    return(summary.anomaly_series(object))
-})
-
-#' @name show
-#'
-#' @docType methods
-#' 
-#' @rdname show-methods
-#'
-#' @aliases show,anomaly_series-method
-#'
-#' @export
-setMethod("show",signature=list("anomaly_series"),function(object)
-{
-    return(print.anomaly_series(object))
-})
 
 
 

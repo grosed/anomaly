@@ -3,14 +3,15 @@
 \docType{methods}
 \name{summary}
 \alias{summary}
+\alias{summary.anomaly_series}
 \alias{summary,anomaly_series-method}
 \alias{summary,capa.class-method}
 \alias{summary,capa.uv.class-method}
 \alias{summary,capa.mv.class-method}
 \alias{summary,pass.class-method}
-\title{Summary of collective and point anomalies.}
+\title{Summary method for anomaly_series objects.}
 \usage{
-\S4method{summary}{anomaly_series}(object)
+summary.anomaly_series(object, ...)
 
 \S4method{summary}{capa.class}(object)
 
@@ -21,11 +22,13 @@
 \S4method{summary}{pass.class}(object)
 }
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.}
+\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}, or an S3 class produced by \code{\link{anomaly_series}}.}
 
 \item{...}{Other parameters to be passed to summary methods.}
 }
 \description{
+A function summarising the content of an anomaly_object as produced by the \code{\link{anomaly_series}} method. It prints the number of detected anomalous windows and point anomalies.
+
 Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
 and \code{\link{pass}}.  The output displayed depends on the type of S4 object passed to summary. For all types, the output indicates whether the data is univariate or
 multivariate, the number of observations in the data, and the type of change being detected.
@@ -36,6 +39,22 @@ For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{
 
 For an object produced by \code{\link{capa}} is the same as for an object produced by \code{\link{capa.uv}}
 or \code{\link{capa.mv}}.
+}
+\examples{
+\donttest{
+library(anomaly)
+set.seed(2018)
+# Generate data typically followig a normal distribution with mean 0 and variance 1. 
+# Then introduce 3 anomaly windows and 4 point outliers.
+x  = rnorm(5000)
+x[401:500]   = rnorm(100,4,1)
+x[1601:1800] = rnorm(200,0,0.01)
+x[3201:3500] = rnorm(300,0,10)
+x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
+inferred_anomalies = anomaly_series(x)
+summary(inferred_anomalies)
+}
+
 }
 \seealso{
 \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}.

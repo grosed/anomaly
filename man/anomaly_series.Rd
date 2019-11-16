@@ -28,6 +28,7 @@ An anomaly_series object.
 Method for calling \code{\link{capa.uv}} in a manner consistent with older versions of the anomaly package.
 }
 \examples{
+\donttest{
 library(anomaly)
 set.seed(2018)
 # Generate data typically following a normal distribution with mean 0 and variance 1. 
@@ -60,7 +61,7 @@ binned_data = period_average(Lightcurves$Kepler10965588,62.9)
 inferred_anomalies = anomaly_series(binned_data)
 plot(inferred_anomalies,xlab="Bin")
 # We found a planet!
-
+}
 }
 \references{
 \insertRef{2018arXiv180601947F}{anomaly}
