@@ -15,7 +15,7 @@
 #' The default value is 1. 
 #' @param transform A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
 #'
-#' @return An S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
+#' @return An instance of an S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
 #' 
 #' @references \insertRef{10.1093/biomet/ass059}{anomaly}
 #' 

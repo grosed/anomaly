@@ -163,16 +163,25 @@ setMethod("summary",signature=list("pass.class"),function(object)
 #' @export
 setMethod("show",signature=list("pass.class"),function(object)
 {
-  cat("PASS detecting change in mean","\n")
-  cat("observations = ",nrow(object@data),"\n",sep="")
-  cat("variates = ",ncol(object@data),"\n",sep="")
-  cat("minimum segment length = ",object@Lmin,"\n",sep="")
-  cat("maximum segment length = ",object@Lmax,"\n",sep="")
-  cat("alpha = ",object@alpha,"\n",sep="") # tuning parameter
-  cat("lambda = ",object@lambda,"\n",sep="")
-  cat("Collective anomalies detected : ",nrow(object@results),"\n")
+  summary(object)
   print(object@results)
   cat("\n")
   invisible()
 })
 
+
+#' @name collective_anomalies
+#'
+#' @docType methods
+#'
+#' @rdname collective_anomalies-methods
+#'
+#' @aliases collective_anomalies,pass.class-method
+#'
+#' 
+#' 
+#' @export
+setMethod("collective_anomalies",signature=list("pass.class"),function(object)
+{
+    return(object@results)
+})

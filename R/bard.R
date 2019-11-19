@@ -1,4 +1,5 @@
 
+#' @include capa.R
 
 .bard.class<-setClass("bard.class",representation(data="array",
                                                   p_N="numeric",
@@ -31,6 +32,23 @@ bard.class<-function(data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h,Rs,
 
 
 
+.bard.sampler.class<-setClass("bard.sampler.class",
+                              representation(bard.result="bard.class",
+                              gamma="numeric",
+                              num_draws="numeric",
+                              sampler.result="data.frame"))
+
+
+bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,...)
+{
+    .bard.sampler.class(bard.result=bard.result,
+                        gamma=gamma,
+                        num_draws=num_draws,
+                        sampler.result=sampler.result)
+}
+
+
+
 
 #' Detection of multivariate anomalous segments using BARD.
 #'
@@ -52,7 +70,7 @@ bard.class<-function(data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h,Rs,
 #' @param h - The step size in the numerical integration used to find the marginal likelihood. The quadrature points are located from lower to upper in steps of h.  
 #' @param transform - A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
 #' 
-#' @return An S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.
+#' @return An instance of the S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.
 #'
 #' @references  \insertRef{bardwell2017}{anomaly}
 #'
@@ -563,12 +581,9 @@ sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
       df = rbind(df, tempdf)
     }
     df = df[-1,]
-    df = df[order(df$LogMargLike, decreasing = T), ]                                                                                                                              
-    return(df)
-    #df<-data.frame("time"=seq(1,length(pvec)),"probability"=pvec)
-    #p<-ggplot(data=df,aes(x=time,y=probability))
-    #p<-p+geom_line()
-    #return(p)
+    df = df[order(df$LogMargLike, decreasing = T), ]
+    return(bard.sampler.class(bard_result,gamma,num_draws,df))
+    # return(df)
 }
 
 
@@ -596,3 +611,92 @@ sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
 ## run bard
 #res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
 #p<-post_process_bard(res)
+
+
+#' @name plot-bard.sampler.class
+#'
+#' @docType methods
+#'
+#' @rdname plot-methods
+#'
+#' @aliases plot,bard.sampler.class,ANY-method
+#'
+#' @export
+setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_names,tile_plot)
+{   # from a plotting perspective the sampled BARD results are identical to those of PASS - cast type to pass.class 
+    plot(pass.class(x@bard.result@data,x@sampler.result,0,0,0,0))
+})
+
+
+#' @name show
+#'
+#' @docType methods
+#'
+#' @rdname show-methods
+#'
+#' @aliases show,bard.class-method
+#'
+#' @export
+setMethod("show",signature=list("bard.class"),function(object)
+{
+    cat("BARD detecting changes in mean","\n",sep="")
+    cat("observations = ",dim(object@data)[1],sep="")
+    cat("\n",sep="")
+    cat("variates = ",dim(object@data)[2],"\n",sep="")
+    invisible()
+})
+
+
+#' @name summary
+#'
+#' @docType methods
+#'
+#' @rdname summary-methods
+#'
+#' @aliases summary,bard.sampler.class-method
+#'
+#' @export
+setMethod("summary",signature=list("bard.sampler.class"),function(object)
+{
+    cat("BARD sampler detecting changes in mean","\n",sep="")
+    cat("observations = ",dim(object@bard.result@data)[1],sep="")
+    cat("\n",sep="")
+    cat("variates = ",dim(object@bard.result@data)[2],"\n",sep="")
+    cat("Collective anomalies detected : ",nrow(object@sampler.result),"\n",sep="")
+    invisible()
+})
+
+
+#' @name show
+#'
+#' @docType methods
+#'
+#' @rdname show-methods
+#'
+#' @aliases show,bard.sampler.class-method
+#'
+#' @export
+setMethod("show",signature=list("bard.sampler.class"),function(object)
+{
+    summary(object)
+    print(object@sampler.result)
+    invisible()
+})
+
+#' @name collective_anomalies
+#'
+#' @docType methods
+#'
+#' @rdname collective_anomalies-methods
+#'
+#' @aliases collective_anomalies,bard.sampler.class-method
+#'
+#' 
+#' 
+#' @export
+setMethod("collective_anomalies",signature=list("bard.sampler.class"),function(object)
+{
+    return(object@sampler.result)
+})
+
+

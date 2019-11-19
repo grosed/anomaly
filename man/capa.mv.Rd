@@ -30,7 +30,7 @@ untransformed data remains available for post processing results obtained using 
 the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default value is \code{transform=robust_scale}.}
 }
 \value{
-An S4 class of type capa.mv.class.
+An instance of an S4 class of type capa.mv.class.
 }
 \description{
 This function implements MVCAPA (Multi-Variate Collective And Point Anomaly) from Fisch et al. (2019). 

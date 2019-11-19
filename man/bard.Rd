@@ -34,7 +34,7 @@ can be changed using the \code{transform} parameter.}
 \item{transform}{- A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.}
 }
 \value{
-An S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.
+An instance of the S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.
 }
 \description{
 Implements the BARD (Bayesian Abnormal Region Detector) procedure of Bardwell and Fearnhead (2017). BARD is a fully Bayesian inference procedure which is able to give

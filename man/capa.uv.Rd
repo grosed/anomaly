@@ -27,7 +27,7 @@ in the data. Importantly, the untransformed data remains available for post proc
 the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}.}
 }
 \value{
-An S4 class of type capa.uv.class.
+An instance of an S4 class of type capa.uv.class.
 }
 \description{
 A technique for detecting anomalous segments and points in univariate time series data based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). CAPA assumes that the data has a certain mean and variance for most

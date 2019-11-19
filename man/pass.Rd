@@ -24,7 +24,7 @@ The default value is 1.}
 \item{transform}{A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.}
 }
 \value{
-An S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
+An instance of an S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
 }
 \description{
 Implements the PASS (Proportion Adaptive Segment Selection) procedure of Jeng et al. (2012). PASS uses a higher criticism statistic to pool the information about the 

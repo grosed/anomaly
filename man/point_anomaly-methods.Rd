@@ -15,7 +15,7 @@
 \S4method{point_anomalies}{capa.mv.class}(object)
 }
 \arguments{
-\item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.}
+\item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.}
 }
 \value{
 A data frame.

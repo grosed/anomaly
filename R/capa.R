@@ -82,7 +82,7 @@ to_array<-function(X)
 if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,...) {standardGeneric("point_anomalies")})}
 
 #' @name point_anomalies
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.
+#' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.
 #' 
 #' @return A data frame. 
 #'
@@ -183,7 +183,7 @@ merge_collective_anomalies<-function(object,epoch)
 #' @name collective_anomalies
 #'
 #' @description Creates a data frame containing collective anomaly locations, lags and changes in mean and variance as detected by
-#' \code{\link{capa.uv}}, \code{\link{capa.mv}}, and \code{\link{capa}}. 
+#' \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{capa}}, \code{\link{pass}}, and \code{\link{sampler}}. 
 #'
 #' For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
 #' due to the anomaly. When \code{type="meanvar"}, the change in variance due to the anomaly is also returned in an additional column.
@@ -198,6 +198,8 @@ merge_collective_anomalies<-function(object,epoch)
 #' For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{capa.uv}} when the data is univariate, or the same results as
 #' \code{\link{capa.mv}} when the data is multivariate.
 #'
+#' For an object produced by \code{\link{pass}} or \code{sampler} returns a data frame containing the start, end and strength of the collective anomalies.
+#'
 #' 
 #' @docType methods
 #'
@@ -206,7 +208,7 @@ merge_collective_anomalies<-function(object,epoch)
 if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",function(object,...) {standardGeneric("collective_anomalies")})}
 
 #' @name collective_anomalies
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}.
+#' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}.
 #' @param merged Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
 #' of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.  
 #' 
@@ -351,25 +353,27 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #' @name summary
 #'
 #' @description Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
-#' and \code{\link{pass}}.  The output displayed depends on the type of S4 object passed to summary. For all types, the output indicates whether the data is univariate or
+#' and \code{\link{pass}}, or \code{\link{sampler}}, or an S3 object returned by \code{\link{anomaly_series}}.  The output displayed
+#' depends on the type of object passed to summary. For all types, the output indicates whether the data is univariate or
 #' multivariate, the number of observations in the data, and the type of change being detected.
 #'
 #'
-#' For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{summary} displays a summary of the analysis..
-#' 
+#' For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{\link{pass}}, \code{\link{sampler}}, or \code{\link{anomaly_series}} \code{summary}
+#' displays a summary of the analysis.
 #' 
 #' For an object produced by \code{\link{capa}} is the same as for an object produced by \code{\link{capa.uv}}
 #' or \code{\link{capa.mv}}. 
 #'
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}, or an S3 class produced by \code{\link{anomaly_series}}.
+#' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}},
+#' or an S3 class produced by \code{\link{anomaly_series}}.
 #' 
 #' @rdname summary-methods
 #'
 #' @aliases summary,capa.class-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}. 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{sampler}}. 
 #'
 #' @export
 setMethod("summary",signature=list("capa.class"),function(object)
@@ -465,19 +469,19 @@ setMethod("summary",signature=list("capa.mv.class"),function(object)
 #'
 #' @name show
 #'
-#' @description Displays S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and
-#' \code{\link{pass}}. The output displayed depends on the type of S4 object passed to the method For all types, the output indicates whether the data is univariate or
+#' @description Displays S4 object produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, \code{\link{bard}}, and \code{\link{sampler}}.
+#' The output displayed depends on the type of S4 object passed to the method. For all types, the output indicates whether the data is univariate or
 #' multivariate, the number of observations in the data, and the type of change being detected.
 #'
 #' @docType methods
 #'
-#' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, or \code{\link{capa.mv}}.
+#' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, \code{\link{bard}}, or \code{\link{sampler}}.
 #' 
 #' @rdname show-methods
 #'
 #' @aliases show,capa.class-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}. 
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{bard}},\code{\link{sampler}}. 
 #'
 #' @export
 setMethod("show",signature=list("capa.class"),function(object)
@@ -848,11 +852,11 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.
-#' @param transform A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for le, be used to compensate for the effects of autocorrelation in the data.
+#' @param transform A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for examle, be used to compensate for the effects of autocorrelation in the data.
 #' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 #' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}. 
 #' 
-#' @return An S4 class of type capa.class. 
+#' @return An instance of an S4 class of type capa.class. 
 #'
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
 #'
@@ -1064,7 +1068,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #' in the data. Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa.uv}}. The package includes several methods that are commonly used for
 #' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}. 
 #'
-#' @return An S4 class of type capa.uv.class. 
+#' @return An instance of an S4 class of type capa.uv.class. 
 #'
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
 #' 
@@ -1130,7 +1134,7 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' untransformed data remains available for post processing results obtained using \code{\link{capa.mv}}. The package includes several methods that are commonly used for
 #' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default value is \code{transform=robust_scale}.
 #' 
-#' @return An S4 class of type capa.mv.class. 
+#' @return An instance of an S4 class of type capa.mv.class. 
 #'
 #' @references \insertRef{2019MVCAPA}{anomaly}
 #'
@@ -1326,7 +1330,8 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @docType methods
 #'
-#' @param x An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}} or an S3 class produced by \code{\link{anomaly_series}}.
+#' @param x An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}}, or
+#' an instance of the S3 class produced by \code{\link{anomaly_series}}.. 
 #' @param subset A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.
 #' @param variate_names Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 #' as it makes the visualisation easier to interpret. Default value is TRUE.
@@ -1339,7 +1344,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @aliases plot,capa.class,ANY-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}}.
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{sampler}},\code{\link{anomaly_series}}.
 #'
 #' @export 
 setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,tile_plot)

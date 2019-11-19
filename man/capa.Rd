@@ -25,12 +25,12 @@ variance (the default) or "mean" for collective anomalies characterised by chang
 
 \item{max_lag}{A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.}
 
-\item{transform}{A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for le, be used to compensate for the effects of autocorrelation in the data.
+\item{transform}{A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for examle, be used to compensate for the effects of autocorrelation in the data.
 Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}.}
 }
 \value{
-An S4 class of type capa.class.
+An instance of an S4 class of type capa.class.
 }
 \description{
 A technique for detecting anomalous segments and points based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). This is a generic method that can be used for both univariate
