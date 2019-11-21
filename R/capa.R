@@ -394,7 +394,7 @@ setMethod("summary",signature=list("capa.class"),function(object)
     p_anoms<-point_anomalies(object)
     c_anoms<-collective_anomalies(object)
     cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-    cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+    cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
     invisible()
 })
 
@@ -427,7 +427,7 @@ setMethod("summary",signature=list("capa.uv.class"),function(object)
     p_anoms<-point_anomalies(object)
     c_anoms<-collective_anomalies(object)
     cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-    cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+    cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
     invisible()
 })
 
@@ -461,7 +461,7 @@ setMethod("summary",signature=list("capa.mv.class"),function(object)
     p_anoms<-point_anomalies(object)
     c_anoms<-collective_anomalies(object)
     cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-    cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+    cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
     invisible()
 })
 
@@ -507,7 +507,7 @@ setMethod("show",signature=list("capa.class"),function(object)
   print(p_anoms)
   }
   cat("\n",sep="")
-  cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+  cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
   if (nrow(c_anoms)>0){
     print(c_anoms)
   }
@@ -548,7 +548,7 @@ setMethod("show",signature=list("capa.uv.class"),function(object)
     print(p_anoms)
   }
   cat("\n",sep="")
-  cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+  cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
   if (nrow(c_anoms)>0){
     print(c_anoms)
   }
@@ -590,7 +590,7 @@ setMethod("show",signature=list("capa.mv.class"),function(object)
     print(p_anoms)
   }
   cat("\n",sep="")
-  cat("Collective anomalies detected : ",nrow(c_anoms),"\n",sep="")
+  cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
   if (nrow(c_anoms)>0){
     print(c_anoms)
   }
