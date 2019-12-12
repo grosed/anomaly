@@ -865,7 +865,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' library(anomaly)
 #' # generate some multivariate data
 #' set.seed(0)
-#' sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
+#' sim.data<-simulate(n=500,p=100,mu=2,locations=c(100,200,300),
 #'                    duration=6,proportions=c(0.04,0.06,0.08))
 #' res<-capa(sim.data,type="mean",min_seg_len=2,max_lag=5)
 #' collective_anomalies(res)
@@ -1144,7 +1144,7 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' ### generate some multivariate data
 #' 
 #' set.seed(0)
-#' sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
+#' sim.data<-simulate(n=500,p=100,mu=2,locations=c(100,200,300),
 #'                    duration=6,proportions=c(0.04,0.06,0.08))
 #'                    
 #' ### Apply MVCAPA
@@ -1265,7 +1265,11 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
                    panel.grid.major = element_blank(),
                    panel.grid.minor = element_blank(),
                    # Change axis line
-                   axis.line = element_line(colour = "black")
+                   axis.line = element_line(colour = "black"),
+                   # remove y axis line, ticks and values
+                   axis.line.y=element_blank(),
+                   axis.ticks.y=element_blank(),
+                   axis.text.y=element_blank()
                  )
     return(out)
 }
@@ -1311,12 +1315,13 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
                  panel.grid.major = element_blank(),
                  panel.grid.minor = element_blank(),
                  # Change axis line
-                 axis.line = element_line(colour = "black")
+                 axis.line = element_line(colour = "black"),
+                 # remove y axis and ticks
+                 axis.line.y=element_blank(),
+                 axis.ticks.y=element_blank()
                  )
     return(out)
 }
-
-
 
 
 #' Visualisation of data, collective and point anomalies.

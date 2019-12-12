@@ -44,7 +44,7 @@ library(anomaly)
 ### generate some multivariate data
 
 set.seed(0)
-sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
+sim.data<-simulate(n=500,p=100,mu=2,locations=c(100,200,300),
                    duration=6,proportions=c(0.04,0.06,0.08))
                    
 ### Apply MVCAPA

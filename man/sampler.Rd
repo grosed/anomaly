@@ -22,7 +22,7 @@ Determines the locations of anomalous sections from the results produced by BARD
 \examples{
 library(anomaly)
 set.seed(0)
-sim.data<-simulate(n=500,p=200,mu=2,locations=c(100,200,300),
+sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
 duration=6,proportions=c(0.04,0.06,0.08))
 # parameters
 p_N<-0.05
@@ -30,8 +30,8 @@ p_A<-0.5
 k_N<-10
 k_A<-10
 pi_N<-0.9
-alpha<-0.0001
-paffected<-10/200
+alpha<-0.00001
+paffected<-10/100
 lower<-0.5
 upper<-1.5
 h<-0.25
