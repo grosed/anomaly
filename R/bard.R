@@ -557,6 +557,8 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #'
 #' @references  \insertRef{bardwell2017}{anomaly}
 #'
+#' @seealso \code{\link{sampler}}
+#'
 #' @examples
 #' 
 #' library(anomaly)
@@ -575,9 +577,12 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' upper<-1.5
 #' h<-0.25
 #' # run bard
-#' res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
-#' sampler(res)
-#'
+#' bard.res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+#' sampler.res<-sampler(bard.res)
+#' collective_anomalies(sampler.res)
+#' \donttest{
+#' plot(sampler.res,marginals=TRUE)
+#' }
 #' @export
 bard<-function(x,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h,transform=robustscale)
 {
@@ -894,9 +899,11 @@ format_output = function(R){
 #' @param gamma - Parameter of loss function: cost of incorrectly assigning an abnormal point as being normal (false negative).
 #' @param num_draws - Number of samples to draw from the posterior distribution. 
 #' 
-#' @return A dataframe containing the start, end, and log marginal likelihood for each anomalous segment. 
+#' @return Returns an S4 class of type \code{bard.sampler.class}.  
 #'
 #' @references  \insertRef{bardwell2017}{anomaly}
+#' @seealso \code{\link{bard}}
+#'
 #'
 #' @examples
 #' library(anomaly)
@@ -918,9 +925,6 @@ format_output = function(R){
 #' res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
 #' # sample 
 #' sampler(res)
-#' # effect of sampling parameters
-#' sampler(res,gamma=10,num_draws=1000)
-#' sampler(res,gamma=10,num_draws=10)
 #' 
 #' @export
 sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)

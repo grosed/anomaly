@@ -14,7 +14,7 @@ sampler(bard_result, gamma = 1/3, num_draws = 1000)
 \item{num_draws}{- Number of samples to draw from the posterior distribution.}
 }
 \value{
-A dataframe containing the start, end, and log marginal likelihood for each anomalous segment.
+Returns an S4 class of type \code{bard.sampler.class}.
 }
 \description{
 Determines the locations of anomalous sections from the results produced by BARD.
@@ -39,11 +39,11 @@ h<-0.25
 res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
 # sample 
 sampler(res)
-# effect of sampling parameters
-sampler(res,gamma=10,num_draws=1000)
-sampler(res,gamma=10,num_draws=10)
 
 }
 \references{
 \insertRef{bardwell2017}{anomaly}
+}
+\seealso{
+\code{\link{bard}}
 }

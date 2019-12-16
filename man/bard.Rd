@@ -59,10 +59,16 @@ lower<-0.5
 upper<-1.5
 h<-0.25
 # run bard
-res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
-sampler(res)
-
+bard.res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+sampler.res<-sampler(bard.res)
+collective_anomalies(sampler.res)
+\donttest{
+plot(sampler.res,marginals=TRUE)
+}
 }
 \references{
 \insertRef{bardwell2017}{anomaly}
+}
+\seealso{
+\code{\link{sampler}}
 }
