@@ -481,8 +481,8 @@ Rbard <- function(data, bardparams, mu_seq, alpha = 1e-4){
 .bard.class<-setClass("bard.class",representation(data="array",
                                                   p_N="numeric",
                                                   p_A="numeric",
-                                                  k_N="integer",
-                                                  k_A="integer",
+                                                  k_N="numeric",
+                                                  k_A="numeric",
                                                   pi_N="numeric",
                                                   alpha="numeric",
                                                   paffected="numeric",
@@ -532,28 +532,40 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 
 
 
-library(anomaly)
-?bard
 #' Detection of multivariate anomalous segments using BARD.
 #'
 #' Implements the BARD (Bayesian Abnormal Region Detector) procedure of Bardwell and Fearnhead (2017). 
 #' BARD is a fully Bayesian inference procedure which is able to give measures of uncertainty about the 
 #' number and location of anomalous regions. It uses negative binomial prior distributions on the lengths 
-#' of anomalous and non-anomalous regions as well as a prior uniform distribution for the mean of an anomalous segment.
+#' of anomalous and non-anomalous regions as well as a uniform prior for the means of anomalous regions. 
+#' Inference is conducted by solving a set of recursions. To reduce computational and storage costs a resampling 
+#' step is included.
 #' 
 #' @param x - An $n$ by $p$ real matrix representing n observations of p variates. Each variate is scaled by BARD using the median and the median absolute deviation. This
 #' can be changed using the \code{transform} parameter. 
-#' @param p_N - Probability of success in each trial for the negative binomial distribution for the length of non-anomalous segments.
-#' @param k_N - Dispersion parameter for the negative binomial distribution for the length of non-anomalous segments.
-#' @param p_A - Probability of success in each trial for the negative binomial distribution for the length of anomalous segments.
-#' @param k_A - Dispersion parameter for the negative binomial distribution for the length of anomalous segments.
-#' @param pi_N - Probability that an anomalous segment is followed by a non-anomalous segment.
-#' @param alpha - Threshold used to control the resampling in the approximation of the posterior distribution at each time step. Defaults to 1e-4.
-#' @param paffected - Proportion of the series believed to be affected by any given anomalous segment.
-#' @param lower - The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{mu}.
-#' @param upper - The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{mu}.
-#' @param h - The step size in the numerical integration used to find the marginal likelihood. The quadrature points are located from lower to upper in steps of h.  
+#' @param p_N - Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}}.
+#' @param k_N - Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.
+#' @param p_A - Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \deqn{\frac{5}{n}}.
+#' @param k_A - Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \deqn{\frac{5p_A}{1- p_A}}.
+#' @param pi_N - Probability that an anomalous segment is followed by a non-anomalous segment. Defaults to 0.9.
+#' @param paffected - Proportion of the series believed to be affected by any given anomalous segment. Defaults to 5\%. 
+#' This parameter is relatively robust to being mis-specified and is studied empirically in Section 5.1 of \insertCite{bardwell2017;textual}{anomaly}.
+#' @param lower - The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{mu}. Defaults to \deqn{2\sqrt{\frac{\log(n)}{n}}}.
+#' @param upper - The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{mu}. 
+#' Defaults to the largest standardised value of x, i.e. \code{max(transform(x))}.
+#' @param alpha - Threshold used to control the resampling in the approximation of the posterior distribution at each time step. A sensible default is 1e-4.
+#' Decreasing alpha increases the accuracy of the posterior distribution but also increases the computational complexity of the algorithm. 
+#' @param h - The step size in the numerical integration used to find the marginal likelihood. 
+#' The quadrature points are located from lower to upper in steps of h. Defaults to 0.25. 
+#' Decreasing this parameter increases the accuracy of the calculation for the marginal likelihood but increases computational complexity.   
 #' @param transform - A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
+#' 
+#' @section Notes on default hyper-parameters:
+#' This function gives certain default hyper-parameters for the two segment length distributions.
+#' We chose these to be quite flexible for a range of problems. For non-anomalous segments a geometric distibution
+#' was selected having an average segment length of \eqn{n} with the standard deviation being of the same order. 
+#' For anomalous segments we chose parameters that gave an average length of 5 and a variance of \eqn{n}. 
+#' These may not be suitable for all problems and the user is encouraged to tune these parameters. 
 #' 
 #' @return An instance of the S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.
 #'
@@ -567,26 +579,15 @@ library(anomaly)
 #' set.seed(0)
 #' sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
 #'                    duration=6,proportions=c(0.04,0.06,0.08))
-#' # parameters
-#' p_N<-0.05
-#' p_A<-0.5
-#' k_N<-10
-#' k_A<-10
-#' pi_N<-0.9
-#' alpha<-0.00001
-#' paffected<-10/100
-#' lower<-0.5
-#' upper<-1.5
-#' h<-0.25
 #' # run bard
-#' bard.res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+#' bard.res<-bard(sim.data)
 #' sampler.res<-sampler(bard.res)
 #' collective_anomalies(sampler.res)
 #' \donttest{
 #' plot(sampler.res,marginals=TRUE)
 #' }
 #' @export
-bard<-function(x,p_N,p_A,k_N,k_A,pi_N,alpha=1e-4,paffected,lower,upper,h,transform=robustscale)
+bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(1-p_A), pi_N = 0.9, paffected = 0.05, lower = 2*sqrt(log(nrow(data))/nrow(data)), upper = max(transform(x)), alpha=1e-4, h=0.25, transform=robustscale)
 {
     # check the data
     data<-as.array(as.matrix(x))
@@ -696,10 +697,6 @@ bard<-function(x,p_N,p_A,k_N,k_A,pi_N,alpha=1e-4,paffected,lower,upper,h,transfo
     {
         stop("k_A must be positive")
     }
-    if(k_A - as.integer(k_A) > 0)
-    {
-        warning("k_A should be an integer - user value will rounded down")
-    }
 
     # check k_N
     if(!is_numeric(k_N))
@@ -713,10 +710,6 @@ bard<-function(x,p_N,p_A,k_N,k_A,pi_N,alpha=1e-4,paffected,lower,upper,h,transfo
     if(k_N < 0.0)
     {
         stop("k_N must be positive")
-    }
-    if(k_N - as.integer(k_N) > 0)
-    {
-        warning("k_N should be an integer - user value will rounded down")
     }
     
     # check lower
@@ -757,7 +750,7 @@ bard<-function(x,p_N,p_A,k_N,k_A,pi_N,alpha=1e-4,paffected,lower,upper,h,transfo
     # check relationship between h and upper and lower
     if(h > (upper - lower))
     {
-        stop("h value to large : (h <= upper -lower)")
+        stop("h value too large : (h <= upper -lower)")
     }
 
 
@@ -771,8 +764,8 @@ res<-Rbard(data,bardparams,mu_seq,alpha)
 return(bard.class(data=data,
                   p_N=p_N,
                   p_A=p_A,
-                  k_N=as.integer(k_N),
-                  k_A=as.integer(k_A),
+                  k_N=k_N,
+                  k_A=k_A,
                   pi_N=pi_N,
                   alpha=alpha,
                   paffected=paffected,
@@ -898,7 +891,8 @@ format_output = function(R){
 #' Determines the locations of anomalous sections from the results produced by BARD.
 #'
 #' @param bard_result - An instance of the S4 class \code{.bard.class} containing a result returned by the \code{bard} function. 
-#' @param gamma - Parameter of loss function: cost of incorrectly assigning an abnormal point as being normal (false negative).
+#' @param gamma - Parameter of loss function: cost of incorrectly assigning an abnormal point as being normal (false negative). 
+#' For more details see Section 3.5 of \insertCite{bardwell2017;textual}{anomaly}.
 #' @param num_draws - Number of samples to draw from the posterior distribution. 
 #' 
 #' @return Returns an S4 class of type \code{bard.sampler.class}.  
@@ -912,19 +906,8 @@ format_output = function(R){
 #' set.seed(0)
 #' sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
 #' duration=6,proportions=c(0.04,0.06,0.08))
-#' # parameters
-#' p_N<-0.05
-#' p_A<-0.5
-#' k_N<-10
-#' k_A<-10
-#' pi_N<-0.9
-#' alpha<-0.00001
-#' paffected<-10/100
-#' lower<-0.5
-#' upper<-1.5
-#' h<-0.25
 #' # run bard
-#' res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+#' res<-bard(sim.data)
 #' # sample 
 #' sampler(res)
 #' 
@@ -934,32 +917,6 @@ sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
    res<-Rsampler(res=bard_result@Rs,gamma=gamma,no.draws=num_draws)
    return(bard.sampler.class(bard_result,gamma,num_draws,res[[1]],res[[2]],res[[3]]))
 }
-
-
-
-
-
-
-##### BARD example to use in documentation
-
-#library(anomaly)
-#data(simulated)
-#
-## parameters
-#p_N<-0.05
-#p_A<-0.5
-#k_N<-10
-#k_A<-10
-#pi_N<-0.9
-#alpha<-0.0001
-#paffected<-10/200
-#lower<-0.5
-#upper<-1.5
-#h<-0.25
-#
-## run bard
-#res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
-#p<-post_process_bard(res)
 
 
 #' @name plot-bard.sampler.class
