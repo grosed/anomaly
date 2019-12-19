@@ -532,24 +532,26 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 
 
 
-
+library(anomaly)
+?bard
 #' Detection of multivariate anomalous segments using BARD.
 #'
-#' Implements the BARD (Bayesian Abnormal Region Detector) procedure of Bardwell and Fearnhead (2017). BARD is a fully Bayesian inference procedure which is able to give
-#' measures of uncertainty about the number and location of abnormal regions. It uses flexible prior distributions on the lengths of normal and abnormal regions as well as
-#' a prior distribution on the mean of the affected variates.
+#' Implements the BARD (Bayesian Abnormal Region Detector) procedure of Bardwell and Fearnhead (2017). 
+#' BARD is a fully Bayesian inference procedure which is able to give measures of uncertainty about the 
+#' number and location of anomalous regions. It uses negative binomial prior distributions on the lengths 
+#' of anomalous and non-anomalous regions as well as a prior uniform distribution for the mean of an anomalous segment.
 #' 
 #' @param x - An $n$ by $p$ real matrix representing n observations of p variates. Each variate is scaled by BARD using the median and the median absolute deviation. This
 #' can be changed using the \code{transform} parameter. 
-#' @param p_N - Probability of success in each trial for the Negative Binomial distribution for the length of normal segments.
-#' @param k_N - Dispersion parameter for the Negative Binomial distribution for the length of normal segments.
-#' @param p_A - Probability of success in each trial for the Negative Binomial distribution for the length of abnormal segments.
-#' @param k_A - Dispersion parameter for the Negative Binomial distribution for the length of abnormal segments.
-#' @param pi_N - Probability that an abnormal segment is followed by a normal segment.
-#' @param alpha - Threshold used to control the resampling in the approximation of the posterior distribution at each time step.
-#' @param paffected - Proportion of the series believed to be affected by an abnormal segment.
-#' @param lower - The lower limit of the prior uniform distribution for \eqn{mu}.
-#' @param upper - The upper limit of the prior uniform distribution for \eqn{mu}.
+#' @param p_N - Probability of success in each trial for the negative binomial distribution for the length of non-anomalous segments.
+#' @param k_N - Dispersion parameter for the negative binomial distribution for the length of non-anomalous segments.
+#' @param p_A - Probability of success in each trial for the negative binomial distribution for the length of anomalous segments.
+#' @param k_A - Dispersion parameter for the negative binomial distribution for the length of anomalous segments.
+#' @param pi_N - Probability that an anomalous segment is followed by a non-anomalous segment.
+#' @param alpha - Threshold used to control the resampling in the approximation of the posterior distribution at each time step. Defaults to 1e-4.
+#' @param paffected - Proportion of the series believed to be affected by any given anomalous segment.
+#' @param lower - The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{mu}.
+#' @param upper - The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{mu}.
 #' @param h - The step size in the numerical integration used to find the marginal likelihood. The quadrature points are located from lower to upper in steps of h.  
 #' @param transform - A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
 #' 
@@ -584,7 +586,7 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' plot(sampler.res,marginals=TRUE)
 #' }
 #' @export
-bard<-function(x,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h,transform=robustscale)
+bard<-function(x,p_N,p_A,k_N,k_A,pi_N,alpha=1e-4,paffected,lower,upper,h,transform=robustscale)
 {
     # check the data
     data<-as.array(as.matrix(x))
