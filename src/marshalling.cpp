@@ -127,6 +127,18 @@ std::vector<int> marshall_MeanAnomaly(SEXP a,
   return MeanAnomaly(a,b,c,d,e,f,g);
 }
 
+//[[Rcpp::export]]
+std::vector<int> marshall_RobustMeanAnomaly(SEXP a,
+				            SEXP b,
+				            SEXP c,
+				            SEXP d,
+				            SEXP e,
+				            SEXP f,
+				            SEXP g)
+{
+  return RobustMeanAnomaly(a,b,c,d,e,f,g);
+}
+
 
 //[[Rcpp::export]]
 std::vector<int> marshall_recursive_anomalies(SEXP a,
