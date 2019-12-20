@@ -4,13 +4,13 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "Functions_robustmean.h"
+#include "Functions_mean.h"
 
 #include <vector>
 
 using namespace anomalymv;
 
-std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Rmaxlength, SEXP Ronline)
+std::vector<int> MeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Rmaxlength, SEXP Ronline)
 // SEXP MeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Rmaxlength, SEXP Ronline)
 {
   
@@ -54,7 +54,7 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
   	}
 
 
-	struct orderedobservationlist_robustmean* mylist;
+	struct orderedobservationlist_mean* mylist;
 
 	populate_mean(&mylist, x, n, p, l); 
 	
