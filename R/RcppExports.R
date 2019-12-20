@@ -13,6 +13,10 @@ marshall_MeanAnomaly <- function(a, b, c, d, e, f, g) {
     .Call('_anomaly_marshall_MeanAnomaly', PACKAGE = 'anomaly', a, b, c, d, e, f, g)
 }
 
+marshall_RobustMeanAnomaly <- function(a, b, c, d, e, f, g) {
+    .Call('_anomaly_marshall_RobustMeanAnomaly', PACKAGE = 'anomaly', a, b, c, d, e, f, g)
+}
+
 marshall_recursive_anomalies <- function(a, b, c) {
     .Call('_anomaly_marshall_recursive_anomalies', PACKAGE = 'anomaly', a, b, c)
 }

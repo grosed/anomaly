@@ -7,17 +7,19 @@
 Online_tukey::Online_tukey()
 {
 
+	cumsumofsquares = 0;
 	tukey_object New;
 	object_list.push_back(New);
 
 };
 
-void Online_tukey::Add_observation(double observation, const double threshold, const double threshold_squared)
+void Online_tukey::Add_observation(double observation, double observation_squared, const double threshold, const double threshold_squared)
 {
 
 	double lower = observation-threshold;
 	double upper = observation+threshold;
-	double observation_squared = observation*observation;
+
+	cumsumofsquares += observation_squared;
 
 	std::list<tukey_object>::iterator it = object_list.begin();
 
@@ -79,6 +81,6 @@ double Online_tukey::Find_minimum()
 
 	}
 
-	return(Min);
+	return(cumsumofsquares - Min);
 
 };

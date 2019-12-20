@@ -54,6 +54,10 @@ std::vector<int> RobustMeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxl
 	
 	if (error)
 	{
+		for (ii = 0; ii < n+2; ii++)
+		{	
+			if(mylist[ii].Tukey_Stuff){delete mylist[ii].Tukey_Stuff;}
+		}
 		free(betavector);
 	  	free(mylist);
 	  	UNPROTECT(7);
@@ -128,6 +132,11 @@ std::vector<int> RobustMeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxl
 
 	}
 	
+
+	for (ii = 0; ii < n+2; ii++)
+	{	
+		if(mylist[ii].Tukey_Stuff){delete mylist[ii].Tukey_Stuff;}
+	}
 	free(changes);
 	free(betavector);
 	free(mylist); 

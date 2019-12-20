@@ -6,9 +6,10 @@
 class Online_tukey
 {
 	public:
+	double cumsumofsquares;
 	std::list<tukey_object> object_list;
 	Online_tukey();
-	void Add_observation(double,const double, const double);
+	void Add_observation(double,double,const double, const double);
 	double Find_minimum();
 
 };

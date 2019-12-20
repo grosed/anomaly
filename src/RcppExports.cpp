@@ -61,6 +61,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// marshall_RobustMeanAnomaly
+std::vector<int> marshall_RobustMeanAnomaly(SEXP a, SEXP b, SEXP c, SEXP d, SEXP e, SEXP f, SEXP g);
+RcppExport SEXP _anomaly_marshall_RobustMeanAnomaly(SEXP aSEXP, SEXP bSEXP, SEXP cSEXP, SEXP dSEXP, SEXP eSEXP, SEXP fSEXP, SEXP gSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type a(aSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type b(bSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type c(cSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type d(dSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type e(eSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type f(fSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type g(gSEXP);
+    rcpp_result_gen = Rcpp::wrap(marshall_RobustMeanAnomaly(a, b, c, d, e, f, g));
+    return rcpp_result_gen;
+END_RCPP
+}
 // marshall_recursive_anomalies
 std::vector<int> marshall_recursive_anomalies(SEXP a, SEXP b, SEXP c);
 RcppExport SEXP _anomaly_marshall_recursive_anomalies(SEXP aSEXP, SEXP bSEXP, SEXP cSEXP) {
@@ -168,6 +185,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_anomaly_marshall_bard", (DL_FUNC) &_anomaly_marshall_bard, 12},
     {"_anomaly_marshall_MeanVarAnomaly", (DL_FUNC) &_anomaly_marshall_MeanVarAnomaly, 7},
     {"_anomaly_marshall_MeanAnomaly", (DL_FUNC) &_anomaly_marshall_MeanAnomaly, 7},
+    {"_anomaly_marshall_RobustMeanAnomaly", (DL_FUNC) &_anomaly_marshall_RobustMeanAnomaly, 7},
     {"_anomaly_marshall_recursive_anomalies", (DL_FUNC) &_anomaly_marshall_recursive_anomalies, 3},
     {"_anomaly_marshall_recursive_mvanomalies", (DL_FUNC) &_anomaly_marshall_recursive_mvanomalies, 7},
     {"_anomaly_marshall_MeanVarAnomalyMV", (DL_FUNC) &_anomaly_marshall_MeanVarAnomalyMV, 9},

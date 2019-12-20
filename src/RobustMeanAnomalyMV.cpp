@@ -56,9 +56,9 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 
 	struct orderedobservationlist_robustmean* mylist;
 
-	populate_mean(&mylist, x, n, p, l); 
+	populate_robustmean(&mylist, x, n, p, l); 
 	
-	status = solveorderedobservationlist_mean(mylist, n, p, l, betachange, betaanomaly, minlength, maxlength);
+	status = solveorderedobservationlist_robustmean(mylist, n, p, l, betachange, betaanomaly, minlength, maxlength);
 
 	if(status)
 	{
@@ -97,7 +97,7 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 		int *out;
   		out  = INTEGER(Rout);
 		
-		changepointreturn_mean_online(mylist, n, p, out);
+		changepointreturn_robustmean_online(mylist, n, p, out);
 		
 
 	} 
@@ -106,7 +106,7 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 
 		int numberofchanges = 0, *changes = NULL, *components = NULL, *startlag = NULL, *endlag = NULL;
 	
-		changepointreturn_mean(mylist, n, p, &numberofchanges, &changes, &components, &startlag, &endlag);
+		changepointreturn_robustmean(mylist, n, p, &numberofchanges, &changes, &components, &startlag, &endlag);
 		
   		PROTECT(Rout = allocVector(INTSXP, numberofchanges*(3 + 3*p)));
 		vout.resize(numberofchanges*(3 + 3*p));

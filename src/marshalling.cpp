@@ -13,6 +13,7 @@
 
 #include "MeanVarAnomaly.h"
 #include "MeanAnomaly.h"
+#include "RobustMeanAnomaly.h"
 #include "sequential_quantiles.h"
 #include "recursive_anomalies.h"
 #include "recursive_mvanomalies.h"

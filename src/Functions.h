@@ -1,4 +1,6 @@
 #include <stdbool.h>
+#include "tukey.h"
+#include "Online_tukey.h"
 
 
 namespace anomaly
@@ -72,10 +74,11 @@ void pruner_mean(struct orderedobservationlist_mean *list, int ii, double penalt
 
 typedef struct orderedobservationlist_robustmean 
 {
-	int    numberofobservation;
+	int numberofobservation;
 	double observation;
+	double observationsquared;
+	Online_tukey *Tukey_Stuff;
 
-	double cumulativesum;
 	double optimalcostofprevious;
 	double segmentcost;
 	
@@ -90,7 +93,7 @@ typedef struct orderedobservationlist_robustmean
 
 void populateorderedobservationlist_robustmean(struct orderedobservationlist_robustmean **list, double* x , int n);
 
-void updatewithobservation_robustmean(int ii, struct orderedobservationlist_robustmean *list, double* penaltychange);
+void updatewithobservation_robustmean(int ii, struct orderedobservationlist_robustmean *list, double* penaltychange, const double threshold, const double threshold_squared);
 
 void findoptimaloption_robustmean(int ii, struct orderedobservationlist_robustmean *list, int minseglength, double penaltyoutlier);
 
