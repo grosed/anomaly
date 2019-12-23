@@ -9,7 +9,8 @@ sampler(bard_result, gamma = 1/3, num_draws = 1000)
 \arguments{
 \item{bard_result}{- An instance of the S4 class \code{.bard.class} containing a result returned by the \code{bard} function.}
 
-\item{gamma}{- Parameter of loss function: cost of incorrectly assigning an abnormal point as being normal (false negative).}
+\item{gamma}{- Parameter of loss function: cost of incorrectly assigning an abnormal point as being normal (false negative). 
+For more details see Section 3.5 of \insertCite{bardwell2017;textual}{anomaly}.}
 
 \item{num_draws}{- Number of samples to draw from the posterior distribution.}
 }
@@ -24,19 +25,8 @@ library(anomaly)
 set.seed(0)
 sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
 duration=6,proportions=c(0.04,0.06,0.08))
-# parameters
-p_N<-0.05
-p_A<-0.5
-k_N<-10
-k_A<-10
-pi_N<-0.9
-alpha<-0.00001
-paffected<-10/100
-lower<-0.5
-upper<-1.5
-h<-0.25
 # run bard
-res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+res<-bard(sim.data, alpha = 1e-3, h = 0.5)
 # sample 
 sampler(res)
 
