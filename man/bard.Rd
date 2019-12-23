@@ -4,32 +4,49 @@
 \alias{bard}
 \title{Detection of multivariate anomalous segments using BARD.}
 \usage{
-bard(x, p_N, p_A, k_N, k_A, pi_N, alpha, paffected, lower, upper, h,
-  transform = robustscale)
+bard(
+  x,
+  p_N = 1/(nrow(x) + 1),
+  p_A = 5/nrow(x),
+  k_N = 1,
+  k_A = (5 * p_A)/(1 - p_A),
+  pi_N = 0.9,
+  paffected = 0.05,
+  lower = 2 * sqrt(log(nrow(data))/nrow(data)),
+  upper = max(transform(x)),
+  alpha = 1e-04,
+  h = 0.25,
+  transform = robustscale
+)
 }
 \arguments{
 \item{x}{- An $n$ by $p$ real matrix representing n observations of p variates. Each variate is scaled by BARD using the median and the median absolute deviation. This
 can be changed using the \code{transform} parameter.}
 
-\item{p_N}{- Probability of success in each trial for the Negative Binomial distribution for the length of normal segments.}
+\item{p_N}{- Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}}.}
 
-\item{p_A}{- Probability of success in each trial for the Negative Binomial distribution for the length of abnormal segments.}
+\item{p_A}{- Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \deqn{\frac{5}{n}}.}
 
-\item{k_N}{- Dispersion parameter for the Negative Binomial distribution for the length of normal segments.}
+\item{k_N}{- Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.}
 
-\item{k_A}{- Dispersion parameter for the Negative Binomial distribution for the length of abnormal segments.}
+\item{k_A}{- Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \deqn{\frac{5p_A}{1- p_A}}.}
 
-\item{pi_N}{- Probability that an abnormal segment is followed by a normal segment.}
+\item{pi_N}{- Probability that an anomalous segment is followed by a non-anomalous segment. Defaults to 0.9.}
 
-\item{alpha}{- Threshold used to control the resampling in the approximation of the posterior distribution at each time step.}
+\item{paffected}{- Proportion of the series believed to be affected by any given anomalous segment. Defaults to 5\%. 
+This parameter is relatively robust to being mis-specified and is studied empirically in Section 5.1 of \insertCite{bardwell2017;textual}{anomaly}.}
 
-\item{paffected}{- Proportion of the series believed to be affected by an abnormal segment.}
+\item{lower}{- The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{mu}. Defaults to \deqn{2\sqrt{\frac{\log(n)}{n}}}.}
 
-\item{lower}{- The lower limit of the prior uniform distribution for \eqn{mu}.}
+\item{upper}{- The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{mu}. 
+Defaults to the largest standardised value of x, i.e. \code{max(transform(x))}.}
 
-\item{upper}{- The upper limit of the prior uniform distribution for \eqn{mu}.}
+\item{alpha}{- Threshold used to control the resampling in the approximation of the posterior distribution at each time step. A sensible default is 1e-4.
+Decreasing alpha increases the accuracy of the posterior distribution but also increases the computational complexity of the algorithm.}
 
-\item{h}{- The step size in the numerical integration used to find the marginal likelihood. The quadrature points are located from lower to upper in steps of h.}
+\item{h}{- The step size in the numerical integration used to find the marginal likelihood. 
+The quadrature points are located from lower to upper in steps of h. Defaults to 0.25. 
+Decreasing this parameter increases the accuracy of the calculation for the marginal likelihood but increases computational complexity.}
 
 \item{transform}{- A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.}
 }
@@ -37,29 +54,30 @@ can be changed using the \code{transform} parameter.}
 An instance of the S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.
 }
 \description{
-Implements the BARD (Bayesian Abnormal Region Detector) procedure of Bardwell and Fearnhead (2017). BARD is a fully Bayesian inference procedure which is able to give
-measures of uncertainty about the number and location of abnormal regions. It uses flexible prior distributions on the lengths of normal and abnormal regions as well as
-a prior distribution on the mean of the affected variates.
+Implements the BARD (Bayesian Abnormal Region Detector) procedure of Bardwell and Fearnhead (2017). 
+BARD is a fully Bayesian inference procedure which is able to give measures of uncertainty about the 
+number and location of anomalous regions. It uses negative binomial prior distributions on the lengths 
+of anomalous and non-anomalous regions as well as a uniform prior for the means of anomalous regions. 
+Inference is conducted by solving a set of recursions. To reduce computational and storage costs a resampling 
+step is included.
 }
+\section{Notes on default hyper-parameters}{
+
+This function gives certain default hyper-parameters for the two segment length distributions.
+We chose these to be quite flexible for a range of problems. For non-anomalous segments a geometric distibution
+was selected having an average segment length of \eqn{n} with the standard deviation being of the same order. 
+For anomalous segments we chose parameters that gave an average length of 5 and a variance of \eqn{n}. 
+These may not be suitable for all problems and the user is encouraged to tune these parameters.
+}
+
 \examples{
 
 library(anomaly)
 set.seed(0)
 sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
                    duration=6,proportions=c(0.04,0.06,0.08))
-# parameters
-p_N<-0.05
-p_A<-0.5
-k_N<-10
-k_A<-10
-pi_N<-0.9
-alpha<-0.00001
-paffected<-10/100
-lower<-0.5
-upper<-1.5
-h<-0.25
 # run bard
-bard.res<-bard(sim.data,p_N,p_A,k_N,k_A,pi_N,alpha,paffected,lower,upper,h)
+bard.res<-bard(sim.data, alpha = 1e-3, h = 0.5)
 sampler.res<-sampler(bard.res)
 collective_anomalies(sampler.res)
 \donttest{

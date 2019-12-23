@@ -544,8 +544,8 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' @param x - An $n$ by $p$ real matrix representing n observations of p variates. Each variate is scaled by BARD using the median and the median absolute deviation. This
 #' can be changed using the \code{transform} parameter. 
 #' @param p_N - Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}}.
-#' @param k_N - Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.
 #' @param p_A - Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \deqn{\frac{5}{n}}.
+#' @param k_N - Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.
 #' @param k_A - Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \deqn{\frac{5p_A}{1- p_A}}.
 #' @param pi_N - Probability that an anomalous segment is followed by a non-anomalous segment. Defaults to 0.9.
 #' @param paffected - Proportion of the series believed to be affected by any given anomalous segment. Defaults to 5\%. 
@@ -580,7 +580,7 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
 #'                    duration=6,proportions=c(0.04,0.06,0.08))
 #' # run bard
-#' bard.res<-bard(sim.data)
+#' bard.res<-bard(sim.data, alpha = 1e-3, h = 0.5)
 #' sampler.res<-sampler(bard.res)
 #' collective_anomalies(sampler.res)
 #' \donttest{
@@ -907,7 +907,7 @@ format_output = function(R){
 #' sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
 #' duration=6,proportions=c(0.04,0.06,0.08))
 #' # run bard
-#' res<-bard(sim.data)
+#' res<-bard(sim.data, alpha = 1e-3, h = 0.5)
 #' # sample 
 #' sampler(res)
 #' 
