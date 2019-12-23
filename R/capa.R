@@ -633,56 +633,24 @@ anomalies<-function(x,epoch=NULL)
 
 
   
-
-capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=robustscale)
+# not exported - helper function for capa function
+capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf)
 {
-    
-    # error trapping
-    x_dash<-x
-    if(!is.null(transform))
-    {
-        x_dash = transform(x)
-        # error trap x_dash
-    }
-    # check it is univariate
-    
-    if(is.array(x_dash))
-    {
-       dims<-dim(x_dash)
-       if((length(dims) > 1) & (dims[2] > 1))
-       {
-	   stop("multivariate data used in univariate method - use capa.mv")
-       }
-    }
-    # convert to vector structure
-    if(is.array(x_dash))
-    {
-        x_dash<-as.vector(x_dash)
-    }
     # configure defaults as required
     marshaller = marshall_MeanVarAnomaly
     if(type == "mean")
     {
         marshaller = marshall_MeanAnomaly
     }
-    else if(type != "meanvar")
-    {
-        stop("type can be either mean or meanvar")
-    }
-
-    if(max_seg_len == Inf)
-    {
-        max_seg_len = length(x_dash)
-    }
     if(is.null(beta))
     {
         if(type == "mean")
         {
-            beta = 3*log(length(x_dash))
+	    beta = 3*log(length(x))
         }
         else 
         {
-            beta = 4*log(length(x_dash))
+	    beta = 4*log(length(x))
         }
     }
     if(length(beta) > 1 & length(beta) != (max_seg_len - min_seg_len + 1))
@@ -696,70 +664,52 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     }
     if(is.null(beta_tilde))
     {
-        beta_tilde = 3*log(length(x_dash))
+	beta_tilde = 3*log(length(x))
     }
-    # call the underlying method
-    S<-marshaller(x_dash,
-                  as.integer(length(x_dash)),
+    
+    S<-marshaller(x,
+                  as.integer(length(x)),
                   as.integer(min_seg_len),
                   as.integer(max_seg_len),
                   beta,
                   beta_tilde,
                   as.integer(1))
-		     blob<-list(x_dash,
-               as.integer(length(x_dash)),
+		     blob<-list(x,
+               as.integer(length(x)),
                as.integer(min_seg_len),
                as.integer(max_seg_len),
                beta,
                beta_tilde,
                as.integer(1),
 	       S)
-    # wrap the callable transform object in a function to store in S4 class
-    transform_method<-function(arg){return(transform(arg))}
+	       
     # construct the S4 capa class instance
     return(
-        # capa.uv.class(array(x,c(length(x_dash),1)), # array(x_dash,c(length(x_dash),1)),
-	capa.class(array(x,c(length(x_dash),1)), # array(x_dash,c(length(x_dash),1)),
+	capa.class(array(x,c(length(x),1)), 
 		     array(beta,c(length(beta),1)),
                      array(beta_tilde,c(1,1)),
                      as.integer(min_seg_len),
                      as.integer(max_seg_len),
                      integer(),
                      type,
-                     transform_method,
+                     function() return(),
                      S[seq(1,length(S),2)],
                      S[seq(2,length(S),2)],
-                     array(1,c(length(x),1)), #array(1,c(length(x_dash),1)),
-                     array(0,c(length(x),1)), #array(0,c(length(x_dash),1)),
-                     array(0,c(length(x),1))) # array(0,c(length(x_dash),1)))
+                     array(1,c(length(x),1)), 
+                     array(0,c(length(x),1)), 
+                     array(0,c(length(x),1))) 
         )
 }
 
 
 
-
-capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=robustscale)
+# not exported - helper function used by capa function
+capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
-    # error trapping
-    x_dash<-x
-    if(!is.null(transform))
-    {
-        x_dash = transform(x)
-        # error trap x_dash
-    }
-    # configure defaults as required
     marshaller = marshall_MeanVarAnomalyMV
     if(type == "mean")
     {
         marshaller = marshall_MeanAnomalyMV
-    }
-    else
-    {
-        # error - invalid type 
-    }
-    if(max_seg_len == Inf)
-    {
-        max_seg_len = nrow(x_dash)
     }
     # process beta
     n = nrow(x)
@@ -789,7 +739,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
                 beta[1] = beta[1] + 2*s
             }
         }
-        if(type == "meanvar")#
+        if(type == "meanvar")
         {
             beta = rep(4*log(p*(max_lag+1)),p)
             beta[1] = beta[1] + 4*s         
@@ -801,33 +751,31 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     }
     if(is.null(beta_tilde))
     {
-        beta_tilde = 3*log(length(x_dash))
+        beta_tilde = 3*log(length(x))
     }
     
     # call the underlying method
-    S<-marshaller(as.vector(x_dash),
-                  as.integer(nrow(x_dash)),
-                  as.integer(ncol(x_dash)),
+    S<-marshaller(as.vector(x),
+                  as.integer(nrow(x)),
+                  as.integer(ncol(x)),
                   as.integer(max_lag),
                   as.integer(min_seg_len),
                   beta,
                   beta_tilde,
                   as.integer(max_seg_len),
                   as.integer(1))
-    # wrap the callable transform object in a function to store in S4 class
-    transform_method<-function(arg){return(transform(arg))}
     # construct the S4 capa class instance
-    S = matrix(S,nrow(x_dash),byrow=T)
-    p = ncol(x_dash)
+    S = matrix(S,nrow(x),byrow=T)
+    p = ncol(x)
     return(
-        capa.class(x, #x_dash,
+        capa.class(x,
                    array(beta,c(length(beta),1)),
                    array(beta_tilde,c(1,1)),
                    as.integer(min_seg_len),
                    as.integer(max_seg_len),
                    integer(max_lag),
                    type,
-                   transform_method,
+                   function() return(),
                    S[,1], 
                    S[,2],
                    matrix(S[,2 + 0*p + 1:p],ncol=p),
@@ -873,7 +821,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' 
 #' @export
 #'
-capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=NULL,max_lag=0,transform=robustscale)
+capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=robustscale)
 {
     # make sure the callable transform object is of type function
     # data needs to be in the form of an array
@@ -908,6 +856,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     {
         stop("transform must be a function")
     }
+    x_untransformed<-x
     x<-transform(x)
     # and check the transformed data
     if(!is_array(x))
@@ -986,6 +935,10 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     {
         max_seg_len=dim(x)[1]
     }
+    if(max_seg_len == Inf)
+    {
+        max_seg_len = length(x)
+    }
     if(!is_numeric(max_seg_len))
     {
         stop("max_seg_len must be numeric")
@@ -994,6 +947,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     {
         stop("max_seg_len must be greater than zero")
     }
+
     # check relative values of min and max segment length
     if(max_seg_len < min_seg_len)
     {
@@ -1033,14 +987,20 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     }
     # wrap the callable transform object in a function to store in S4 class
     transform_method<-function(arg){return(transform(arg))}
-    # call appropriate method
+    # call appropriate helper function
     if(univariate)
     {
-        return(capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,transform_method))
+        res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
+	res@data<-x_untransformed
+	res@transform<-transform_method
+	return(res)
     }
     else
     {
-        return(capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,transform_method))
+        res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
+        res@data<-x_untransformed
+        res@transform<-transform_method
+        return(res)
     }
     
 }
@@ -1091,8 +1051,11 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 {
     # data needs to be in the form of an array
     x<-to_array(x)
-    res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,transform)
-    # return(res)
+    if(dim(x)[2] > 1)
+    {
+       stop("data for univariate analysis must have 1 variate. Use capa or capa.mv for multivariate data.")
+    }
+    res<-capa(x=x,beta=beta,beta_tilde=beta_tilde,type=type,min_seg_len=min_seg_len,max_seg_len=max_seg_len,transform=transform)
     return(
     capa.uv.class(data=res@data,
                  beta=res@beta,
@@ -1189,7 +1152,11 @@ capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 {
     # data needs to be in the form of an array
     x<-to_array(x)
-    res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,transform)
+    if(dim(x)[2] < 2)
+    {
+      stop("data is not multivariate. Use capa or capa.uv for univariate analysis.")
+    }
+    res<-capa(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag,transform)
     return(
     capa.mv.class(data=res@data,
                  beta=res@beta,
