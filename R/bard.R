@@ -235,8 +235,12 @@ P.A <- function(s, t, mu_seq, N, S, p){
   # evaluating log of quantity
   for (k in 1:length(mu_seq)){
 
-    vec[k] <- N*log(1-p) + sum( log( 1 + exp( mu_seq[k] * ( S[(t+1),] - S[s,]  -  mu_seq[k] * (t-s+1)/2 ) + log(p) - log(1-p) ) ) )
-
+    Z = mu_seq[k] * (S[(t+1),] - S[s,] - mu_seq[k] * (t-s+1)/2) + log(p) - log(1-p)
+    Q = log( 1 + exp(Z) )
+    wQ = which(Q == Inf)
+    Q[wQ] = Z[wQ]
+    vec[k] <- N*log(1-p) + sum(Q)
+    
   }
 
   # finding sum of logs -- for numerical instability
