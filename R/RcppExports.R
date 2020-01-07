@@ -29,6 +29,10 @@ marshall_MeanVarAnomalyMV <- function(a, b, c, d, e, f, g, h, i) {
     .Call('_anomaly_marshall_MeanVarAnomalyMV', PACKAGE = 'anomaly', a, b, c, d, e, f, g, h, i)
 }
 
+marshall_RobustMeanAnomalyMV <- function(a, b, c, d, e, f, g, h, i) {
+    .Call('_anomaly_marshall_RobustMeanAnomalyMV', PACKAGE = 'anomaly', a, b, c, d, e, f, g, h, i)
+}
+
 marshall_MeanAnomalyMV <- function(a, b, c, d, e, f, g, h, i) {
     .Call('_anomaly_marshall_MeanAnomalyMV', PACKAGE = 'anomaly', a, b, c, d, e, f, g, h, i)
 }

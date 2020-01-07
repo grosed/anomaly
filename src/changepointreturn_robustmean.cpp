@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "Functions_mean.h"
+#include "Functions_robustmean.h"
 
 namespace anomalymv
 {

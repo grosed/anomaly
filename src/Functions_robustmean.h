@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include "Online_tukey.h"
 
 #include "check_user_interrupt.h"
 
@@ -19,8 +20,8 @@ typedef struct orderedobservationlist_robustmean
 	int numberofobservation;
 	
 	double* observation;
-	double* mean_of_xs;
-	Online_tukey *Tukey_Stuff;
+	double* observationsquared;
+	Online_tukey* Tukey_Stuff;
 
 	double* segmentcosts;
 	double* best_end_costs;
@@ -53,7 +54,7 @@ int solveorderedobservationlist_robustmean(struct orderedobservationlist_robustm
 
 void compute_cost_of_starting_anomalies_robustmean(struct orderedobservationlist_robustmean *list , int ii, int n, int p, int l, int minseglength, double *penaltycomponent, double *componentcost);
 
-void update_cumsums_and_segmentcosts_robustmean(struct orderedobservationlist_robustmean *list, int ii, int n, int p, int l, int minseglength);
+void update_cumsums_and_segmentcosts_robustmean(struct orderedobservationlist_robustmean *list, int ii, int n, int p, int l, int minseglength, const double threshold, const double threshold_squared);
 
 double find_lowest_end_cost(double* segmentcosts, int jj, int p, int l);
 

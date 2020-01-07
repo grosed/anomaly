@@ -752,12 +752,19 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
         # error trap x_dash
     }
     # configure defaults as required
-    marshaller = marshall_MeanVarAnomalyMV
     if(type == "mean")
     {
         marshaller = marshall_MeanAnomalyMV
     }
-    else
+    if(type == "meanvar")
+    {
+        marshaller = marshall_MeanVarAnomalyMV
+    }
+    if(type == "robustmean")
+    {
+        marshaller = marshall_RobustMeanAnomalyMV
+    }
+    if(!(type %in% c("mean","meanvar","robustmean")))
     {
         # error - invalid type 
     }
@@ -771,7 +778,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     s = 1.5*log(n)
     if (is.null(beta))
     {            
-        if(type == "mean")
+        if(type %in% c("mean","robustmean"))
         {
             if (max_lag == 0)
             {

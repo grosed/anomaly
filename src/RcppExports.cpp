@@ -127,6 +127,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// marshall_RobustMeanAnomalyMV
+std::vector<int> marshall_RobustMeanAnomalyMV(SEXP a, SEXP b, SEXP c, SEXP d, SEXP e, SEXP f, SEXP g, SEXP h, SEXP i);
+RcppExport SEXP _anomaly_marshall_RobustMeanAnomalyMV(SEXP aSEXP, SEXP bSEXP, SEXP cSEXP, SEXP dSEXP, SEXP eSEXP, SEXP fSEXP, SEXP gSEXP, SEXP hSEXP, SEXP iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type a(aSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type b(bSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type c(cSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type d(dSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type e(eSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type f(fSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type g(gSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type h(hSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
+    rcpp_result_gen = Rcpp::wrap(marshall_RobustMeanAnomalyMV(a, b, c, d, e, f, g, h, i));
+    return rcpp_result_gen;
+END_RCPP
+}
 // marshall_MeanAnomalyMV
 std::vector<int> marshall_MeanAnomalyMV(SEXP a, SEXP b, SEXP c, SEXP d, SEXP e, SEXP f, SEXP g, SEXP h, SEXP i);
 RcppExport SEXP _anomaly_marshall_MeanAnomalyMV(SEXP aSEXP, SEXP bSEXP, SEXP cSEXP, SEXP dSEXP, SEXP eSEXP, SEXP fSEXP, SEXP gSEXP, SEXP hSEXP, SEXP iSEXP) {
@@ -189,6 +208,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_anomaly_marshall_recursive_anomalies", (DL_FUNC) &_anomaly_marshall_recursive_anomalies, 3},
     {"_anomaly_marshall_recursive_mvanomalies", (DL_FUNC) &_anomaly_marshall_recursive_mvanomalies, 7},
     {"_anomaly_marshall_MeanVarAnomalyMV", (DL_FUNC) &_anomaly_marshall_MeanVarAnomalyMV, 9},
+    {"_anomaly_marshall_RobustMeanAnomalyMV", (DL_FUNC) &_anomaly_marshall_RobustMeanAnomalyMV, 9},
     {"_anomaly_marshall_MeanAnomalyMV", (DL_FUNC) &_anomaly_marshall_MeanAnomalyMV, 9},
     {"_anomaly_marshall_sequential_ests", (DL_FUNC) &_anomaly_marshall_sequential_ests, 9},
     {"_anomaly_marshall_pass", (DL_FUNC) &_anomaly_marshall_pass, 5},

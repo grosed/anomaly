@@ -67,7 +67,8 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 		{
 
 			if(mylist[ii].observation){free(mylist[ii].observation);}
-			if(mylist[ii].mean_of_xs){free(mylist[ii].mean_of_xs);}
+			if(mylist[ii].observationsquared){free(mylist[ii].observationsquared);}
+			if(mylist[ii].Tukey_Stuff){delete[] mylist[ii].Tukey_Stuff;}
 			if(mylist[ii].segmentcosts){free(mylist[ii].segmentcosts);}
 			if(mylist[ii].best_end_costs){free(mylist[ii].best_end_costs);}
 			if(mylist[ii].affectedcomponents){free(mylist[ii].affectedcomponents);}
@@ -85,6 +86,7 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 	  	// return(R_NilValue) ; 
 		return std::vector<int>();
 	}
+
 
 	SEXP Rout ;
 	std::vector<int> vout;	
@@ -145,7 +147,8 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 	{
 
 		if(mylist[ii].observation){free(mylist[ii].observation);}
-		if(mylist[ii].mean_of_xs){free(mylist[ii].mean_of_xs);}
+		if(mylist[ii].observationsquared){free(mylist[ii].observationsquared);}
+		if(mylist[ii].Tukey_Stuff){delete[] mylist[ii].Tukey_Stuff;}
 		if(mylist[ii].segmentcosts){free(mylist[ii].segmentcosts);}
 		if(mylist[ii].best_end_costs){free(mylist[ii].best_end_costs);}
 		if(mylist[ii].affectedcomponents){free(mylist[ii].affectedcomponents);}
