@@ -13,6 +13,8 @@
 
 #include "MeanVarAnomaly.h"
 #include "MeanAnomaly.h"
+#include "RobustMeanAnomaly.h"
+#include "RobustMeanAnomalyMV.h"
 #include "sequential_quantiles.h"
 #include "recursive_anomalies.h"
 #include "recursive_mvanomalies.h"
@@ -127,6 +129,18 @@ std::vector<int> marshall_MeanAnomaly(SEXP a,
   return MeanAnomaly(a,b,c,d,e,f,g);
 }
 
+//[[Rcpp::export]]
+std::vector<int> marshall_RobustMeanAnomaly(SEXP a,
+				            SEXP b,
+				            SEXP c,
+				            SEXP d,
+				            SEXP e,
+				            SEXP f,
+				            SEXP g)
+{
+  return RobustMeanAnomaly(a,b,c,d,e,f,g);
+}
+
 
 //[[Rcpp::export]]
 std::vector<int> marshall_recursive_anomalies(SEXP a,
@@ -165,7 +179,19 @@ std::vector<int> marshall_MeanVarAnomalyMV(SEXP a,
   return MeanVarAnomalyMV(a,b,c,d,e,f,g,h,i);
 }
 
-
+//[[Rcpp::export]]
+std::vector<int> marshall_RobustMeanAnomalyMV(SEXP a,
+					SEXP b,
+					SEXP c,
+					SEXP d,
+					SEXP e,
+					SEXP f,
+					SEXP g,
+					SEXP h,
+					SEXP i)
+{
+  return RobustMeanAnomalyMV(a,b,c,d,e,f,g,h,i);
+}
 
 //[[Rcpp::export]]
 std::vector<int> marshall_MeanAnomalyMV(SEXP a,

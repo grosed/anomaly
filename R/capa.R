@@ -278,7 +278,7 @@ setMethod("collective_anomalies",signature=list("capa.class"),
                   )
                   names(changes)<-c("mean.change","variance.change")
               }
-              else if(object@type == "mean")
+              else if(object@type %in% c("mean","robustmean"))
               {
                   changes<-data.frame(
                       Reduce(rbind,
@@ -339,7 +339,7 @@ setMethod("collective_anomalies",signature=list("capa.uv.class"),
 setMethod("collective_anomalies",signature=list("capa.mv.class"),
           function(object)
           {
-	      if(object@type == "mean")
+	      if(object@type %in% c("mean","robustmean"))
                   {
                       return(callNextMethod(object)[,1:6])
                   }
@@ -384,7 +384,7 @@ setMethod("summary",signature=list("capa.class"),function(object)
     {
         cat("mean and variance.","\n",sep="") 
     }
-    if(object@type == "mean")
+    if(object@type %in% c("mean","robustmean"))
     {
         cat("mean.","\n",sep="") 
     }
@@ -416,7 +416,7 @@ setMethod("summary",signature=list("capa.uv.class"),function(object)
     {
         cat("mean and variance.","\n",sep="") 
     }
-    if(object@type == "mean")
+    if(object@type %in% c("mean","robustmean"))
     {
         cat("mean.","\n",sep="") 
     }
@@ -449,7 +449,7 @@ setMethod("summary",signature=list("capa.mv.class"),function(object)
     {
         cat("mean and variance.","\n",sep="") 
     }
-    if(object@type == "mean")
+    if(object@type %in% c("mean","robustmean"))
     {
         cat("mean.","\n",sep="") 
     }
@@ -492,7 +492,7 @@ setMethod("show",signature=list("capa.class"),function(object)
   {
     cat("mean and variance.","\n",sep="") 
   }
-  if(object@type == "mean")
+  if(object@type %in% c("mean","robustmean"))
   {
     cat("mean.","\n",sep="") 
   }
@@ -532,7 +532,7 @@ setMethod("show",signature=list("capa.uv.class"),function(object)
   {
     cat("mean and variance.","\n",sep="") 
   }
-  if(object@type == "mean")
+  if(object@type %in% c("mean","robustmean"))
   {
     cat("mean.","\n",sep="") 
   }
@@ -573,7 +573,7 @@ setMethod("show",signature=list("capa.mv.class"),function(object)
   {
     cat("mean and variance.","\n",sep="") 
   }
-  if(object@type == "mean")
+  if(object@type %in% c("mean","robustmean"))
   {
     cat("mean.","\n",sep="") 
   }
@@ -642,9 +642,21 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     {
         marshaller = marshall_MeanAnomaly
     }
+    else if(type == "robustmean")
+    {
+      marshaller = marshall_RobustMeanAnomaly
+    }
+    else if(type != "meanvar")
+    {
+        stop("type can be either mean, robustmean, or meanvar")
+    }
+    if(max_seg_len == Inf)
+    {
+        max_seg_len = length(x_dash)
+    }
     if(is.null(beta))
     {
-        if(type == "mean")
+        if(type %in% c("mean","robustmean"))
         {
 	    beta = 3*log(length(x))
         }
@@ -706,10 +718,35 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 # not exported - helper function used by capa function
 capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
+
+    # error trapping
+    x_dash<-x
+    if(!is.null(transform))
+    {
+        x_dash = transform(x)
+        # error trap x_dash
+    }
+    # configure defaults as required
     marshaller = marshall_MeanVarAnomalyMV
     if(type == "mean")
     {
         marshaller = marshall_MeanAnomalyMV
+    }
+    if(type == "meanvar")
+    {
+        marshaller = marshall_MeanVarAnomalyMV
+    }
+    if(type == "robustmean")
+    {
+        marshaller = marshall_RobustMeanAnomalyMV
+    }
+    if(!(type %in% c("mean","meanvar","robustmean")))
+    {
+        # error - invalid type 
+    }
+    if(max_seg_len == Inf)
+    {
+        max_seg_len = nrow(x_dash)
     }
     # process beta
     n = nrow(x)
@@ -717,7 +754,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     s = 1.5*log(n)
     if (is.null(beta))
     {            
-        if(type == "mean")
+        if(type %in% c("mean","robustmean"))
         {
             if (max_lag == 0)
             {
@@ -881,7 +918,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     }
 
     # check the type 
-    types=list("mean","meanvar")
+    types=list("mean","robustmean","meanvar")
     if(!(type %in% types))
     {
         stop("type has to be one of mean or meanvar")
@@ -913,7 +950,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     {
         stop("min_seg_len must be numeric")
     }
-    if(type=="mean" && min_seg_len < 1)
+    if(type %in% c("mean","robustmean") && min_seg_len < 1)
     {
         stop("when type=mean, min_seg_len must be greater than zero")
     }
