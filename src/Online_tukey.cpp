@@ -69,6 +69,34 @@ void Online_tukey::Add_observation(double observation, double observation_square
 
 }
 
+double Online_tukey::Find_mean()
+{
+
+	double Min = object_list.begin()->min_cost;
+	double Mean = object_list.begin()->mean_of_x;
+
+	if (Mean > object_list.begin()->end){Mean = object_list.begin()->end;}
+	if (Mean < object_list.begin()->start){Mean = object_list.begin()->start;}
+
+	for (std::list<tukey_object>::iterator it = object_list.begin(); it != object_list.end(); it ++)
+	{
+		
+		if (it->min_cost < Min)
+		{
+
+			Min  = it->min_cost;
+			Mean = it->mean_of_x;
+
+			if (Mean > it->end){Mean = it->end;}
+			if (Mean < it->start){Mean = it->start;}
+		}
+
+	}
+
+	return(Mean);
+
+};
+
 double Online_tukey::Find_minimum()
 {
 

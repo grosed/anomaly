@@ -45,3 +45,7 @@ marshall_pass <- function(Xi, Lmax, Lmin, alpha, lambda) {
     .Call('_anomaly_marshall_pass', PACKAGE = 'anomaly', Xi, Lmax, Lmin, alpha, lambda)
 }
 
+tukey_mean <- function(x, th) {
+    .Call('_anomaly_tukey_mean', PACKAGE = 'anomaly', x, th)
+}
+

@@ -100,27 +100,77 @@ setMethod("point_anomalies",signature=list("capa.class"),
               # transform data
               data_dash<-object@transform(object@data)
               p_anoms<-Map(function(x) x[1],Filter(function(x) x[1] == x[2],anoms))
-              if(length(p_anoms) == 0)
+              if(length(p_anoms) > 0)
+              {
+                  p_anom_daf = Reduce(rbind,
+                       Map(
+                         function(p_anom)
+                         {
+                           variates<-seq(1,ncol(data_dash))[as.logical(object@components[p_anom[1],])]
+                           location<-rep(p_anom[1],length(variates))
+                           strength<-abs(data_dash[p_anom[1],variates])
+                           return(
+                             data.frame("location"=location,
+                                        "variate"=variates,
+                                        "strength"=strength)
+                           )
+                         },
+                         p_anoms)
+                  )
+              }
+              
+              extra_anoms = data.frame("location"=integer(0),"variate"=integer(0),"strength"=integer(0))
+              
+              if (object@type == "robustmean"){
+                
+                tmp = collective_anomalies(object)
+                
+                if (nrow(tmp)>0)
+                {
+                  
+                  extra_anoms = Reduce(rbind,
+                                      Map(
+                                        function(ii)
+                                        {
+                                          relevant_row = tmp[ii,]
+                                          if (is.null(relevant_row$start.lag)){
+                                            effective_start = relevant_row$start
+                                            effective_end   = relevant_row$end
+                                          } else{
+                                            effective_start = relevant_row$start+relevant_row$start.lag
+                                            effective_end   = relevant_row$end-relevant_row$start.lag                                      
+                                          }
+                                          x_data = data_dash[effective_start:effective_end,relevant_row$variate]
+                                          standardised_x_data = x_data - tukey_mean(x_data,sqrt(object@beta_tilde))
+                                          
+                                          location<-which(abs(standardised_x_data)>sqrt(object@beta_tilde))
+                                          strength<-abs(standardised_x_data[location])
+                                          variates<-rep(relevant_row$variate,length(location))
+                                          if (length(location > 0)){
+                                            location = location - 1 + effective_start
+                                          }
+                                          return(
+                                            data.frame("location"=location,
+                                                       "variate"=variates,
+                                                       "strength"=strength)
+                                          )
+                                        },
+                                        1:nrow(tmp))
+                  )
+                  
+                }
+              
+              }
+              
+              if(length(p_anoms) + nrow(extra_anoms) == 0)
               {
                   return(data.frame("location"=integer(0),"variate"=integer(0),"strength"=integer(0)))
               }
-              return(
-                  Reduce(rbind,
-                         Map(
-                             function(p_anom)
-                             {
-                                 variates<-seq(1,ncol(data_dash))[as.logical(object@components[p_anom[1],])]
-                                 location<-rep(p_anom[1],length(variates))
-                                 strength<-abs(data_dash[p_anom[1],variates])
-                                 return(
-                                     data.frame("location"=location,
-                                                "variate"=variates,
-                                                "strength"=strength)
-                                 )
-                             },
-                             p_anoms)
-                         )
-              )
+              else
+              {
+                  out = rbind(p_anom_daf,extra_anoms)
+                  return(out[order(out$location,out$variate),])
+              }
           }
           )
 
@@ -190,7 +240,7 @@ merge_collective_anomalies<-function(object,epoch)
 #' 
 #'
 #' For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the variates 
-#' affected by the anomaly, as well as their the start and end lags. When \code{type="mean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
+#' affected by the anomaly, as well as their the start and end lags. When \code{type="mean"/"robustmean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
 #' change in variance are included. If \code{merged=FALSE} (the default), then all the collective anomalies are processed individually even if they are common across multiple variates.
 #' If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 #'
@@ -285,7 +335,12 @@ setMethod("collective_anomalies",signature=list("capa.class"),
                              Map(
                                  function(variate,start,end,start_lag,end_lag)
                                  {
-                                     mean_change<-mean(data_dash[(start+start_lag):(end-end_lag),variate])^2
+                                     if (object@type == "mean"){
+                                          mean_change<-mean(data_dash[(start+start_lag):(end-end_lag),variate])^2
+                                     }
+                                     if (object@type == "robustmean"){
+                                          mean_change<-tukey_mean(data_dash[(start+start_lag):(end-end_lag),variate],sqrt(object@beta_tilde))^2
+                                     }
                                      variance_change<-mean_change*((end-end_lag)-(start+start_lag)+1) 
                                      return(array(c(mean_change,variance_change),c(1,2)))
                                      # return(array(c(mean_change),c(1,1)))    
@@ -830,10 +885,10 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
 #' @param beta A numeric vector of length p, giving the marginal penalties. If p > 1, type ="meanvar" or type = "mean" and max_lag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
+#' Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
+#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.
@@ -921,7 +976,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     types=list("mean","robustmean","meanvar")
     if(!(type %in% types))
     {
-        stop("type has to be one of mean or meanvar")
+        stop("type has to be one of mean, robustmean, or meanvar")
     }
 
     # set analysis type
@@ -952,7 +1007,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     }
     if(type %in% c("mean","robustmean") && min_seg_len < 1)
     {
-        stop("when type=mean, min_seg_len must be greater than zero")
+        stop("when type=mean or type=robustmean, min_seg_len must be greater than zero")
     }
     if(type=="meanvar" && min_seg_len < 2)
     {
@@ -1058,7 +1113,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #' lengths. If an argument of length 1 is provided the same penalty is used for all collective anomalies irrespective of their length. The default is a BIC style penalty.
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only. 
+#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
 #' @param transform A function used to transform the data prior to analysis by \code{\link{capa.uv}}. This can, for example, be used to compensate for the effects of autocorrelation
@@ -1122,11 +1177,11 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' at best in \code{nrow(x)}. If \code{max_seg_len} is set the runtime scales like \code{nrow(x)*max_seg_len}.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
-#' @param beta A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean" and maxlag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley and Fearnhead (2019). If type = "mean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
+#' @param beta A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean"/"robustmean" and maxlag > 0 it defaults to the penalty regime 2' described in 
+#' Fisch, Eckley, and Fearnhead (2019). If type = "mean"/"robustmean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley, and Fearnhead (2019).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only. 
+#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Default value is 0.

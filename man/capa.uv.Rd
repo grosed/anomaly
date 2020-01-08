@@ -16,7 +16,7 @@ lengths. If an argument of length 1 is provided the same penalty is used for all
 \item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.}
 
 \item{type}{A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-variance (the default) or "mean" for collective anomalies characterised by changes in mean only.}
+variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.}
 
 \item{min_seg_len}{An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.}
 

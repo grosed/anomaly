@@ -38,7 +38,7 @@ due to the anomaly. When \code{type="meanvar"}, the change in variance due to th
 
 
 For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the variates 
-affected by the anomaly, as well as their the start and end lags. When \code{type="mean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
+affected by the anomaly, as well as their the start and end lags. When \code{type="mean"/"robustmean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
 change in variance are included. If \code{merged=FALSE} (the default), then all the collective anomalies are processed individually even if they are common across multiple variates.
 If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 

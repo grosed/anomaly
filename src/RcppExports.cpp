@@ -199,6 +199,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// tukey_mean
+double tukey_mean(std::vector<double> x, double th);
+RcppExport SEXP _anomaly_tukey_mean(SEXP xSEXP, SEXP thSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<double> >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type th(thSEXP);
+    rcpp_result_gen = Rcpp::wrap(tukey_mean(x, th));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_anomaly_marshall_bard", (DL_FUNC) &_anomaly_marshall_bard, 12},
@@ -212,6 +224,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_anomaly_marshall_MeanAnomalyMV", (DL_FUNC) &_anomaly_marshall_MeanAnomalyMV, 9},
     {"_anomaly_marshall_sequential_ests", (DL_FUNC) &_anomaly_marshall_sequential_ests, 9},
     {"_anomaly_marshall_pass", (DL_FUNC) &_anomaly_marshall_pass, 5},
+    {"_anomaly_tukey_mean", (DL_FUNC) &_anomaly_tukey_mean, 2},
     {NULL, NULL, 0}
 };
 

@@ -28,5 +28,3 @@ export(simulate)
 S3method(print, anomaly_series)
 S3method(summary, anomaly_series)
 S3method(plot, anomaly_series)
-
-
