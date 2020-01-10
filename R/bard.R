@@ -545,24 +545,23 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' Inference is conducted by solving a set of recursions. To reduce computational and storage costs a resampling 
 #' step is included.
 #' 
-#' @param x - An $n$ by $p$ real matrix representing n observations of p variates. Each variate is scaled by BARD using the median and the median absolute deviation. This
-#' can be changed using the \code{transform} parameter. 
-#' @param p_N - Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}}.
-#' @param p_A - Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \deqn{\frac{5}{n}}.
-#' @param k_N - Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.
-#' @param k_A - Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \deqn{\frac{5p_A}{1- p_A}}.
-#' @param pi_N - Probability that an anomalous segment is followed by a non-anomalous segment. Defaults to 0.9.
-#' @param paffected - Proportion of the series believed to be affected by any given anomalous segment. Defaults to 5\%. 
+#' @param x An n x p real matrix representing n observations of p variates.
+#' @param p_N Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}.}
+#' @param p_A Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \deqn{\frac{5}{n}.}
+#' @param k_N Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.
+#' @param k_A Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \deqn{\frac{5p_A}{1- p_A}.}
+#' @param pi_N Probability that an anomalous segment is followed by a non-anomalous segment. Defaults to 0.9.
+#' @param paffected Proportion of the variates believed to be affected by any given anomalous segment. Defaults to 5\%. 
 #' This parameter is relatively robust to being mis-specified and is studied empirically in Section 5.1 of \insertCite{bardwell2017;textual}{anomaly}.
-#' @param lower - The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{mu}. Defaults to \deqn{2\sqrt{\frac{\log(n)}{n}}}.
-#' @param upper - The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{mu}. 
+#' @param lower The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. Defaults to \deqn{2\sqrt{\frac{\log(n)}{n}}.}
+#' @param upper The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. 
 #' Defaults to the largest standardised value of x, i.e. \code{max(transform(x))}.
-#' @param alpha - Threshold used to control the resampling in the approximation of the posterior distribution at each time step. A sensible default is 1e-4.
+#' @param alpha Threshold used to control the resampling in the approximation of the posterior distribution at each time step. A sensible default is 1e-4.
 #' Decreasing alpha increases the accuracy of the posterior distribution but also increases the computational complexity of the algorithm. 
-#' @param h - The step size in the numerical integration used to find the marginal likelihood. 
-#' The quadrature points are located from lower to upper in steps of h. Defaults to 0.25. 
+#' @param h The step size in the numerical integration used to find the marginal likelihood. 
+#' The quadrature points are located from \code{lower} to \code{upper} in steps of \code{h}. Defaults to 0.25. 
 #' Decreasing this parameter increases the accuracy of the calculation for the marginal likelihood but increases computational complexity.   
-#' @param transform - A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
+#' @param transform A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
 #' 
 #' @section Notes on default hyper-parameters:
 #' This function gives certain default hyper-parameters for the two segment length distributions.
@@ -892,12 +891,12 @@ format_output = function(R){
 
 #' Post processing of BARD results.
 #'
-#' Determines the locations of anomalous sections from the results produced by BARD.
+#' Draw samples from the posterior distribution to give the locations of anomalous segments.
 #'
-#' @param bard_result - An instance of the S4 class \code{.bard.class} containing a result returned by the \code{bard} function. 
-#' @param gamma - Parameter of loss function: cost of incorrectly assigning an abnormal point as being normal (false negative). 
+#' @param bard_result An instance of the S4 class \code{.bard.class} containing a result returned by the \code{bard} function. 
+#' @param gamma Parameter of loss function giving the cost of a false negative i.e. incorrectly allocating an anomalous point as being non-anomalous. 
 #' For more details see Section 3.5 of \insertCite{bardwell2017;textual}{anomaly}.
-#' @param num_draws - Number of samples to draw from the posterior distribution. 
+#' @param num_draws Number of samples to draw from the posterior distribution. 
 #' 
 #' @return Returns an S4 class of type \code{bard.sampler.class}.  
 #'
@@ -927,7 +926,7 @@ sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
 #'
 #' @docType methods
 #'
-#' @param marginals Logical value. If \code{marginals=TRUE} the plot will include visualisations of the marginal probablities.
+#' @param marginals Logical value. If \code{marginals=TRUE} the plot will include visualisations of the marginal probablities of each time point being anomalous.
 #' The defualt is \code{marginals=FALSE}. 
 #' 
 #' @rdname plot-methods
