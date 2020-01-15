@@ -16,8 +16,7 @@
 \usage{
 \S4method{plot}{anomaly_series,ANY}(x, xlab = "", ylab = "", ...)
 
-\S4method{plot}{bard.sampler.class,ANY}(x, subset, variate_names,
-  tile_plot, marginals = FALSE)
+\S4method{plot}{bard.sampler.class,ANY}(x, subset, variate_names, tile_plot, marginals = FALSE)
 
 \S4method{plot}{capa.class,ANY}(x, subset, variate_names, tile_plot)
 
@@ -45,7 +44,7 @@ as it makes the visualisation easier to interpret. Default value is TRUE.}
 \item{tile_plot}{Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
 This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.}
 
-\item{marginals}{Logical value. If \code{marginals=TRUE} the plot will include visualisations of the marginal probablities.
+\item{marginals}{Logical value. If \code{marginals=TRUE} the plot will include visualisations of the marginal probablities of each time point being anomalous.
 The defualt is \code{marginals=FALSE}.}
 
 \item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.}
