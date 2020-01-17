@@ -701,14 +701,6 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     {
       marshaller = marshall_RobustMeanAnomaly
     }
-    else if(type != "meanvar")
-    {
-        stop("type can be either mean, robustmean, or meanvar")
-    }
-    if(max_seg_len == Inf)
-    {
-        max_seg_len = length(x_dash)
-    }
     if(is.null(beta))
     {
         if(type %in% c("mean","robustmean"))
@@ -773,35 +765,15 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 # not exported - helper function used by capa function
 capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
-
-    # error trapping
-    x_dash<-x
-    if(!is.null(transform))
-    {
-        x_dash = transform(x)
-        # error trap x_dash
-    }
     # configure defaults as required
     marshaller = marshall_MeanVarAnomalyMV
     if(type == "mean")
     {
         marshaller = marshall_MeanAnomalyMV
     }
-    if(type == "meanvar")
-    {
-        marshaller = marshall_MeanVarAnomalyMV
-    }
     if(type == "robustmean")
     {
         marshaller = marshall_RobustMeanAnomalyMV
-    }
-    if(!(type %in% c("mean","meanvar","robustmean")))
-    {
-        # error - invalid type 
-    }
-    if(max_seg_len == Inf)
-    {
-        max_seg_len = nrow(x_dash)
     }
     # process beta
     n = nrow(x)
