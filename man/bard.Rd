@@ -4,20 +4,10 @@
 \alias{bard}
 \title{Detection of multivariate anomalous segments using BARD.}
 \usage{
-bard(
-  x,
-  p_N = 1/(nrow(x) + 1),
-  p_A = 5/nrow(x),
-  k_N = 1,
-  k_A = (5 * p_A)/(1 - p_A),
-  pi_N = 0.9,
-  paffected = 0.05,
-  lower = 2 * sqrt(log(nrow(data))/nrow(data)),
-  upper = max(transform(x)),
-  alpha = 1e-04,
-  h = 0.25,
-  transform = robustscale
-)
+bard(x, p_N = 1/(nrow(x) + 1), p_A = 5/nrow(x), k_N = 1, k_A = (5 *
+  p_A)/(1 - p_A), pi_N = 0.9, paffected = 0.05, lower = 2 *
+  sqrt(log(nrow(data))/nrow(data)), upper = max(transform(x)),
+  alpha = 1e-04, h = 0.25, transform = robustscale)
 }
 \arguments{
 \item{x}{An n x p real matrix representing n observations of p variates.}

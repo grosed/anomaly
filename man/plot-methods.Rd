@@ -16,7 +16,8 @@
 \usage{
 \S4method{plot}{anomaly_series,ANY}(x, xlab = "", ylab = "", ...)
 
-\S4method{plot}{bard.sampler.class,ANY}(x, subset, variate_names, tile_plot, marginals = FALSE)
+\S4method{plot}{bard.sampler.class,ANY}(x, subset, variate_names,
+  tile_plot, marginals = FALSE)
 
 \S4method{plot}{capa.class,ANY}(x, subset, variate_names, tile_plot)
 
