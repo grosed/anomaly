@@ -725,7 +725,6 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     {
 	beta_tilde = 3*log(length(x))
     }
-    
     S<-marshaller(x,
                   as.integer(length(x)),
                   as.integer(min_seg_len),
@@ -740,8 +739,7 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
                beta,
                beta_tilde,
                as.integer(1),
-	       S)
-	       
+	       S)	       
     # construct the S4 capa class instance
     return(
 	capa.class(array(x,c(length(x),1)), 
@@ -1052,20 +1050,23 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     # wrap the callable transform object in a function to store in S4 class
     transform_method<-function(arg){return(transform(arg))}
     # call appropriate helper function
-    if(univariate)
+    tryCatch(
     {
-        res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
-	res@data<-x_untransformed
-	res@transform<-transform_method
-	return(res)
-    }
-    else
-    {
-        res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
-        res@data<-x_untransformed
-        res@transform<-transform_method
-        return(res)
-    }
+        if(univariate)
+        {
+            res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
+            res@data<-x_untransformed
+            res@transform<-transform_method
+            return(res)
+        }
+        else
+        {
+            res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
+            res@data<-x_untransformed
+            res@transform<-transform_method
+            return(res)
+        }
+    },error = function(e) {print(e$message);stop();})
     
 }
 

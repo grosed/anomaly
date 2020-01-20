@@ -8,6 +8,9 @@
 
 #include <vector>
 
+#include <string>
+#include "capa.exception.h"
+
 using namespace anomaly;
 
 std::vector<int> MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Ronline)
@@ -57,8 +60,8 @@ std::vector<int> MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength,
 		free(betavector);
 	  	free(mylist);
 	  	UNPROTECT(7);
-		return std::vector<int>();
-	  	// return R_NilValue ; 
+		std::string reason = "user interrupt";
+		throw_capa_exception(reason);
 	}
 
 	int numberofchanges = 0, *changes = NULL;

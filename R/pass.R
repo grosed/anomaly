@@ -111,7 +111,7 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     {
         marshall_pass(Map(function(j) unlist(Xi[,j]),1:ncol(Xi)),Lmax,Lmin,alpha,lambda)
     },
-    error = function(e) {e$message<-"pass stopped because of user interrupt";print(e$message);stop();}
+    error = function(e) {print(e$message);stop();}
     )
     # post process results
     if(length(pass.results) == 0) # no anomalies

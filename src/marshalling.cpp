@@ -246,13 +246,19 @@ std::list<std::vector<double> > marshall_pass(const std::list<std::vector<double
 	{
 	  Rcpp::checkUserInterrupt();
 	}
-    } catch(...)
+    }  
+  catch(std::bad_alloc &e)
     {
       exitSignal.set_value();
       auto result = future.get(); // wait for it to tidy up
-      throw(std::exception());
+      Rcpp::stop("insufficient memory");
     }
-
+  catch(...)
+    {
+      exitSignal.set_value();
+      auto result = future.get(); // wait for it to tidy up
+      Rcpp::stop("user interrupt");
+    }
   
   auto result = future.get();
   auto cpts = std::get<0>(result);
