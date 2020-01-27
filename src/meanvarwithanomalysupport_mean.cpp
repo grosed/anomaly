@@ -203,11 +203,11 @@ void solveorderedobservationlist_mean(struct orderedobservationlist_mean *list, 
 		
 		if (ii % 128 == 0)
 		{
-		  if(check_user_interrupt())
-		  {
-		     user_interupt e;
-		     throw(e);
-		  }
+		  	if(check_user_interrupt())
+		  	{
+		     		user_interupt e;
+		     		throw(e);
+		  	}
 		}
 		
 	}

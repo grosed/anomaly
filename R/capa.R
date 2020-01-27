@@ -701,14 +701,6 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     {
       marshaller = marshall_RobustMeanAnomaly
     }
-    else if(type != "meanvar")
-    {
-        stop("type can be either mean, robustmean, or meanvar")
-    }
-    if(max_seg_len == Inf)
-    {
-        max_seg_len = length(x_dash)
-    }
     if(is.null(beta))
     {
         if(type %in% c("mean","robustmean"))
@@ -733,7 +725,6 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
     {
 	beta_tilde = 3*log(length(x))
     }
-    
     S<-marshaller(x,
                   as.integer(length(x)),
                   as.integer(min_seg_len),
@@ -748,8 +739,7 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
                beta,
                beta_tilde,
                as.integer(1),
-	       S)
-	       
+	       S)	       
     # construct the S4 capa class instance
     return(
 	capa.class(array(x,c(length(x),1)), 
@@ -773,35 +763,15 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 # not exported - helper function used by capa function
 capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
-
-    # error trapping
-    x_dash<-x
-    if(!is.null(transform))
-    {
-        x_dash = transform(x)
-        # error trap x_dash
-    }
     # configure defaults as required
     marshaller = marshall_MeanVarAnomalyMV
     if(type == "mean")
     {
         marshaller = marshall_MeanAnomalyMV
     }
-    if(type == "meanvar")
-    {
-        marshaller = marshall_MeanVarAnomalyMV
-    }
     if(type == "robustmean")
     {
         marshaller = marshall_RobustMeanAnomalyMV
-    }
-    if(!(type %in% c("mean","meanvar","robustmean")))
-    {
-        # error - invalid type 
-    }
-    if(max_seg_len == Inf)
-    {
-        max_seg_len = nrow(x_dash)
     }
     # process beta
     n = nrow(x)
@@ -1080,20 +1050,23 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     # wrap the callable transform object in a function to store in S4 class
     transform_method<-function(arg){return(transform(arg))}
     # call appropriate helper function
-    if(univariate)
+    tryCatch(
     {
-        res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
-	res@data<-x_untransformed
-	res@transform<-transform_method
-	return(res)
-    }
-    else
-    {
-        res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
-        res@data<-x_untransformed
-        res@transform<-transform_method
-        return(res)
-    }
+        if(univariate)
+        {
+            res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
+            res@data<-x_untransformed
+            res@transform<-transform_method
+            return(res)
+        }
+        else
+        {
+            res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
+            res@data<-x_untransformed
+            res@transform<-transform_method
+            return(res)
+        }
+    },error = function(e) {print(e$message);stop();})
     
 }
 

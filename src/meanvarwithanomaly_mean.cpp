@@ -10,6 +10,9 @@
 #include <iostream>
 #include <vector>
 
+#include <string>
+#include "capa.exception.h"
+
 using namespace anomaly;
 
 std::vector<int> MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Ronline)
@@ -27,6 +30,7 @@ std::vector<int> MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength,
   	int n = 0, minlength = 0, maxlength = 0, error = 0, online = -1, ii = 0;
   	double betaanomaly = 0.0;
   	double* x = NULL, *betachange = NULL, *betavector = NULL ;
+	std::string reason;
 	
   
  	minlength        = *(INTEGER(Rminlength));
@@ -46,96 +50,86 @@ std::vector<int> MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength,
 
 	try
 	{
-
 		betavector = new double[maxlength];
-	
-		for (ii = 0; ii < minlength-1; ii++){betavector[ii] = 0;}
-		for (ii = minlength-1; ii < maxlength; ii++){betavector[ii] = betachange[ii+1-minlength];}
-
-		populateorderedobservationlist_mean(&mylist, x, n);
-		solveorderedobservationlist_mean(mylist, n, betavector, betaanomaly, minlength, maxlength);
-
-		if (online == 0)
-		{
-	
-			changepointreturn_mean(mylist, n, &numberofchanges, &changes);
-	
-			Rout.resize(3*numberofchanges);
-  		
-			for (ii = 0; ii < 3*numberofchanges; ii++)
-			{
-				Rout[ii] = changes[ii];
-			}
-
-		}
-		else
-		{
-
-			changepointreturn_online_mean(mylist, n, &changes);
-			Rout.resize(2*n);
-			for (ii = 0; ii < 2*n; ii++)
-			{
-				Rout[ii] = changes[ii];
-			}
-
-		}
- 
 	}
-
 	catch(std::bad_alloc& e)
 	{
-		std::cout << "Ran out of memory!" << std::endl;
-		Rout = std::vector<int>();
+		reason = "Not enough memory";
+		error = 1;
+		goto clearup;
+	}
+	
+	for (ii = 0; ii < minlength-1; ii++){betavector[ii] = 0;}
+	for (ii = minlength-1; ii < maxlength; ii++){betavector[ii] = betachange[ii+1-minlength];}
+
+	try
+	{
+		populateorderedobservationlist_mean(&mylist, x, n);
+	}
+	catch(std::bad_alloc& e)
+	{
+		reason = "Not enough memory";
+		error = 1;
+		goto clearup;
 	}
 
+	try
+	{	
+		solveorderedobservationlist_mean(mylist, n, betavector, betaanomaly, minlength, maxlength);
+	}
 	catch(user_interupt& a)
 	{
-		std::cout << "User interupt!" << std::endl;
-		Rout = std::vector<int>();
+		reason = "user interrupt";
+		error = 1;
+		goto clearup;
 	}
-
-	catch(...)
-	{
-		std::cout << "Unknown error occured!" << std::endl;
-		Rout = std::vector<int>();
-	}
-
-	/*
-	SEXP Rout ;
 
 	if (online == 0)
 	{
 
-		changepointreturn_mean(mylist, n, &numberofchanges, &changes);
-
-  		PROTECT(Rout = allocVector(INTSXP, 3*numberofchanges));
-
-		int *out;
-  		out  = INTEGER(Rout);
-  	
+		try
+		{
+			changepointreturn_mean(mylist, n, &numberofchanges, &changes);
+		}
+		catch(std::bad_alloc& e)
+		{
+			reason = "Not enough memory";
+			error = 1;
+			goto clearup;
+		}
+	
+		Rout.resize(3*numberofchanges);
+  		
 		for (ii = 0; ii < 3*numberofchanges; ii++)
 		{
-			out[ii] = changes[ii];
+			Rout[ii] = changes[ii];
 		}
 
 	}
 	else
 	{
 
+		try
+		{
 		changepointreturn_online_mean(mylist, n, &changes);
-	 
-  		PROTECT(Rout = allocVector(INTSXP, 2*n));
+		}
+		catch(std::bad_alloc& e)
+		{
+			reason = "Not enough memory";
+			error = 1;
+			goto clearup;
+		}
 
-		int *out;
-  		out  = INTEGER(Rout);
-  	
+		Rout.resize(2*n);
+
 		for (ii = 0; ii < 2*n; ii++)
 		{
-			out[ii] = changes[ii];
+			Rout[ii] = changes[ii];
 		}
 
 	}
-	*/
+
+clearup:
 	
 	if(changes){delete[] changes;}
 	if(betavector){delete[] betavector;}
@@ -143,7 +137,15 @@ std::vector<int> MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength,
 
 	UNPROTECT(7);
 
-  	return(Rout) ; 
+	if (error == 0)
+	{
+  		return(Rout) ; 
+	}
+	else 
+	{
+		throw_capa_exception(reason);
+	}
+
 }
 
 

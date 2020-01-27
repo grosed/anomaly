@@ -73,15 +73,26 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     {
         stop("alpha must be a non-negative whole number")
     }
+    ## LB ADDED - if number of variates < default alpha (2) -> alpha = 1
+    if(dim(x)[2] < alpha){
+      alpha = 1
+    }
     if(is.null(lambda))
     {
-        n_rows<-dim(x)[1]
-        n_cols<-dim(x)[2]
+      n_rows<-dim(x)[1]
+      n_cols<-dim(x)[2]
+      if (n_cols < 3){
+        lambda <- 10
+        message = paste("The data has only N =", n_cols, "variates.", "Since the value of",  "\U03BB", "is based on asymptotic theory as the number of variates, N tends to infinity we suggest using simulations to determine a data-driven threshold to control the number of overselections. A default value of", "\U03BB = 10 has been used here.")
+        warning(message)
+      }
+      else{
         lambda<-(3.0*log(n_rows*Lmax) + 2*log(log(n_cols)))/sqrt(2*log(log(n_cols)))
+      }
     }
     if(!(is_numeric(lambda) && is_positive(lambda)))
     {
-        stop("lambda must be numeric value greater than 0")
+      stop("lambda must be numeric value greater than 0")
     }
     assert_is_matrix(Xi)
     assert_is_non_empty(Xi)
@@ -100,7 +111,7 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     {
         marshall_pass(Map(function(j) unlist(Xi[,j]),1:ncol(Xi)),Lmax,Lmin,alpha,lambda)
     },
-    error = function(e) {e$message<-"pass stopped because of user interrupt";print(e$message);stop();}
+    error = function(e) {print(e$message);stop();}
     )
     # post process results
     if(length(pass.results) == 0) # no anomalies

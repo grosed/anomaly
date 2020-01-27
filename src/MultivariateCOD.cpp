@@ -1,3 +1,4 @@
+
 #include <R.h>
 #include <Rinternals.h>
 #include <Rmath.h>
@@ -7,6 +8,8 @@
 #include "Functions.h"
 
 #include <vector>
+
+#include "capa.exception.h"
 
 using namespace anomalymv;
 
@@ -83,10 +86,8 @@ std::vector<int> MeanVarAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminl
 
 	  
 	  	UNPROTECT(9);
-
-	  	// return(R_NilValue) ;
-		return std::vector<int>();
-
+		std::string reason = "user interrupt";
+		throw_capa_exception(reason);
 	}
 
 	SEXP Rout ; 

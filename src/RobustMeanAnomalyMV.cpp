@@ -1,3 +1,4 @@
+
 #include <R.h>
 #include <Rinternals.h>
 #include <Rmath.h>
@@ -7,6 +8,9 @@
 #include "Functions_robustmean.h"
 
 #include <vector>
+
+#include <string>
+#include "capa.exception.h"
 
 using namespace anomalymv;
 
@@ -82,9 +86,8 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 
 	  
 	  	UNPROTECT(9);
-
-	  	// return(R_NilValue) ; 
-		return std::vector<int>();
+		std::string reason = "user interrupt";
+		throw_capa_exception(reason);
 	}
 
 

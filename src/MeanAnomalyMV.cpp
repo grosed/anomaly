@@ -8,6 +8,9 @@
 
 #include <vector>
 
+#include <string>
+#include "capa.exception.h"
+
 using namespace anomalymv;
 
 std::vector<int> MeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Rmaxlength, SEXP Ronline)
@@ -59,7 +62,7 @@ std::vector<int> MeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminleng
 	populate_mean(&mylist, x, n, p, l); 
 	
 	status = solveorderedobservationlist_mean(mylist, n, p, l, betachange, betaanomaly, minlength, maxlength);
-
+	
 	if(status)
 	{
 
@@ -81,9 +84,8 @@ std::vector<int> MeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminleng
 
 	  
 	  	UNPROTECT(9);
-
-	  	// return(R_NilValue) ; 
-		return std::vector<int>();
+		std::string reason = "user interrupt";
+		throw_capa_exception(reason);
 	}
 
 	SEXP Rout ;

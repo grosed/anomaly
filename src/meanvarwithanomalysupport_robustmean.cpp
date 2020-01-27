@@ -8,6 +8,7 @@
 
 #include "Functions.h"
 
+#include "user_interupt.h"
 #include "check_user_interrupt.h"
 
 namespace anomaly
@@ -187,7 +188,7 @@ void pruner_robustmean(struct orderedobservationlist_robustmean *list, int ii, d
 }
 
 
-int solveorderedobservationlist_robustmean(struct orderedobservationlist_robustmean *list, int n, double *penaltychange, double penaltyoutlier, int minseglength, int maxseglength)
+void solveorderedobservationlist_robustmean(struct orderedobservationlist_robustmean *list, int n, double *penaltychange, double penaltyoutlier, int minseglength, int maxseglength)
 {
 
 	int ii = 1;
@@ -208,15 +209,14 @@ int solveorderedobservationlist_robustmean(struct orderedobservationlist_robustm
 		
 		if (ii % 128 == 0)
 		{
-		  if(check_user_interrupt())
-		  {
-		    return(1);  
-		  }
+		  	if(check_user_interrupt())
+		  	{
+		     		user_interupt e;
+		     		throw(e);
+		  	}
 		}
 		
 	}
-	
-	return(0);
 
 }
 
@@ -237,7 +237,7 @@ void changepointreturn_robustmean(struct orderedobservationlist_robustmean *list
 	}
 
 	
-        *changepoints = (int*)calloc(3*(*numberofchanges) ,sizeof(int));
+        *changepoints = new int[3*(*numberofchanges)];
 
 	(*changepoints)[0] = -1; 
 	(*changepoints)[1] = -1;
@@ -268,7 +268,7 @@ void changepointreturn_robustmean(struct orderedobservationlist_robustmean *list
 void changepointreturn_online_robustmean(struct orderedobservationlist_robustmean *list, int n, int** changepoints)
 {
 	
-  *changepoints = (int*)calloc(2*n ,sizeof(int));
+  	*changepoints = new int[2*n];
 	
 	int ii = 0;
 

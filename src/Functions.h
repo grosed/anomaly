@@ -32,7 +32,7 @@ void updatewithobservation(int ii, struct orderedobservationlist *list, double* 
 
 void findoptimaloption(int ii, struct orderedobservationlist *list, int minseglength, double penaltyoutlier);
 
-int solveorderedobservationlist(struct orderedobservationlist *list, int n, double* penaltychange, double penaltyoutlier, int minseglength, int maxseglength);
+void solveorderedobservationlist(struct orderedobservationlist *list, int n, double* penaltychange, double penaltyoutlier, int minseglength, int maxseglength);
 
 void changepointreturn(struct orderedobservationlist *list, int n, int* numberofchanges, int** changepoints);
 
@@ -97,7 +97,7 @@ void updatewithobservation_robustmean(int ii, struct orderedobservationlist_robu
 
 void findoptimaloption_robustmean(int ii, struct orderedobservationlist_robustmean *list, int minseglength, double penaltyoutlier);
 
-int solveorderedobservationlist_robustmean(struct orderedobservationlist_robustmean *list, int n, double* penaltychange, double penaltyoutlier, int minseglength, int maxseglength);
+void solveorderedobservationlist_robustmean(struct orderedobservationlist_robustmean *list, int n, double* penaltychange, double penaltyoutlier, int minseglength, int maxseglength);
 
 void changepointreturn_robustmean(struct orderedobservationlist_robustmean *list, int n, int* numberofchanges, int** changepoints);
 
