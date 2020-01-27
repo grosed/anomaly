@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include "tukey.h"
 #include "Online_tukey.h"
-
+#include "user_interupt.h"
 
 namespace anomaly
 {
@@ -64,7 +64,7 @@ void updatewithobservation_mean(int ii, struct orderedobservationlist_mean *list
 
 void findoptimaloption_mean(int ii, struct orderedobservationlist_mean *list, int minseglength, double penaltyoutlier);
 
-int solveorderedobservationlist_mean(struct orderedobservationlist_mean *list, int n, double* penaltychange, double penaltyoutlier, int minseglength, int maxseglength);
+void solveorderedobservationlist_mean(struct orderedobservationlist_mean *list, int n, double* penaltychange, double penaltyoutlier, int minseglength, int maxseglength);
 
 void changepointreturn_mean(struct orderedobservationlist_mean *list, int n, int* numberofchanges, int** changepoints);
 

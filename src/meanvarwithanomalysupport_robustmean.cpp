@@ -18,7 +18,7 @@ void populateorderedobservationlist_robustmean(struct orderedobservationlist_rob
 
 	int ii = 0;
 
-	*list = (struct orderedobservationlist_robustmean*) calloc( n+2 , sizeof( struct orderedobservationlist_robustmean ) );
+	*list = new orderedobservationlist_robustmean[n+2];
 	
 	(*list)[0].numberofobservation = 0;
 	(*list)[0].observation = 0;

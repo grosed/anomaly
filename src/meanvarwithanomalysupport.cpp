@@ -19,7 +19,7 @@ void populateorderedobservationlist(struct orderedobservationlist **list, double
 
 	int ii = 0;
 
-	*list = (struct orderedobservationlist*) calloc( n+2 , sizeof( struct orderedobservationlist ) );
+	*list = new orderedobservationlist[n+2];
 	
 	(*list)[0].numberofobservation = 0;
 	(*list)[0].observation = 0;

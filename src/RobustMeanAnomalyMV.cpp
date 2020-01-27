@@ -66,19 +66,19 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 		for (ii = 0; ii < n + l + 2; ii++)
 		{
 
-			if(mylist[ii].observation){free(mylist[ii].observation);}
-			if(mylist[ii].observationsquared){free(mylist[ii].observationsquared);}
+			if(mylist[ii].observation){delete[] mylist[ii].observation;}
+			if(mylist[ii].observationsquared){delete[] mylist[ii].observationsquared;}
 			if(mylist[ii].Tukey_Stuff){delete[] mylist[ii].Tukey_Stuff;}
-			if(mylist[ii].segmentcosts){free(mylist[ii].segmentcosts);}
-			if(mylist[ii].best_end_costs){free(mylist[ii].best_end_costs);}
-			if(mylist[ii].affectedcomponents){free(mylist[ii].affectedcomponents);}
-			if(mylist[ii].startlag){free(mylist[ii].startlag);}
-			if(mylist[ii].endlag){free(mylist[ii].endlag);}
+			if(mylist[ii].segmentcosts){delete[] mylist[ii].segmentcosts;}
+			if(mylist[ii].best_end_costs){delete[] mylist[ii].best_end_costs;}
+			if(mylist[ii].affectedcomponents){delete[] mylist[ii].affectedcomponents;}
+			if(mylist[ii].startlag){delete[] mylist[ii].startlag;}
+			if(mylist[ii].endlag){delete[] mylist[ii].endlag;}
 
 		}
 
 		if(betachange){free(betachange);}
-		if(mylist){free(mylist);}
+		if(mylist){delete[] mylist;}
 
 	  
 	  	UNPROTECT(9);
@@ -146,14 +146,14 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 	for (ii = 0; ii < n + l + 2; ii++)
 	{
 
-		if(mylist[ii].observation){free(mylist[ii].observation);}
-		if(mylist[ii].observationsquared){free(mylist[ii].observationsquared);}
+		if(mylist[ii].observation){delete[] mylist[ii].observation;}
+		if(mylist[ii].observationsquared){delete[] mylist[ii].observationsquared;}
 		if(mylist[ii].Tukey_Stuff){delete[] mylist[ii].Tukey_Stuff;}
-		if(mylist[ii].segmentcosts){free(mylist[ii].segmentcosts);}
-		if(mylist[ii].best_end_costs){free(mylist[ii].best_end_costs);}
-		if(mylist[ii].affectedcomponents){free(mylist[ii].affectedcomponents);}
-		if(mylist[ii].startlag){free(mylist[ii].startlag);}
-		if(mylist[ii].endlag){free(mylist[ii].endlag);}
+		if(mylist[ii].segmentcosts){delete[] mylist[ii].segmentcosts;}
+		if(mylist[ii].best_end_costs){delete[] mylist[ii].best_end_costs;}
+		if(mylist[ii].affectedcomponents){delete[] mylist[ii].affectedcomponents;}
+		if(mylist[ii].startlag){delete[] mylist[ii].startlag;}
+		if(mylist[ii].endlag){delete[] mylist[ii].endlag;}
 
 	}
 
@@ -165,7 +165,7 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 	  }
 
 	
-	if(mylist){free(mylist);}
+	if(mylist){delete[] mylist;}
 	if(betachange){free(betachange);}
 
   	UNPROTECT(10);

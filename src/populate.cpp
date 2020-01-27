@@ -13,7 +13,7 @@ void populate(struct orderedobservationlist **list, double* x , int n, int p, in
 
 	int ii = 0, jj = 0;
 
-	*list = (struct orderedobservationlist*) calloc(n + l + 2, sizeof( struct orderedobservationlist ) );
+	*list = new orderedobservationlist[n + l + 2];
 
 	struct orderedobservationlist *mylist = *list;
 
@@ -53,17 +53,17 @@ void populate(struct orderedobservationlist **list, double* x , int n, int p, in
 	for (ii = 1; ii < n+l+1; ii++)
 	{
 
-		mylist[ii].observation        = (double *) calloc( p, sizeof(double) );
-		mylist[ii].observationsquared = (double *) calloc( p, sizeof(double) );
-		mylist[ii].mean_of_xs         = (double *) calloc( p, sizeof(double) );
-		mylist[ii].mean_of_xs_squared = (double *) calloc( p, sizeof(double) );
+		mylist[ii].observation        = new double[p];
+		mylist[ii].observationsquared = new double[p];
+		mylist[ii].mean_of_xs         = new double[p];
+		mylist[ii].mean_of_xs_squared = new double[p];
 
-		mylist[ii].segmentcosts   = (double *) calloc( p * (l+1), sizeof(double) );
-		mylist[ii].best_end_costs = (double *) calloc( p        , sizeof(double) );
+		mylist[ii].segmentcosts   = new double[p * (l+1)]; 
+		mylist[ii].best_end_costs = new double[p];
 	
-		mylist[ii].affectedcomponents = (int *) calloc( p, sizeof(int) );
-		mylist[ii].startlag           = (int *) calloc( p, sizeof(int) ); 
-		mylist[ii].endlag             = (int *) calloc( p, sizeof(int) );
+		mylist[ii].affectedcomponents = new int[p];
+		mylist[ii].startlag           = new int[p];
+		mylist[ii].endlag             = new int[p];
 
 		for (jj = 0; jj < p; jj ++)
 		{

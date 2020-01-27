@@ -13,7 +13,7 @@ void populate_robustmean(struct orderedobservationlist_robustmean **list, double
 
 	int ii = 0, jj = 0;
 
-	*list = (struct orderedobservationlist_robustmean*) calloc(n + l + 2, sizeof( struct orderedobservationlist_robustmean ) );
+	*list = new orderedobservationlist_robustmean[n+l+2];
 
 	struct orderedobservationlist_robustmean *mylist = *list;
 
@@ -53,16 +53,16 @@ void populate_robustmean(struct orderedobservationlist_robustmean **list, double
 	for (ii = 1; ii < n+l+1; ii++)
 	{
 
-		mylist[ii].observation        = (double *) calloc( p, sizeof(double) );
-		mylist[ii].observationsquared = (double *) calloc( p, sizeof(double) );
+		mylist[ii].observation        = new double[p];
+		mylist[ii].observationsquared = new double[p];
 		mylist[ii].Tukey_Stuff        = new Online_tukey[p];
 
-		mylist[ii].segmentcosts   = (double *) calloc( p * (l+1), sizeof(double) );
-		mylist[ii].best_end_costs = (double *) calloc( p        , sizeof(double) );
+		mylist[ii].segmentcosts   = new double[p * (l+1)]; 
+		mylist[ii].best_end_costs = new double[p];
 	
-		mylist[ii].affectedcomponents = (int *) calloc( p, sizeof(int) );
-		mylist[ii].startlag           = (int *) calloc( p, sizeof(int) ); 
-		mylist[ii].endlag             = (int *) calloc( p, sizeof(int) );
+		mylist[ii].affectedcomponents = new int[p];
+		mylist[ii].startlag           = new int[p];
+		mylist[ii].endlag             = new int[p];
 
 		for (jj = 0; jj < p; jj ++)
 		{

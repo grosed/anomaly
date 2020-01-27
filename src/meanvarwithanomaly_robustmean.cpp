@@ -13,11 +13,6 @@ using namespace anomaly;
 std::vector<int> RobustMeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Ronline)
 // SEXP MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Ronline)
 {
-  
-  /* 
-  Rx    : Data
-  Rn    : Length of data
-  */
 	 
  	PROTECT(Rx) ; 
  	PROTECT(Rn) ;
@@ -42,6 +37,8 @@ std::vector<int> RobustMeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxl
 
 	struct orderedobservationlist_robustmean* mylist;
 
+	int numberofchanges = 0, *changes = NULL;
+
 	populateorderedobservationlist_robustmean(&mylist, x, n); 
 
 	betavector = (double*) calloc(maxlength, sizeof(double));
@@ -51,21 +48,20 @@ std::vector<int> RobustMeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxl
 
 	
 	error = solveorderedobservationlist_robustmean(mylist, n, betavector, betaanomaly, minlength, maxlength);
-	
+
 	if (error)
 	{
 		for (ii = 0; ii < n+2; ii++)
 		{	
 			if(mylist[ii].Tukey_Stuff){delete mylist[ii].Tukey_Stuff;}
-		}
-		free(betavector);
-	  	free(mylist);
-	  	UNPROTECT(7);
+		}	  	
+		if(changes){free(changes);}
+		if(betavector){free(betavector);}
+		if(mylist){delete[] mylist;}
+		UNPROTECT(7);
 		return std::vector<int>();
 	  	// return R_NilValue ; 
 	}
-
-	int numberofchanges = 0, *changes = NULL;
 
 	/*
 	SEXP Rout ;
@@ -137,12 +133,13 @@ std::vector<int> RobustMeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxl
 	{	
 		if(mylist[ii].Tukey_Stuff){delete mylist[ii].Tukey_Stuff;}
 	}
-	free(changes);
-	free(betavector);
-	free(mylist); 
 
-  	// UNPROTECT(8);
+	if(changes){free(changes);}
+	if(betavector){free(betavector);}
+	if(mylist){delete[] mylist;}
+
 	UNPROTECT(7);
+
   	return(Rout) ; 
 }
 

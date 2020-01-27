@@ -8,6 +8,7 @@
 
 #include "Functions.h"
 
+#include "user_interupt.h"
 #include "check_user_interrupt.h"
 
 namespace anomaly
@@ -18,7 +19,7 @@ void populateorderedobservationlist_mean(struct orderedobservationlist_mean **li
 
 	int ii = 0;
 
-	*list = (struct orderedobservationlist_mean*) calloc( n+2 , sizeof( struct orderedobservationlist_mean ) );
+	*list = new orderedobservationlist_mean[n+2];
 	
 	(*list)[0].numberofobservation = 0;
 	(*list)[0].observation = 0;
@@ -181,7 +182,7 @@ void pruner_mean(struct orderedobservationlist_mean *list, int ii, double penalt
 }
 
 
-int solveorderedobservationlist_mean(struct orderedobservationlist_mean *list, int n, double *penaltychange, double penaltyoutlier, int minseglength, int maxseglength)
+void solveorderedobservationlist_mean(struct orderedobservationlist_mean *list, int n, double *penaltychange, double penaltyoutlier, int minseglength, int maxseglength)
 {
 
 	int ii = 1;
@@ -204,13 +205,12 @@ int solveorderedobservationlist_mean(struct orderedobservationlist_mean *list, i
 		{
 		  if(check_user_interrupt())
 		  {
-		    return(1);  
+		     user_interupt e;
+		     throw(e);
 		  }
 		}
 		
 	}
-	
-	return(0);
 
 }
 
@@ -231,7 +231,7 @@ void changepointreturn_mean(struct orderedobservationlist_mean *list, int n, int
 	}
 
 	
-        *changepoints = (int*)calloc(3*(*numberofchanges) ,sizeof(int));
+        *changepoints = new int[3*(*numberofchanges)];
 
 	(*changepoints)[0] = -1; 
 	(*changepoints)[1] = -1;
@@ -262,7 +262,7 @@ void changepointreturn_mean(struct orderedobservationlist_mean *list, int n, int
 void changepointreturn_online_mean(struct orderedobservationlist_mean *list, int n, int** changepoints)
 {
 	
-  *changepoints = (int*)calloc(2*n ,sizeof(int));
+  *changepoints = new int[2*n];
 	
 	int ii = 0;
 

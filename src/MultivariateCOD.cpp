@@ -66,20 +66,20 @@ std::vector<int> MeanVarAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminl
 		for (ii = 0; ii < n + l + 2; ii++)
 		{
 
-			if(mylist[ii].observation){free(mylist[ii].observation);}
-			if(mylist[ii].observationsquared){free(mylist[ii].observationsquared);}
-			if(mylist[ii].mean_of_xs){free(mylist[ii].mean_of_xs);}
-			if(mylist[ii].mean_of_xs_squared){free(mylist[ii].mean_of_xs_squared);}
-			if(mylist[ii].segmentcosts){free(mylist[ii].segmentcosts);}
-			if(mylist[ii].best_end_costs){free(mylist[ii].best_end_costs);}
-			if(mylist[ii].affectedcomponents){free(mylist[ii].affectedcomponents);}
-			if(mylist[ii].startlag){free(mylist[ii].startlag);}
-			if(mylist[ii].endlag){free(mylist[ii].endlag);}
+			if(mylist[ii].observation){delete[] mylist[ii].observation;}
+			if(mylist[ii].observationsquared){delete[] mylist[ii].observationsquared;}
+			if(mylist[ii].mean_of_xs){delete[] mylist[ii].mean_of_xs;}
+			if(mylist[ii].mean_of_xs_squared){delete[] mylist[ii].mean_of_xs_squared;}
+			if(mylist[ii].segmentcosts){delete[] mylist[ii].segmentcosts;}
+			if(mylist[ii].best_end_costs){delete[] mylist[ii].best_end_costs;}
+			if(mylist[ii].affectedcomponents){delete[] mylist[ii].affectedcomponents;}
+			if(mylist[ii].startlag){delete[] mylist[ii].startlag;}
+			if(mylist[ii].endlag){delete[] mylist[ii].endlag;}
 
 		}
 
 		if(betachange){free(betachange);}
-		if(mylist){free(mylist);}
+		if(mylist){delete[] mylist;}
 
 	  
 	  	UNPROTECT(9);
@@ -157,20 +157,20 @@ std::vector<int> MeanVarAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminl
 	for (ii = 0; ii < n + l + 2; ii++)
 	{
 
-		if(mylist[ii].observation){free(mylist[ii].observation);}
-		if(mylist[ii].observationsquared){free(mylist[ii].observationsquared);}
-		if(mylist[ii].mean_of_xs){free(mylist[ii].mean_of_xs);}
-		if(mylist[ii].mean_of_xs_squared){free(mylist[ii].mean_of_xs_squared);}
-		if(mylist[ii].segmentcosts){free(mylist[ii].segmentcosts);}
-		if(mylist[ii].best_end_costs){free(mylist[ii].best_end_costs);}
-		if(mylist[ii].affectedcomponents){free(mylist[ii].affectedcomponents);}
-		if(mylist[ii].startlag){free(mylist[ii].startlag);}
-		if(mylist[ii].endlag){free(mylist[ii].endlag);}
+		if(mylist[ii].observation){delete[] mylist[ii].observation;}
+		if(mylist[ii].observationsquared){delete[] mylist[ii].observationsquared;}
+		if(mylist[ii].mean_of_xs){delete[] mylist[ii].mean_of_xs;}
+		if(mylist[ii].mean_of_xs_squared){delete[] mylist[ii].mean_of_xs_squared;}
+		if(mylist[ii].segmentcosts){delete[] mylist[ii].segmentcosts;}
+		if(mylist[ii].best_end_costs){delete[] mylist[ii].best_end_costs;}
+		if(mylist[ii].affectedcomponents){delete[] mylist[ii].affectedcomponents;}
+		if(mylist[ii].startlag){delete[] mylist[ii].startlag;}
+		if(mylist[ii].endlag){delete[] mylist[ii].endlag;}
 
 	}
 
 
-	if(mylist){free(mylist);}
+	if(mylist){delete[] mylist;}
 	if(betachange){free(betachange);}
 
 
