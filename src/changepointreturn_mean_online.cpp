@@ -6,7 +6,7 @@
 namespace anomalymv
 {
 
-void changepointreturn_mean_online(struct orderedobservationlist_mean *mylist, int n, int p, int *out)
+void changepointreturn_mean_online(struct orderedobservationlist_mean *mylist, int n, int p, std::vector<int> &out)
 {
 
 	struct orderedobservationlist_mean current; 

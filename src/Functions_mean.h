@@ -1,6 +1,7 @@
 #include <stdbool.h>
-
+#include "user_interupt.h"
 #include "check_user_interrupt.h"
+#include <vector>
 
 namespace anomalymv
 {
@@ -48,7 +49,7 @@ int cmpfunc_nosorting (const void * a, const void * b);
 
 int cmpfunc_sorting (const void * a, const void * b);
 
-int solveorderedobservationlist_mean(struct orderedobservationlist_mean *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength);
+void solveorderedobservationlist_mean(struct orderedobservationlist_mean *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength);
 
 void compute_cost_of_starting_anomalies_mean(struct orderedobservationlist_mean *list , int ii, int n, int p, int l, int minseglength, double *penaltycomponent, double *componentcost);
 
@@ -66,7 +67,7 @@ void changepointreturn_mean(struct orderedobservationlist_mean *list, int n, int
 
 void pruner_mean(struct orderedobservationlist_mean *list, int ii, int p, int l, int minseglength, int maxseglength, double totalpenalty);
 
-void changepointreturn_mean_online(struct orderedobservationlist_mean *mylist, int n, int p, int *out);
+void changepointreturn_mean_online(struct orderedobservationlist_mean *mylist, int n, int p, std::vector<int> &out);
 
 
 
