@@ -2,6 +2,7 @@
 #include "tukey.h"
 #include "Online_tukey.h"
 #include "user_interupt.h"
+#include <vector>
 
 namespace anomaly
 {
@@ -157,7 +158,7 @@ int cmpfunc_nosorting (const void * a, const void * b);
 
 int cmpfunc_sorting (const void * a, const void * b);
 
-int solveorderedobservationlist(struct orderedobservationlist *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength);
+void solveorderedobservationlist(struct orderedobservationlist *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength);
 
 void compute_cost_of_starting_anomalies(struct orderedobservationlist *list , int ii, int n, int p, int l, int minseglength, double *penaltycomponent, double *componentcost);
 
@@ -175,7 +176,7 @@ void changepointreturn(struct orderedobservationlist *list, int n, int p, int* n
 
 void pruner(struct orderedobservationlist *list, int ii, int p, int l, int minseglength, int maxseglength, double totalpenalty);
 
-void changepointreturn_online(struct orderedobservationlist *mylist, int n, int p, int *out);
+void changepointreturn_online(struct orderedobservationlist *mylist, int n, int p, std::vector<int> &out);
 
 
 

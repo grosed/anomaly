@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <float.h>
 #include "Functions.h"
-
+#include <vector>
 namespace anomalymv
 {
 
-void changepointreturn_online(struct orderedobservationlist *mylist, int n, int p, int *out)
+void changepointreturn_online(struct orderedobservationlist *mylist, int n, int p, std::vector<int> &out )
 {
 
 	struct orderedobservationlist current; 

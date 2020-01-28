@@ -28,10 +28,10 @@ void changepointreturn(struct orderedobservationlist *list, int n, int p, int* n
 	}
 
 	
-	*changepoints = (int *) calloc((*numberofchanges)*3, sizeof(int));
-	*components   = (int *) calloc((*numberofchanges)*p, sizeof(int));
-	*startlag     = (int *) calloc((*numberofchanges)*p, sizeof(int));
-	*endlag       = (int *) calloc((*numberofchanges)*p, sizeof(int));
+	*changepoints = new int[(*numberofchanges)*3];
+	*components   = new int[(*numberofchanges)*p];
+	*startlag     = new int[(*numberofchanges)*p];
+	*endlag       = new int[(*numberofchanges)*p];
 
 
 	(*changepoints)[0] = -1; 

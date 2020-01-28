@@ -4,15 +4,16 @@
 #include <Rmath.h>
 #include <math.h>
 #include <stdlib.h>
+#include <vector>
 #include <stdio.h>
 #include <stdbool.h>
-
+#include "user_interupt.h"
 #include "check_user_interrupt.h"
 
 namespace anomalymv
 {
 
-int solveorderedobservationlist(struct orderedobservationlist *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength)
+void solveorderedobservationlist(struct orderedobservationlist *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength)
 {
 
 	int ii, jj;
@@ -49,8 +50,8 @@ int solveorderedobservationlist(struct orderedobservationlist *list, int n, int 
 
 				if(componentcost){free(componentcost);}
 				if(savingvector){free(savingvector);}
-
-		    	return(1);  
+				user_interupt a;
+				throw(a);
 
 		  	}
 
@@ -61,8 +62,6 @@ int solveorderedobservationlist(struct orderedobservationlist *list, int n, int 
 
 	if(componentcost){free(componentcost);}
 	if(savingvector){free(savingvector);}
-
-	return(0); 
 
 }
 
