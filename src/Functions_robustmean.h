@@ -2,6 +2,8 @@
 #include "Online_tukey.h"
 
 #include "check_user_interrupt.h"
+#include "user_interupt.h"
+#include <vector>
 
 namespace anomalymv
 {
@@ -50,7 +52,7 @@ int cmpfunc_nosorting (const void * a, const void * b);
 
 int cmpfunc_sorting (const void * a, const void * b);
 
-int solveorderedobservationlist_robustmean(struct orderedobservationlist_robustmean *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength);
+void solveorderedobservationlist_robustmean(struct orderedobservationlist_robustmean *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength);
 
 void compute_cost_of_starting_anomalies_robustmean(struct orderedobservationlist_robustmean *list , int ii, int n, int p, int l, int minseglength, double *penaltycomponent, double *componentcost);
 
@@ -68,7 +70,7 @@ void changepointreturn_robustmean(struct orderedobservationlist_robustmean *list
 
 void pruner_robustmean(struct orderedobservationlist_robustmean *list, int ii, int p, int l, int minseglength, int maxseglength, double totalpenalty);
 
-void changepointreturn_robustmean_online(struct orderedobservationlist_robustmean *mylist, int n, int p, int *out);
+void changepointreturn_robustmean_online(struct orderedobservationlist_robustmean *mylist, int n, int p, std::vector<int> &out);
 
 
 

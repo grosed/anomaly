@@ -6,13 +6,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
-
+#include "user_interupt.h"
 #include "check_user_interrupt.h"
 
 namespace anomalymv
 {
 
-int solveorderedobservationlist_robustmean(struct orderedobservationlist_robustmean *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength)
+void solveorderedobservationlist_robustmean(struct orderedobservationlist_robustmean *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength)
 {
 
 	int ii, jj;
@@ -51,8 +51,8 @@ int solveorderedobservationlist_robustmean(struct orderedobservationlist_robustm
 
 				if(componentcost){free(componentcost);}
 				if(savingvector){free(savingvector);}
-
-		    	return(1);  
+				user_interupt a;
+				throw(a);				
 
 		  	}
 
@@ -63,8 +63,6 @@ int solveorderedobservationlist_robustmean(struct orderedobservationlist_robustm
 
 	if(componentcost){free(componentcost);}
 	if(savingvector){free(savingvector);}
-
-	return(0); 
 
 }
 

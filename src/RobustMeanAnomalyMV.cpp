@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <string>
+#include "user_interupt.h"
 #include "capa.exception.h"
 
 using namespace anomalymv;
@@ -33,7 +34,7 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
 	PROTECT(Rmaxlength) ;
 	PROTECT(Ronline) ;
 	
-  	int n = 0, p = 0, l = 0, minlength = 0, ii = 0, status = 0, maxlength = 0, online = 0;
+  	int n = 0, p = 0, l = 0, minlength = 0, ii = 0, error = 0, maxlength = 0, online = 0;
   	double betaanomaly = 0.0;
   	double* x = NULL;
   	double* betachange_DUMMY = NULL;
@@ -48,138 +49,143 @@ std::vector<int> RobustMeanAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rm
   	x          	 = REAL(Rx);
   	betachange_DUMMY = REAL(Rbetachange);
   	betaanomaly      = *REAL(Rbetaanomaly);
+	std::vector<int> vout;	
+	std::string reason;
+	int *out;
+	struct orderedobservationlist_robustmean* mylist;
 
 
-	betachange = (double*)calloc(p,sizeof(double));
+	try
+	{
+		betachange = new double[p];
+	}
+	catch(std::bad_alloc& e)
+	{
+		reason = "Not enough memory";
+		error = 1;
+		goto clearup;
+	}
 
   	for (ii = 0; ii < p; ii++)
   	{
   		betachange[ii] = betachange_DUMMY[ii];
   	}
 
-
-	struct orderedobservationlist_robustmean* mylist;
-
-	populate_robustmean(&mylist, x, n, p, l); 
-	
-	status = solveorderedobservationlist_robustmean(mylist, n, p, l, betachange, betaanomaly, minlength, maxlength);
-
-	if(status)
+	try
 	{
-
-		for (ii = 0; ii < n + l + 2; ii++)
-		{
-
-			if(mylist[ii].observation){delete[] mylist[ii].observation;}
-			if(mylist[ii].observationsquared){delete[] mylist[ii].observationsquared;}
-			if(mylist[ii].Tukey_Stuff){delete[] mylist[ii].Tukey_Stuff;}
-			if(mylist[ii].segmentcosts){delete[] mylist[ii].segmentcosts;}
-			if(mylist[ii].best_end_costs){delete[] mylist[ii].best_end_costs;}
-			if(mylist[ii].affectedcomponents){delete[] mylist[ii].affectedcomponents;}
-			if(mylist[ii].startlag){delete[] mylist[ii].startlag;}
-			if(mylist[ii].endlag){delete[] mylist[ii].endlag;}
-
-		}
-
-		if(betachange){free(betachange);}
-		if(mylist){delete[] mylist;}
-
-	  
-	  	UNPROTECT(9);
-		std::string reason = "user interrupt";
-		throw_capa_exception(reason);
+		populate_robustmean(&mylist, x, n, p, l); 
+	}
+	catch(std::bad_alloc& e)
+	{
+		reason = "Not enough memory";
+		error = 1;
+		goto clearup;
 	}
 
-
-	SEXP Rout ;
-	std::vector<int> vout;	
+	try
+	{
+		solveorderedobservationlist_robustmean(mylist, n, p, l, betachange, betaanomaly, minlength, maxlength);
+	}
+	catch(user_interupt& a)
+	{
+		reason = "user interrupt";
+		error = 1;
+		goto clearup;
+	}	
 
 	if (online)
 	{
 
-		PROTECT(Rout = allocVector(INTSXP, n*(2 + 3*p)));
 		vout.resize(n*(2 + 3*p));
-		int *out;
-  		out  = INTEGER(Rout);
 		
-		changepointreturn_robustmean_online(mylist, n, p, out);
+		changepointreturn_robustmean_online(mylist, n, p, vout);
 		
-
 	} 
 	else
 	{
 
 		int numberofchanges = 0, *changes = NULL, *components = NULL, *startlag = NULL, *endlag = NULL;
-	
-		changepointreturn_robustmean(mylist, n, p, &numberofchanges, &changes, &components, &startlag, &endlag);
 		
-  		PROTECT(Rout = allocVector(INTSXP, numberofchanges*(3 + 3*p)));
+		try
+		{
+			changepointreturn_robustmean(mylist, n, p, &numberofchanges, &changes, &components, &startlag, &endlag);
+		}
+		catch(std::bad_alloc& e)
+		{
+			if(components){delete[] components;}
+			if(startlag){delete[] startlag;}
+			if(endlag){delete[] endlag;}
+			if(changes){delete[] changes;}
+			reason = "Not enough memory";
+			error = 1;
+			goto clearup;
+		}		
+
+
 		vout.resize(numberofchanges*(3 + 3*p));
-		
-		int *out;
-  		out  = INTEGER(Rout);
-  		
+	
 		for (ii = 0; ii < 3*numberofchanges; ii++)
 		{
-			out[ii] = changes[ii];
+			vout[ii] = changes[ii];
 		}
 
 		for (ii = 0; ii < numberofchanges*p; ii++)
 		{
-			out[ii + 3*numberofchanges] = components[ii];
+			vout[ii + 3*numberofchanges] = components[ii];
 		}
 
 		for (ii = 0; ii < numberofchanges*p; ii++)
 		{
-			out[ii + numberofchanges*(3 + p)] = startlag[ii];
+			vout[ii + numberofchanges*(3 + p)] = startlag[ii];
 		}
 
 		for (ii = 0; ii < numberofchanges*p; ii++)
 		{
-			out[ii + numberofchanges*(3 + 2*p)] = endlag[ii];
+			vout[ii + numberofchanges*(3 + 2*p)] = endlag[ii];
 		}
 
-		if(components){free(components);}
-		if(startlag){free(startlag);}
-		if(endlag){free(endlag);}
-		if(changes){free(changes);}
+		if(components){delete[] components;}
+		if(startlag){delete[] startlag;}
+		if(endlag){delete[] endlag;}
+		if(changes){delete[] changes;}
 
 	}
-	
-	for (ii = 0; ii < n + l + 2; ii++)
+
+clearup:	
+
+	if(mylist)
 	{
+		for (ii = 0; ii < n + l + 2; ii++)
+		{
 
-		if(mylist[ii].observation){delete[] mylist[ii].observation;}
-		if(mylist[ii].observationsquared){delete[] mylist[ii].observationsquared;}
-		if(mylist[ii].Tukey_Stuff){delete[] mylist[ii].Tukey_Stuff;}
-		if(mylist[ii].segmentcosts){delete[] mylist[ii].segmentcosts;}
-		if(mylist[ii].best_end_costs){delete[] mylist[ii].best_end_costs;}
-		if(mylist[ii].affectedcomponents){delete[] mylist[ii].affectedcomponents;}
-		if(mylist[ii].startlag){delete[] mylist[ii].startlag;}
-		if(mylist[ii].endlag){delete[] mylist[ii].endlag;}
+			if(mylist[ii].Tukey_Stuff){delete[] mylist[ii].Tukey_Stuff;}
+			if(mylist[ii].observation){ delete[] mylist[ii].observation;}
+			if(mylist[ii].observationsquared){ delete[] mylist[ii].observationsquared;}
+			if(mylist[ii].segmentcosts){ delete[] mylist[ii].segmentcosts;}
+			if(mylist[ii].best_end_costs){  delete[] mylist[ii].best_end_costs;}
+			if(mylist[ii].affectedcomponents){  delete[] mylist[ii].affectedcomponents;}
+			if(mylist[ii].startlag){ delete[] mylist[ii].startlag;}
+			if(mylist[ii].endlag){ delete[] mylist[ii].endlag;}
 
+		}
+
+		delete[] mylist;
 	}
 
-	int *out;
-	out  = INTEGER(Rout);
-	for(unsigned int cursor = 0; cursor < vout.size(); cursor++)
-	  {
-	    vout[cursor] = out[cursor];
-	  }
+	if(betachange){ delete[] betachange;}
 
-	
-	if(mylist){delete[] mylist;}
-	if(betachange){free(betachange);}
+  	UNPROTECT(9);
 
-  	UNPROTECT(10);
+	if (error == 0)
+	{
+  		return(vout) ; 
+	}
+	else 
+	{
+		throw_capa_exception(reason);
+	}
 
-  	// return(Rout) ;
-	return(vout);
 }
-
-
-
-
 
 
 

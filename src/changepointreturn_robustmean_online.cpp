@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <float.h>
 #include "Functions_robustmean.h"
+#include <vector>
 
 namespace anomalymv
 {
 
-void changepointreturn_robustmean_online(struct orderedobservationlist_robustmean *mylist, int n, int p, int *out)
+void changepointreturn_robustmean_online(struct orderedobservationlist_robustmean *mylist, int n, int p, std::vector<int> &out)
 {
 
 	struct orderedobservationlist_robustmean current; 
