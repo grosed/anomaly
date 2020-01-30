@@ -16,15 +16,25 @@ namespace anomalymv
 void solveorderedobservationlist(struct orderedobservationlist *list, int n, int p, int l, double* penaltycomponent, double penaltyanomaly, int minseglength, int maxseglength)
 {
 
-	int ii, jj;
-
-	double *componentcost = NULL;
-	componentcost = (double *) calloc(p, sizeof(double));
-
-	struct position_saving *savingvector = NULL;
-	savingvector = (struct position_saving *) calloc(p, sizeof(struct position_saving));
-
+	int ii, jj, error =0;
 	double totalpenalty = 0.0;
+	double *componentcost = NULL;
+	struct position_saving *savingvector = NULL;
+
+
+	componentcost = (double *) calloc(p, sizeof(double));
+	if (!componentcost)
+	{
+		error = 1;
+		goto clearup;
+	}
+
+	savingvector = (struct position_saving *) calloc(p, sizeof(struct position_saving));
+	if (!savingvector)
+	{
+		error = 1;
+		goto clearup;
+	}
 
 	for (jj = 0; jj < p; jj++)
 	{
@@ -48,20 +58,29 @@ void solveorderedobservationlist(struct orderedobservationlist *list, int n, int
 			if(check_user_interrupt())
 		  	{
 
-				if(componentcost){free(componentcost);}
-				if(savingvector){free(savingvector);}
-				user_interupt a;
-				throw(a);
+				error = 2;
+				goto clearup;
 
 		  	}
 
 		}
 
 	}
-	
 
+clearup:	
 	if(componentcost){free(componentcost);}
 	if(savingvector){free(savingvector);}
+	if(error == 1)
+	{
+		std::bad_alloc e;
+		throw(e);
+	}
+	if(error == 2)
+	{
+		user_interupt a;
+		throw(a);
+	}
+	
 
 }
 
