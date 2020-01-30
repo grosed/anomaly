@@ -106,31 +106,31 @@ get.states <- function(segs, states, n){
 
 
 Rsampler <- function(res, gamma = 1/3, no.draws=1000){
-
+  
   logprobs <- res$weights
   cpt.locs <- res$locations
   types <- res$type
   params <- res$params
-
+  
   # sampler params
   mu_seq = res$sampler_params$mu_seq
   N = res$sampler_params$N
   S = res$sampler_params$S
   p = res$sampler_params$p
-
+  
   n = length(logprobs)
   prob.states <- matrix(nrow=no.draws, ncol=n)
   # for the heatmap  
   sampled.res = list()
   for (i in 1:no.draws){
-
+    
     f <- draw.from.post(logprobs, cpt.locs, types, params)
     segs <- f$draws
     states <- f$states
-
+    
     # for marginal probabilities
     prob.states[i,] <- get.states(segs, states, n)
-
+    
     # for the heatmap
     end <- segs[which(states == 1)]
     begin <- segs[which(states == 1) + 1]
@@ -138,30 +138,34 @@ Rsampler <- function(res, gamma = 1/3, no.draws=1000){
     tmpmat[1,] <- begin
     tmpmat[2,] <- end
     sampled.res[[i]] <- tmpmat
-
-      
+    
+    
   }
-
+  
   margprob = apply(prob.states,2,sum)/no.draws
   segmentation = loss(gamma, margprob)
-
+  
   # put into data frame
   df = data.frame("start"=NA, "end"=NA, "LogMargLike"=NA)
   welem = which(segmentation == 1)
-  wdiff = c(0, which(diff(welem) != 1), length(welem))
-  for (i in 1:(length(wdiff)-1) ){
-    start = welem[(wdiff[i] + 1)]
-    end = welem[wdiff[(i+1)]]
-    ml = P.A(start, end, mu_seq, N, S, p)
-    tempdf = data.frame("start"=start,
-                        "end"=end,
-                        "LogMargLike"=ml)
-    df = rbind(df, tempdf)
+  if (length(welem) > 0){
+    
+    wdiff = c(0, which(diff(welem) != 1), length(welem))
+    for (i in 1:(length(wdiff)-1) ){
+      start = welem[(wdiff[i] + 1)]
+      end = welem[wdiff[(i+1)]]
+      ml = P.A(start, end, mu_seq, N, S, p)
+      tempdf = data.frame("start"=start,
+                          "end"=end,
+                          "LogMargLike"=ml)
+      df = rbind(df, tempdf)
+    }
+    df = df[-1,]
+    df = df[order(df$LogMargLike, decreasing = T), ]
+    
   }
-  df = df[-1,]
-  df = df[order(df$LogMargLike, decreasing = T), ]
   return(list(df,margprob,sampled.res))
-
+  
 }
 
 
@@ -590,29 +594,28 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' plot(sampler.res,marginals=TRUE)
 #' }
 #' @export
-bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(1-p_A), pi_N = 0.9, paffected = 0.05, lower = 2*sqrt(log(nrow(data))/nrow(data)), upper = max(transform(x)), alpha=1e-4, h=0.25, transform=robustscale)
+bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(1-p_A), pi_N = 0.9, paffected = 0.05, lower = 2*sqrt(log(nrow(x))/nrow(x)), upper = max(transform(x)), alpha=1e-4, h=0.25, transform=robustscale)
 {
     # check the data
-    data<-as.array(as.matrix(x))
-    if(!is_array(data))
+    x <- as.array(as.matrix(x))
+    if(!is_array(x))
     {
         stop("cannot convert data to an array")
     }
-    if(!all(is_not_na(data)))
+    if(!all(is_not_na(x)))
     {
         stop("x contains NA values")
     }
-    if(!all(is_not_null(data)))
+    if(!all(is_not_null(x)))
     {
         stop("x contains NULL values")
     }
-    if(!is_numeric(data))
+    if(!is_numeric(x))
     {
         stop("x must be of type numeric")
     }
-
     # transform the data
-    data<-transform(data)
+    x <- transform(x)
     
     # now convert the data to a list of vectors for marshalling to Rcpp
     # data<-Map(function(i) unlist(data[i,]),1:nrow(data))
@@ -620,7 +623,7 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     # check p_N
     if(!is_numeric(p_N))
     {
-        stop("p_N must be of type numeric")
+      stop("p_N must be of type numeric")
     }
     if(length(p_N) != 1)
     {
@@ -630,7 +633,7 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     {
         stop("p_N must be in the range [0,1]")
     }
-
+    
     # check p_A
     if(!is_numeric(p_A))
     {
@@ -654,11 +657,11 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     {
         stop("pi_N must be a single numeric value")
     }
-    if(pi_N < 0.0 || pi_N > 1)
+    if(pi_N <= 0.0 || pi_N >= 1)
     {
-        stop("pi_N must be in the range [0,1]")
+        stop("pi_N must be in the range (0,1)")
     }
-
+    
     # check alpha
     if(!is_numeric(alpha))
     {
@@ -682,9 +685,9 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     {
         stop("paffected must be a single numeric value")
     }
-    if(paffected < 0.0 || paffected > 1)
+    if(paffected <= 0.0 || paffected >= 1)
     {
-        stop("paffected must be in the range [0,1]")
+        stop("paffected must be in the range (0,1)")
     }
 
     # check k_A
@@ -760,11 +763,11 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
 
 #  CALL LB's master code !!!!!
 # set up parameters
-bardparams<-c(k_N,p_N,k_A,p_A,pi_N,paffected*dim(data)[2])
-mu_seq<-c(seq(-upper,-lower,by=h),seq(lower,upper,by=h))
-res<-Rbard(data,bardparams,mu_seq,alpha)
+bardparams<-c(k_N, p_N, k_A, p_A, pi_N, paffected*dim(x)[2])
+mu_seq<-c(seq(-upper, -lower, by=h), seq(lower, upper, by=h))
+res<-Rbard(x, bardparams, mu_seq, alpha)
 
-return(bard.class(data=data,
+return(bard.class(data=x,
                   p_N=p_N,
                   p_A=p_A,
                   k_N=k_N,
@@ -843,17 +846,19 @@ get.probvec <- function( filtering , params , num_draws=1000 )
 # function to get a vector of states for a drawn value frin filtering posterior # 
 # segs is vector of locations of segments
 # states vector 
-get.states <- function( segs , states, n){
+get.states <- function(segs, states, n){
   
   state.vec <- numeric(n)
   state.vec[ segs[1]:segs[2] ] <- states[1]
-  for (i in 2:( length(segs) - 1 ) ){
-    state.vec[ ( segs[i]-1 ):segs[i+1] ] <- states[i]
+  if (length(segs) > 2){
+    for (i in 2:( length(segs) - 1 ) ){
+      state.vec[ ( segs[i]-1 ):segs[i+1] ] <- states[i]
+    }
   }
-
   return(state.vec)
   
 }
+
 
 format_output = function(R){
   
