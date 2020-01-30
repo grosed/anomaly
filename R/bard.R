@@ -614,6 +614,10 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     {
         stop("x contains NULL values")
     }
+    if(any(is.infinite(x)))
+    {
+      stop("x contains Inf values")
+    }
     if(!is_numeric(x))
     {
         stop("x must be of type numeric")
