@@ -145,11 +145,11 @@ Rsampler <- function(res, gamma = 1/3, no.draws=1000){
   margprob = apply(prob.states,2,sum)/no.draws
   segmentation = loss(gamma, margprob)
   
-  # put into data frame
-  df = data.frame("start"=NA, "end"=NA, "LogMargLike"=NA)
   welem = which(segmentation == 1)
   if (length(welem) > 0){
     
+    # put into data frame
+    df = data.frame("start"=NA, "end"=NA, "LogMargLike"=NA)
     wdiff = c(0, which(diff(welem) != 1), length(welem))
     for (i in 1:(length(wdiff)-1) ){
       start = welem[(wdiff[i] + 1)]
@@ -162,9 +162,13 @@ Rsampler <- function(res, gamma = 1/3, no.draws=1000){
     }
     df = df[-1,]
     df = df[order(df$LogMargLike, decreasing = T), ]
+    return(list(df,margprob,sampled.res))
     
   }
-  return(list(df,margprob,sampled.res))
+  else{
+    df = data.frame()
+    return(list(df,margprob,sampled.res))
+  }
   
 }
 
