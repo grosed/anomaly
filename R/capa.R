@@ -361,6 +361,9 @@ setMethod("collective_anomalies",signature=list("capa.class"),
                   return(res)
               }
               res<-cbind(res,changes);
+              # tighten
+	      start.lag<-end.lag<-"."<-"%<>%"<-NULL # circumvent CRAN check issues
+	      res %<>% group_by(.,start) %>% mutate(.,end.lag=end.lag-min(end.lag),start.lag=start.lag-min(start.lag)) %>% as.data.frame(.)
               return(res)
           }
           )
