@@ -93,7 +93,7 @@ setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names,ti
         if(is.null(tile_plot))
         {
             tile_plot<-FALSE
-            if(ncol(x@data[,subset]) > 20)
+            if(ncol(as.matrix(x@data[,subset])) > 20)
             {
                 tile_plot<-TRUE
             }
