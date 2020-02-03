@@ -397,10 +397,6 @@ setMethod("collective_anomalies",signature=list("capa.uv.class"),
 setMethod("collective_anomalies",signature=list("capa.mv.class"),
           function(object)
           {
-	      if(object@type %in% c("mean","robustmean"))
-                  {
-                      return(callNextMethod(object)[,1:6])
-                  }
               return(callNextMethod(object))
           })
 
