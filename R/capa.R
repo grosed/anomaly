@@ -123,7 +123,7 @@ setMethod("point_anomalies",signature=list("capa.class"),
               
               if (object@type == "robustmean"){
                 
-                tmp = collective_anomalies(object)
+                tmp = collective_anomalies(as(object,"capa.class"))
                 
                 if (nrow(tmp)>0)
                 {
