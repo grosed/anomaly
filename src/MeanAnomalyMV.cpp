@@ -175,14 +175,13 @@ clearup:
 
   	UNPROTECT(9);
 
-	if (error == 0)
+	if (error != 0)
 	{
-  		return(vout) ; 
+	  throw_capa_exception(reason);
 	}
-	else 
-	{
-		throw_capa_exception(reason);
-	}
+	
+	return(vout) ;
+	
 }
 
 

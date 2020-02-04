@@ -136,14 +136,12 @@ clearup:
 
 	UNPROTECT(7);
 
-	if (error == 0)
+	if (error != 0)
 	{
-  		return(Rout) ; 
+	  throw_capa_exception(reason);
 	}
-	else 
-	{
-		throw_capa_exception(reason);
-	}
+	
+	return(Rout) ;
 
 }
 
