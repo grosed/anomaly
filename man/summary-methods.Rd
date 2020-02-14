@@ -10,20 +10,20 @@
 \alias{summary,pass.class-method}
 \title{Summary of collective and point anomalies.}
 \usage{
-\S4method{summary}{anomaly_series}(object)
+\S4method{summary}{anomaly_series}(object, ...)
 
-\S4method{summary}{capa.class}(object)
+\S4method{summary}{capa.class}(object, ...)
 
-\S4method{summary}{capa.uv.class}(object)
+\S4method{summary}{capa.uv.class}(object, ...)
 
-\S4method{summary}{capa.mv.class}(object)
+\S4method{summary}{capa.mv.class}(object, ...)
 
-\S4method{summary}{pass.class}(object)
+\S4method{summary}{pass.class}(object, ...)
 }
 \arguments{
 \item{object}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.}
 
-\item{...}{Other parameters to be passed to summary methods.}
+\item{...}{Ignored.}
 }
 \description{
 Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},

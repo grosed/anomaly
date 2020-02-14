@@ -4,8 +4,7 @@
 \alias{pass}
 \title{Detection of multivariate anomalous segments using PASS.}
 \usage{
-pass(x, alpha = 2, lambda = NULL, Lmax = 10, Lmin = 1,
-  transform = robustscale)
+pass(x, alpha = 2, lambda = NULL, Lmax = 10, Lmin = 1, transform = robustscale)
 }
 \arguments{
 \item{x}{An n x m real matrix representing n observations of m variates.}

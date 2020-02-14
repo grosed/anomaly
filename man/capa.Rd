@@ -4,9 +4,16 @@
 \alias{capa}
 \title{A technique for detecting anomalous segments and points based on CAPA.}
 \usage{
-capa(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
-  min_seg_len = 10, max_seg_len = NULL, max_lag = 0,
-  transform = robustscale)
+capa(
+  x,
+  beta = NULL,
+  beta_tilde = NULL,
+  type = "meanvar",
+  min_seg_len = 10,
+  max_seg_len = NULL,
+  max_lag = 0,
+  transform = robustscale
+)
 }
 \arguments{
 \item{x}{A numeric matrix with n rows and p columns containing the data which is to be inspected.}

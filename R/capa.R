@@ -369,6 +369,7 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #' @docType methods
 #'
 #' @param object An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.
+#' @param ... Ignored.
 #' 
 #' @rdname summary-methods
 #'
@@ -377,7 +378,7 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{point_anomalies}},\code{\link{collective_anomalies}}. 
 #'
 #' @export
-setMethod("summary",signature=list("capa.class"),function(object)
+setMethod("summary",signature=list("capa.class"),function(object,...)
 {
     epoch=dim(object@data)[1]
     cat("CAPA detecting changes in ",sep="")
@@ -417,7 +418,7 @@ setMethod("summary",signature=list("capa.class"),function(object)
 #' @aliases summary,capa.uv.class-method
 #'
 #' @export
-setMethod("summary",signature=list("capa.uv.class"),function(object)
+setMethod("summary",signature=list("capa.uv.class"),function(object,...)
 {
     cat("Univariate ",sep="")
     cat("CAPA detecting changes in ",sep="")
@@ -458,7 +459,7 @@ setMethod("summary",signature=list("capa.uv.class"),function(object)
 #' @aliases summary,capa.mv.class-method
 #' 
 #' @export
-setMethod("summary",signature=list("capa.mv.class"),function(object)
+setMethod("summary",signature=list("capa.mv.class"),function(object,...)
 {
     cat("Multivariate ",sep="")
     cat("CAPA detecting changes in ",sep="")

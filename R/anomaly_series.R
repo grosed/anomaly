@@ -200,7 +200,7 @@ setMethod("plot",signature=list("anomaly_series"),function(x,xlab="",ylab="",...
 #' @aliases summary,anomaly_series-method
 #'
 #' @export
-setMethod("summary",signature=list("anomaly_series"),function(object)
+setMethod("summary",signature=list("anomaly_series"),function(object,...)
 {
     return(summary.anomaly_series(object))
 })

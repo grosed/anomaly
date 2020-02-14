@@ -4,8 +4,14 @@
 \alias{anomaly_series}
 \title{A technique for detecting anomalous segments based on CAPA.}
 \usage{
-anomaly_series(x, penaltywindow = NULL, penaltyanomaly = NULL,
-  minimumsegmentlength = 10, warnings = TRUE, method = "meanvar")
+anomaly_series(
+  x,
+  penaltywindow = NULL,
+  penaltyanomaly = NULL,
+  minimumsegmentlength = 10,
+  warnings = TRUE,
+  method = "meanvar"
+)
 }
 \arguments{
 \item{x}{A numeric vector containing the data which is to be inspected.}

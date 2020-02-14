@@ -26,7 +26,7 @@
 #'
 #' @export
 ac_corrected<-function(X)
-    {
+    {       
         ac_corrections<-function(X)
         {
             X<-as.matrix(X)
