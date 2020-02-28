@@ -1028,7 +1028,7 @@ setMethod("show",signature=list("bard.class"),function(object)
 #' @aliases summary,bard.sampler.class-method
 #'
 #' @export
-setMethod("summary",signature=list("bard.sampler.class"),function(object)
+setMethod("summary",signature=list("bard.sampler.class"),function(object,...)
 {
     cat("BARD sampler detecting changes in mean","\n",sep="")
     cat("observations = ",dim(object@bard.result@data)[1],sep="")

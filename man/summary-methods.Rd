@@ -15,21 +15,21 @@
 \usage{
 summary(object,...)
 
-\S4method{summary}{bard.sampler.class}(object)
+\S4method{summary}{bard.sampler.class}(object, ...)
 
-\S4method{summary}{capa.class}(object)
+\S4method{summary}{capa.class}(object, ...)
 
-\S4method{summary}{capa.uv.class}(object)
+\S4method{summary}{capa.uv.class}(object, ...)
 
-\S4method{summary}{capa.mv.class}(object)
+\S4method{summary}{capa.mv.class}(object, ...)
 
-\S4method{summary}{pass.class}(object)
+\S4method{summary}{pass.class}(object, ...)
 }
 \arguments{
 \item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}},
 or an S3 class produced by \code{\link{anomaly_series}}.}
 
-\item{...}{Other parameters to be passed to summary methods.}
+\item{...}{Ignored.}
 }
 \description{
 Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},

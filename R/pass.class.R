@@ -138,7 +138,7 @@ setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names,ti
 #' @aliases summary,pass.class-method
 #'
 #' @export
-setMethod("summary",signature=list("pass.class"),function(object)
+setMethod("summary",signature=list("pass.class"),function(object,...)
 {
     cat("PASS detecting change in mean","\n")
     cat("observations = ",nrow(object@data),"\n",sep="")
