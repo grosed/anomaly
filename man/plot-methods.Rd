@@ -3,23 +3,23 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,anomaly_series,ANY-method}
-\alias{plot,capa.class,ANY-method}
-\alias{plot,capa.uv.class,ANY-method}
-\alias{plot,capa.mv.class,ANY-method}
+\alias{plot,anomaly_series-method}
+\alias{plot,capa.class-method}
+\alias{plot,capa.uv.class-method}
+\alias{plot,capa.mv.class-method}
 \alias{plot-pass.class}
-\alias{plot,pass.class,ANY-method}
+\alias{plot,pass.class-method}
 \title{Visualisation of data, collective and point anomalies.}
 \usage{
-\S4method{plot}{anomaly_series,ANY}(x, xlab = "", ylab = "", ...)
+\S4method{plot}{anomaly_series}(x, xlab = "", ylab = "", ...)
 
-\S4method{plot}{capa.class,ANY}(x, subset, variate_names, tile_plot)
+\S4method{plot}{capa.class}(x, subset, variate_names, tile_plot)
 
-\S4method{plot}{capa.uv.class,ANY}(x, variate_name)
+\S4method{plot}{capa.uv.class}(x, variate_name)
 
-\S4method{plot}{capa.mv.class,ANY}(x, subset, variate_names, tile_plot)
+\S4method{plot}{capa.mv.class}(x, subset, variate_names, tile_plot)
 
-\S4method{plot}{pass.class,ANY}(x, subset, variate_names, tile_plot)
+\S4method{plot}{pass.class}(x, subset, variate_names, tile_plot)
 }
 \arguments{
 \item{x}{An S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}.}

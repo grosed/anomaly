@@ -180,7 +180,7 @@ summary.anomaly_series = function(object,...){
 #' 
 #' @rdname plot-methods
 #'
-#' @aliases plot,anomaly_series,ANY-method
+#' @aliases plot,anomaly_series-method
 #'
 #' @export
 setMethod("plot",signature=list("anomaly_series"),function(x,xlab="",ylab="",...)
