@@ -71,7 +71,7 @@ pass.tile.plot<-function(x,subset=1:ncol(x@data),variate_names=TRUE)
 #'
 #' @rdname plot-methods
 #'
-#' @aliases plot,pass.class,ANY-method
+#' @aliases plot,pass.class-method
 #'
 #' @export
 setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names,tile_plot)

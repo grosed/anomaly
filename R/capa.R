@@ -1378,7 +1378,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @rdname plot-methods
 #'
-#' @aliases plot,capa.class,ANY-method
+#' @aliases plot,capa.class-method
 #' 
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{sampler}},\code{\link{anomaly_series}}.
 #'
@@ -1448,7 +1448,7 @@ setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,ti
 #' 
 #' @rdname plot-methods
 #'
-#' @aliases plot,capa.uv.class,ANY-method
+#' @aliases plot,capa.uv.class-method
 #'
 #' @export
 setMethod("plot",signature=list("capa.uv.class"),function(x,variate_name)
@@ -1467,7 +1467,7 @@ setMethod("plot",signature=list("capa.uv.class"),function(x,variate_name)
 #'
 #' @rdname plot-methods
 #'
-#' @aliases plot,capa.mv.class,ANY-method
+#' @aliases plot,capa.mv.class-method
 #'
 #' @export
 setMethod("plot",signature=list("capa.mv.class"),function(x,subset,variate_names,tile_plot)

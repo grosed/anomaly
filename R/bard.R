@@ -944,7 +944,7 @@ sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
 #' 
 #' @rdname plot-methods
 #'
-#' @aliases plot,bard.sampler.class,ANY-method
+#' @aliases plot,bard.sampler.class-method
 #'
 #' @export
 setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_names,tile_plot,marginals=FALSE)

@@ -91,7 +91,7 @@ anomaly_series<-function(x,penaltywindow=NULL,penaltyanomaly=NULL,minimumsegment
 #' 
 #' @rdname plot-methods
 #'
-#' @aliases plot,anomaly_series,ANY-method
+#' @aliases plot,anomaly_series-method
 #' 
 #' @export
 #'
