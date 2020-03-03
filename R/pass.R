@@ -59,15 +59,18 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     # check dimensions,types and values
     if(!(is_whole_number(Lmax) && is_positive(Lmax)))
     {
-        stop("Lmax must be a positive whole number")
+        #stop("Lmax must be a positive whole number")
+        stop("max_seg_len must be a positive whole number")
     }
-    if(!(is_whole_number(Lmax) && is_positive(Lmax)))
+    if(!(is_whole_number(Lmin) && is_positive(Lmin)))
     {
-        stop("Lmin must be a positive whole number")
+        #stop("Lmin must be a positive whole number")
+        stop("min_seg_len must be a positive whole number")
     }
     if(!is_positive(Lmax-Lmin))
     {
-        stop("Lmax must be greater than Lmin")
+        stop("max_seg_len must be greater than min_seg_len")
+        #stop("Lmax must be greater than Lmin")
     }
     if(!(is_whole_number(alpha) && is_non_negative(alpha)))
     {
@@ -99,7 +102,7 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     assert_all_are_real(Xi)
     if(!is_positive(nrow(Xi) - Lmax))
     {
-        stop("number of rows (observations) in Xi must be greater than Lmax") 
+        stop("number of rows (observations) in X must be greater than max_seg_len") 
     }
     # if the columns (variates) do not have names - give them default ones
     if(!has_colnames(Xi))
