@@ -35,7 +35,7 @@ simulate<-function(n=100,p=10,mu=1,locations=40,durations=20,proportions=0.1)
     }
     if(length(mu) > 1)
     {
-        stop("p must be a scalar")
+        stop("mu must be a scalar")
     }
     if(n < 1)
     {
@@ -102,10 +102,14 @@ simulate<-function(n=100,p=10,mu=1,locations=40,durations=20,proportions=0.1)
     }
     for (j in 1:q)
     {
-        for (i in 1:round(proportions[j]*p))
+      # check if proportion of series affected is non zero
+      paffected = round(proportions[j]*p)
+      if (paffected > 0){
+        for (i in 1:paffected)
         {
-            X[i,locations[j]:(locations[j]+s[j]-1)] = X[i,locations[j]:(locations[j]+s[j]-1)]+mu;
+          X[i,locations[j]:(locations[j]+s[j]-1)] = X[i,locations[j]:(locations[j]+s[j]-1)]+mu;
         }
+      }
     }
     return(t(X))
 }
