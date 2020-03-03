@@ -93,9 +93,11 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
         lambda<-(3.0*log(n_rows*Lmax) + 2*log(log(n_cols)))/sqrt(2*log(log(n_cols)))
       }
     }
-    if(!(is_numeric(lambda) && is_positive(lambda)))
-    {
-      stop("lambda must be numeric value greater than 0")
+    else{
+      if(!(is_numeric(lambda) && is_positive(lambda) && (length(lambda) == 1) ))
+      {
+        stop("lambda must be a numeric scalar value greater than 0")
+      }
     }
     assert_is_matrix(Xi)
     assert_is_non_empty(Xi)
