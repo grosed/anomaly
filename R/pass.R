@@ -72,9 +72,14 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
         stop("max_seg_len must be greater than min_seg_len")
         #stop("Lmax must be greater than Lmin")
     }
-    if(!(is_whole_number(alpha) && is_non_negative(alpha)))
+    if(!is.numeric(alpha))
     {
-        stop("alpha must be a non-negative whole number")
+        stop("alpha must be a positive whole number")
+    }
+    alpha = as.integer(alpha)
+    if(alpha < 0)
+    {
+      stop("alpha must be a positive whole number")
     }
     ## LB ADDED - if number of variates < default alpha (2) -> alpha = 1
     if(dim(x)[2] < alpha){
