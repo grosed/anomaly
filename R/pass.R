@@ -121,7 +121,9 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     # post process results
     if(length(pass.results) == 0) # no anomalies
     {
-        results<-data.frame(NA,NA,NA)
+        results<-data.frame("start"=integer(0), "end"=integer(0), "xstar"=integer(0))
+        results.S4<-pass.class(Xi,results,Lmax,Lmin,alpha,lambda)
+        return(results.S4)
     }
     else
     {
