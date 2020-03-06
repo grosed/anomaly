@@ -164,7 +164,9 @@ setMethod("summary",signature=list("pass.class"),function(object,...)
 setMethod("show",signature=list("pass.class"),function(object)
 {
   summary(object)
-  print(object@results)
+  if (nrow(object@results) > 0){
+    print(object@results)
+  }
   cat("\n")
   invisible()
 })
