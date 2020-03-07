@@ -21,7 +21,9 @@ pass.line.plot<-function(x,subset=1:ncol(x@data),variate_names=TRUE)
     p<-ggplot(data=molten.X)
     p<-p+aes(x=k,y=value)
     p<-p+geom_line()
-    if(!Reduce("||",is.na(x@results)))
+    # check to see if there are any anomalies
+    #if(!Reduce("||",is.na(x@results)))
+    if (nrow(x@results) > 0)
     {
         p<-p+geom_vline(xintercept=x@results[,1],colour="red")
         p<-p+geom_vline(xintercept=x@results[,2],colour="red")
@@ -54,7 +56,8 @@ pass.tile.plot<-function(x,subset=1:ncol(x@data),variate_names=TRUE)
     ymin<-0
     ymax<-ncol(df)
     # check to see if there are any anomalies
-    if(!Reduce("||",is.na(x@results)))
+    #if(!Reduce("||",is.na(x@results)))
+    if (nrow(x@results) > 0)
         {
             p<-p+annotate("rect",xmin=x@results[,1],xmax=x@results[,2],ymin=ymin,ymax=ymax+1,alpha=0.0,color="red",fill="yellow")
         }
