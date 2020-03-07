@@ -99,9 +99,9 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
       }
     }
     else{
-      if(!(is_numeric(lambda) && is_positive(lambda) && (length(lambda) == 1) ))
+      if(!check.lambda(lambda))
       {
-        stop("lambda must be a numeric scalar value greater than 0")
+        stop("lambda must be a positive real number")
       }
     }
     assert_is_matrix(Xi)
@@ -152,6 +152,13 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
 check.alpha = function(input){
   
   res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0) && (!is.infinite(input)) && (input%%1 == 0)
+  return(res)
+  
+}
+
+check.lambda = function(input){
+  
+  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0)
   return(res)
   
 }
