@@ -972,17 +972,19 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
        df<-Reduce(cbind,
                   Map(function(locations)
                   {
-                      x<-rep(0,n)
+                    x<-rep(0,n)
+                    if (ncol(locations) > 0){
                       for(j in 1:ncol(locations))
                       {
-                          s<-locations[1,j]
-                          e<-locations[2,j]	
-                          x[s:e]<-1
-                      }
-                      return(x)
+                        s<-locations[1,j]
+                        e<-locations[2,j]	
+                        x[s:e]<-1
+                      } 
+                    }
+                    return(x)
                   },
                   object@sampled.res)
-                  )
+       )
        n.df<-data.frame("n"=seq(1,nrow(df)))
        molten.data<-melt(cbind(n.df,df),id="n")
        out<-ggplot(molten.data, aes(n,variable))
