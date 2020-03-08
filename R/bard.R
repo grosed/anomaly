@@ -645,47 +645,23 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     }
     
     # check pi_N
-    if(!is_numeric(pi_N))
+    if(!check.p(pi_N))
     {
-        stop("pi_N must be of type numeric")
-    }
-    if(length(pi_N) != 1)
-    {
-        stop("pi_N must be a single numeric value")
-    }
-    if(pi_N <= 0.0 || pi_N >= 1)
-    {
-        stop("pi_N must be in the range (0,1)")
+        stop("pi_N must be in the interval (0,1)")
     }
     
     # check alpha
-    if(!is_numeric(alpha))
+    if(!check.p(alpha))
     {
-        stop("alpha must be of type numeric")
+      stop("alpha must be in the interval (0,1)")
     }
-    if(length(alpha) != 1)
-    {
-        stop("alpha must be a single numeric value")
-    }
-    if(alpha < 0.0 || alpha > 1)
-    {
-        stop("alpha must be in the range [0,1]")
-    }
-
+    
     # check paffected
-    if(!is_numeric(paffected))
+    if(!check.p(paffected))
     {
-        stop("paffected must be of type numeric")
+        stop("paffected must be in the interval (0,1)")
     }
-    if(length(paffected) != 1)
-    {
-        stop("paffected must be a single numeric value")
-    }
-    if(paffected <= 0.0 || paffected >= 1)
-    {
-        stop("paffected must be in the range (0,1)")
-    }
-
+    
     # check k_A
     if(!check.k(k_A))
     {
