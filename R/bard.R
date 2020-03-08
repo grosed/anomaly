@@ -622,6 +622,10 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     {
         stop("x must be of type numeric")
     }
+    if(!is_function(transform))
+    {
+      stop("transform must be a function")
+    }
     # transform the data
     x <- transform(x)
     
@@ -699,31 +703,14 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     }
 
     # check k_A
-    if(!is_numeric(k_A))
+    if(!check.k(k_A))
     {
-        stop("k_A must be of type numeric")
+      stop("k_A must be a positive real number")
     }
-    if(length(k_A) != 1)
-    {
-        stop("k_A must be a single numeric value")
-    }
-    if(k_A < 0.0)
-    {
-        stop("k_A must be positive")
-    }
-
     # check k_N
-    if(!is_numeric(k_N))
+    if(!check.k(k_N))
     {
-        stop("k_N must be of type numeric")
-    }
-    if(length(k_N) != 1)
-    {
-        stop("k_N must be a single numeric value")
-    }
-    if(k_N < 0.0)
-    {
-        stop("k_N must be positive")
+      stop("k_N must be a positive real number")
     }
     
     # check lower
@@ -1075,3 +1062,9 @@ setMethod("collective_anomalies",signature=list("bard.sampler.class"),function(o
 })
 
 
+check.k = function(input){
+  
+  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0)
+  return(res)
+  
+}
