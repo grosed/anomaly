@@ -633,33 +633,17 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     # data<-Map(function(i) unlist(data[i,]),1:nrow(data))
 
     # check p_N
-    if(!is_numeric(p_N))
+    if(!check.p(p_N))
     {
-      stop("p_N must be of type numeric")
-    }
-    if(length(p_N) != 1)
-    {
-        stop("p_N must be a single numeric value")
-    }
-    if(p_N < 0.0 || p_N > 1)
-    {
-        stop("p_N must be in the range [0,1]")
+        stop("p_N must be in the interval (0,1)")
     }
     
     # check p_A
-    if(!is_numeric(p_A))
+    if(!check.p(p_A))
     {
-        stop("p_A must be of type numeric")
+        stop("p_A must be in the interval (0,1)")
     }
-    if(length(p_A) != 1)
-    {
-        stop("p_A must be a single numeric value")
-    }
-    if(p_A < 0.0 || p_A > 1)
-    {
-        stop("p_A must be in the range [0,1]")
-    }
-
+    
     # check pi_N
     if(!is_numeric(pi_N))
     {
@@ -1065,6 +1049,13 @@ setMethod("collective_anomalies",signature=list("bard.sampler.class"),function(o
 check.k = function(input){
   
   res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0)
+  return(res)
+  
+}
+
+check.p = function(input){
+  
+  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0) && (input < 1)
   return(res)
   
 }
