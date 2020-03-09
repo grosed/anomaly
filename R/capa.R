@@ -35,14 +35,11 @@ capa.mv.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,typ
 # utility function to coerce data to an array structure
 to_array<-function(X)
 {
-  if(!is.data.frame(X))
+  if(is.data.frame(X))
   {
-     X<-as.array(X)
+     X<-data.matrix(X, rownames.force = NA)
   }
-  else
-  {
-    X<-as.array(array(X))
-  }
+  X<-as.array(X)
   dims<-dim(X)
   if(length(dims) == 1)
   {
@@ -904,6 +901,10 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     {
         stop("x must be of type numeric")
     }
+    if(Reduce("|",x == Inf))
+    {
+        stop("x contains Inf values")
+    }
     # check dimensions
     if(length(dim(x)) != 2)
     {
@@ -1038,13 +1039,13 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
         {
             stop("beta must be numeric")
         }
-        if(length(beta) != 1 && length(beta) != dim(x)[2])
+        if(!(all(beta >= 0)))
         {
-            stop(paste("beta must be a single scalar value or a vector of length ",dim(x)[2],'\n',sep=""))
+                stop("beta values must be >= 0")
         }
         if(!(all(beta_tilde >= 0)))
         {
-                stop("beta values must be >= 0")
+                stop("beta_tilde values must be >= 0")
         }
     }
     # wrap the callable transform object in a function to store in S4 class
