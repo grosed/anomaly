@@ -935,7 +935,7 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
        return(out)
    }
     sample.plot<-gen.sample.plot(x)
-    return(cowplot::plot_grid(tile.plot,sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(0.8, 0.1,0.1)))
+    return( suppressWarnings(cowplot::plot_grid(tile.plot,sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(0.8, 0.1,0.1))) )
 })
 
 
