@@ -991,7 +991,10 @@ if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",functi
 setMethod("show",signature=list("bard.sampler.class"),function(object)
 {
     summary(object)
-    print(object@sampler.result)
+    ## LB changed - no anom doesnt show data frame with 0 columns and 0 rows
+    if (nrow(object@sampler.result) > 0){
+      print(object@sampler.result)
+    }
     invisible()
 })
 
