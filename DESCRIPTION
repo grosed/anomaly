@@ -13,7 +13,9 @@ License: GPL
 Imports: dplyr,rlang,methods,assertive,Rdpack,ggplot2,reshape2,Rcpp (>= 0.12.18),robustbase,cowplot
 LinkingTo: Rcpp,BH
 Suggests: magrittr
-Depends: R (>= 2.10)
+Depends: R (>= 3.5.0)
 NeedsCompilation: yes
 RoxygenNote: 7.0.2
 RdMacros: Rdpack
+
+
