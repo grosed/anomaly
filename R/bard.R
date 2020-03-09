@@ -667,6 +667,7 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     {
       stop("k_A must be a positive real number")
     }
+    
     # check k_N
     if(!check.k(k_N))
     {
@@ -674,25 +675,17 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     }
     
     # check lower
-    if(!is_numeric(lower))
+    if(!check.lu(lower))
     {
-        stop("lower must be of type numeric")
-    }
-    if(length(lower) != 1)
-    {
-        stop("lower must be a single numeric value")
+        stop("lower must be a real number")
     }
 
     # check upper
-    if(!is_numeric(upper))
+    if(!check.lu(upper))
     {
-        stop("upper must be of type numeric")
+      stop("upper must be a real number")
     }
-    if(length(upper) != 1)
-    {
-        stop("upper must be a single numeric value")
-    }
-
+    
     # check relationaship between upper an lower
     if(lower > upper)
     {
@@ -700,14 +693,11 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     }
 
     # check h
-    if(!is_numeric(h))
+    if(!check.lu(h))
     {
-        stop("h must be of type numeric")
+      stop("h must be a real number")
     }
-    if(length(h) != 1)
-    {
-        stop("h must be a single numeric value")
-    }
+    
     # check relationship between h and upper and lower
     if(h > (upper - lower))
     {
@@ -1032,6 +1022,13 @@ check.k = function(input){
 check.p = function(input){
   
   res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0) && (input < 1)
+  return(res)
+  
+}
+
+check.lu = function(input){
+  
+  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input))
   return(res)
   
 }
