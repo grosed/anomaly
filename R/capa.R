@@ -404,12 +404,12 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #' @name summary
 #'
 #' @description Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
-#' and \code{\link{pass}}, or \code{\link{sampler}}, or an S3 object returned by \code{\link{anomaly_series}}.  The output displayed
+#' \code{\link{pass}}, and \code{\link{sampler}}.  The output displayed
 #' depends on the type of object passed to summary. For all types, the output indicates whether the data is univariate or
 #' multivariate, the number of observations in the data, and the type of change being detected.
 #'
 #'
-#' For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{\link{pass}}, \code{\link{sampler}}, or \code{\link{anomaly_series}} \code{summary}
+#' For an object produced by \code{\link{capa.uv}} or \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}},  \code{summary}
 #' displays a summary of the analysis.
 #' 
 #' For an object produced by \code{\link{capa}} is the same as for an object produced by \code{\link{capa.uv}}
@@ -417,8 +417,7 @@ setMethod("collective_anomalies",signature=list("capa.mv.class"),
 #'
 #' @docType methods
 #'
-#' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}},
-#' or an S3 class produced by \code{\link{anomaly_series}}.
+#' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.
 #' @param ... Ignored.
 #' 
 #' @rdname summary-methods
@@ -859,7 +858,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.
-#' @param transform A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for examle, be used to compensate for the effects of autocorrelation in the data.
+#' @param transform A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
 #' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
 #' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}. 
 #' 
@@ -1111,6 +1110,15 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 #'              beta_tilde=inflated_penalty)
 #' res
 #' plot(res)
+#'
+#' library(anomaly)
+#' data(Lightcurves)
+#' ### Plot the data for Kepler 10965588: No transit apparent
+#' plot(Lightcurves$Kepler10965588$Day,Lightcurves$Kepler10965588$Brightness,xlab = "Day",pch=".")
+#' ### Examine a period of 62.9 days for Kepler 10965588
+#' binned_data = period_average(Lightcurves$Kepler10965588,62.9)
+#' inferred_anomalies = capa.uv(binned_data)
+#' plot(inferred_anomalies)
 #'
 #' @export
 capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=robustscale)
@@ -1368,8 +1376,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @docType methods
 #'
-#' @param x An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}}, or
-#' an instance of the S3 class produced by \code{\link{anomaly_series}}.. 
+#' @param x An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}}. 
 #' @param subset A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.
 #' @param variate_names Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 #' as it makes the visualisation easier to interpret. Default value is TRUE.
@@ -1382,7 +1389,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @aliases plot,capa.class-method
 #' 
-#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{sampler}},\code{\link{anomaly_series}}.
+#' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{sampler}}.
 #'
 #' @export 
 setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,tile_plot)
