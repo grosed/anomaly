@@ -5,17 +5,25 @@
 \alias{point_anomalies}
 \alias{point_anomalies,capa.class-method}
 \alias{point_anomalies,capa.uv.class-method}
+\alias{point_anomalies,scapa.uv.class-method}
 \alias{point_anomalies,capa.mv.class-method}
+\alias{point_anomalies,scapa.mv.class-method}
 \title{Point anomaly location and strength.}
 \usage{
-\S4method{point_anomalies}{capa.class}(object)
+\S4method{point_anomalies}{capa.class}(object, epoch = nrow(object@data))
 
 \S4method{point_anomalies}{capa.uv.class}(object)
 
+\S4method{point_anomalies}{scapa.uv.class}(object, epoch = nrow(object@data))
+
 \S4method{point_anomalies}{capa.mv.class}(object)
+
+\S4method{point_anomalies}{scapa.mv.class}(object, epoch = nrow(object@data))
 }
 \arguments{
 \item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.}
+
+\item{epoch}{Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.}
 }
 \value{
 A data frame.

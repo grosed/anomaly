@@ -6,22 +6,30 @@
 \alias{collective_anomalies,bard.sampler.class-method}
 \alias{collective_anomalies,capa.class-method}
 \alias{collective_anomalies,capa.uv.class-method}
+\alias{collective_anomalies,scapa.uv.class-method}
 \alias{collective_anomalies,capa.mv.class-method}
+\alias{collective_anomalies,scapa.mv.class-method}
 \alias{collective_anomalies,pass.class-method}
 \title{Collective anomaly location, lags, and mean/variance changes.}
 \usage{
 \S4method{collective_anomalies}{bard.sampler.class}(object)
 
-\S4method{collective_anomalies}{capa.class}(object, merged = FALSE)
+\S4method{collective_anomalies}{capa.class}(object, epoch = nrow(object@data), merged = FALSE)
 
 \S4method{collective_anomalies}{capa.uv.class}(object)
 
+\S4method{collective_anomalies}{scapa.uv.class}(object, epoch = nrow(object@data))
+
 \S4method{collective_anomalies}{capa.mv.class}(object)
+
+\S4method{collective_anomalies}{scapa.mv.class}(object, epoch = nrow(object@data))
 
 \S4method{collective_anomalies}{pass.class}(object)
 }
 \arguments{
 \item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}.}
+
+\item{epoch}{Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.}
 
 \item{merged}{Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
 of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.}

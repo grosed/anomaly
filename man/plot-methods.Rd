@@ -7,18 +7,24 @@
 \alias{plot}
 \alias{plot,capa.class-method}
 \alias{plot,capa.uv.class-method}
+\alias{plot,scapa.uv.class-method}
 \alias{plot,capa.mv.class-method}
+\alias{plot,scapa.mv.class-method}
 \alias{plot-pass.class}
 \alias{plot,pass.class-method}
 \title{Visualisation of data, collective and point anomalies.}
 \usage{
 \S4method{plot}{bard.sampler.class}(x, subset, variate_names, tile_plot, marginals = FALSE)
 
-\S4method{plot}{capa.class}(x, subset, variate_names, tile_plot)
+\S4method{plot}{capa.class}(x, subset, variate_names, tile_plot, epoch = nrow(x@data))
 
 \S4method{plot}{capa.uv.class}(x, variate_name)
 
+\S4method{plot}{scapa.uv.class}(x, epoch, variate_name)
+
 \S4method{plot}{capa.mv.class}(x, subset, variate_names, tile_plot)
+
+\S4method{plot}{scapa.mv.class}(x, subset, variate_names, tile_plot, epoch)
 
 \S4method{plot}{pass.class}(x, subset, variate_names, tile_plot)
 }
@@ -35,6 +41,8 @@ This type of plot is useful when the data contains are large number of variates.
 
 \item{marginals}{Logical value. If \code{marginals=TRUE} the plot will include visualisations of the marginal probablities of each time point being anomalous.
 The defualt is \code{marginals=FALSE}.}
+
+\item{epoch}{Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.}
 
 \item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.}
 }

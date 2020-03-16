@@ -12,7 +12,7 @@
 \usage{
 \S4method{summary}{bard.sampler.class}(object, ...)
 
-\S4method{summary}{capa.class}(object, ...)
+\S4method{summary}{capa.class}(object, epoch = nrow(object@data), ...)
 
 \S4method{summary}{capa.uv.class}(object, ...)
 
@@ -24,6 +24,8 @@
 \item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.}
 
 \item{...}{Ignored.}
+
+\item{epoch}{Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.}
 }
 \description{
 Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
