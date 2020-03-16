@@ -573,7 +573,7 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' 
 #' @section Notes on default hyper-parameters:
 #' This function gives certain default hyper-parameters for the two segment length distributions.
-#' We chose these to be quite flexible for a range of problems. For non-anomalous segments a geometric distibution
+#' We chose these to be quite flexible for a range of problems. For non-anomalous segments a geometric distribution
 #' was selected having an average segment length of \eqn{n} with the standard deviation being of the same order. 
 #' For anomalous segments we chose parameters that gave an average length of 5 and a variance of \eqn{n}. 
 #' These may not be suitable for all problems and the user is encouraged to tune these parameters. 
@@ -935,7 +935,7 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
        return(out)
    }
     sample.plot<-gen.sample.plot(x)
-    return(cowplot::plot_grid(tile.plot,sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(0.8, 0.1,0.1)))
+    return( suppressWarnings(cowplot::plot_grid(tile.plot,sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(0.8, 0.1,0.1))) )
 })
 
 

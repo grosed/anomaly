@@ -4,8 +4,10 @@
 \name{Lightcurves}
 \alias{Lightcurves}
 \title{Kepler Lightcurve  data.}
-\format{A list of seven dataframes named "Kepler1871056", "Kepler2307415", "Kepler3102384", "Kepler3231341", "Kepler3447722", "Kepler4139816", and "Kepler10965588". Each dataframe
-consists of two columns called "Brightness" and "Day", containing measurements of a star's brightness and the measurement's timestamp respectively.}
+\format{
+A list of seven dataframes named "Kepler1871056", "Kepler2307415", "Kepler3102384", "Kepler3231341", "Kepler3447722", "Kepler4139816", and "Kepler10965588". Each dataframe
+consists of two columns called "Brightness" and "Day", containing measurements of a star's brightness and the measurement's timestamp respectively.
+}
 \usage{
 data(Lightcurves)
 }

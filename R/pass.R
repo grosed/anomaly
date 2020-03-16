@@ -54,6 +54,10 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     {
         stop("x must be of type numeric")
     }        
+    if(any(is.infinite(x)))
+    {
+      stop("x contains Inf values")
+    }
     if(!is_function(transform))
     {
       stop("transform must be a function")
@@ -69,7 +73,7 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     {
         stop("min_seg_len must be a positive integer")
     }
-    if(!is_positive(Lmax-Lmin))
+    if(!(Lmax >= Lmin))
     {
         stop("max_seg_len must be greater than min_seg_len")
     }
