@@ -130,8 +130,8 @@ std::vector<int> MeanVarAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxleng
 
 clearup:
 	
-	if(changes){free(changes);}
-	if(betavector){free(betavector);}
+	if(changes){delete[] changes;}
+	if(betavector){delete[] betavector;}
 	if(mylist){delete[] mylist;}
 
 	UNPROTECT(7);

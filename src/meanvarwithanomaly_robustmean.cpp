@@ -142,8 +142,8 @@ clearup:
 		if(mylist[ii].Tukey_Stuff){delete mylist[ii].Tukey_Stuff;}
 	}
 
-	if(changes){free(changes);}
-	if(betavector){free(betavector);}
+	if(changes){delete[] changes;}
+	if(betavector){delete[] betavector;}
 	if(mylist){delete[] mylist;}
 
 	UNPROTECT(7);
