@@ -1,6 +1,4 @@
-#include <R.h>
-#include <Rinternals.h>
-#include <Rmath.h>
+
 #include <math.h>
 #include <stdlib.h>
 
@@ -12,6 +10,11 @@
 
 #include <string>
 #include "capa.exception.h"
+
+#include <R.h>
+#include <Rinternals.h>
+#include <Rmath.h>
+
 
 using namespace anomaly;
 
