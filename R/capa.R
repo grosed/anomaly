@@ -1263,49 +1263,54 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 
 
 
-#' Sequential detection of univariate anomalous segments and points using CAPA.
+#' Detection of univariate anomalous segments using SCAPA.
 #'
-#' @name scapa.uv
+#' @name scapa.uv 
+#'
+#' @description An offline as-if-online implementation of SCAPA (Sequential Collective And Point Anomalies) by Bardwell et al. (2019) for online collective and point anomaly detection. This version of \code{capa.uv} has a default value
+#' \code{transform=tierney} which uses sequential estimates for transforming the data prior to analysis. It also returns an S4 class which allows the results to be postprocessed
+#' at different time points as if the data had been analysed in an online fashion up to that point.
 #' 
-#' @description A technique for detecting anomalous segments and points in univariate time series data based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). CAPA assumes that the data has a certain mean and variance for most
-#' time points and detects segments in which the mean and/or variance deviates from the typical mean and variance as collective anomalies. It also detects point
-#' outliers and returns a measure of strength for the changes in mean and variance. If the number of anomalous windows scales linearly with the number of
-#' data points, CAPA scales linearly with the number of data points. At
-#' worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, the computational cost of CAPA scales quadratically with the number of data points.
-#'  
 #' @param x A numeric vector containing the data which is to be inspected.
-#' @param beta A numeric vector of length 1 or \code{max_seg_len - min_seg_len + 1} indicating the penalty for adding additional collective anomalies of all possible
-#' lengths. If an argument of length 1 is provided the same penalty is used for all collective anomalies irrespective of their length. The default is a BIC style penalty.
-#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.
+#' @param beta A numeric constant indicating the penalty for adding an additional epidemic changepoint. It defaults to a BIC style penalty if no argument is provided.
+#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.
+#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
-#' @param transform A function used to transform the data prior to analysis by \code{\link{capa.uv}}. This can, for example, be used to compensate for the effects of autocorrelation
-#' in the data. Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa.uv}}. The package includes several methods that are commonly used for
-#' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}. 
+#' @param transform A function used to transform the data prior to analysis by \code{\link{scapa.uv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
+#' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{scapa.uv}}. The package includes a method which can be used for
+#' the transform, (see \code{\link{tierney}}, the default), but a user defined (ideally sequential) function can be specified.  
 #'
-#' @return An instance of an S4 class of type scapa.uv.class. 
+#' @return An S4 class of type scapa.uv.class. 
 #'
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
 #' 
 #' @examples
 #' library(anomaly)
-#' data(machinetemp)
-#' attach(machinetemp)
-#' res<-scapa.uv(temperature,type="mean")
-#' canoms<-collective_anomalies(res)
-#' dim(canoms)[1] # over fitted due to autocorrelation
-#' psi<-0.98 # computed using covRob
-#' inflated_penalty<-3*(1+psi)/(1-psi)*log(length(temperature))
-#' res<-scapa.uv(temperature,type="mean",beta=inflated_penalty,
-#'              beta_tilde=inflated_penalty)
-#' res
-#' plot(res)
-#' plot(res,epoch=10000)
-#'
+#' # Simulated data example
+#' set.seed(2018)
+#' # Generate data typically following a normal distribution with mean 0 and variance 1.
+#' # Then introduce 3 anomaly windows and 4 point outliers.
+#' x = rnorm(5000)
+#' x[401:500] = rnorm(100,4,1)
+#' x[1601:1800] = rnorm(200,0,0.01)
+#' x[3201:3500] = rnorm(300,0,10)
+#' x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
+#' # add some initial data to burnin the sequential estimates
+#' x<-c(rnorm(100,0,1),x)
+#' # use magrittr to pipe the data to the transform
+#' library(magrittr)
+#' trans<-.%>%tierney(1000)
+#' res<-scapa.uv(x,transform=trans)
+#' res # print a summary of the results
+#' plot(res) # visualise the results
+#' # visualise the results up to t=1500
+#' plot(res,epoch=1500) 
+#' 
+#' 
 #' @export
-scapa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=robustscale)
+scapa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,transform=tierney)
 {
     # data needs to be in the form of an array
     x<-to_array(x)
@@ -1436,30 +1441,31 @@ capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 }
 
 
-#' Sequential detection of multivariate anomalous segments and points using MVCAPA.
-#'
-#' @name scapa.mv
+
+#' Online detection of multivariate anomalous segments and points using SMVCAPA.
 #' 
-#' @description This function implements MVCAPA (Multi-Variate Collective And Point Anomaly) from Fisch et al. (2019). 
-#' It detects potentially lagged collective anomalies as well as point anomalies in multivariate time series data.  
-#' The runtime of MVCAPA scales linearly (up to logarithmic factors) in \code{ncol(x)} and \code{maxlag}. If \code{max_seg_len} is not set, the runtime scales quadratically at worst and linearly 
-#' at best in \code{nrow(x)}. If \code{max_seg_len} is set the runtime scales like \code{nrow(x)*max_seg_len}.
+#' @name scapa.mv 
+#'
+#' @description This function implements SMVCAPA from Fisch et al. (2019) in an as-if-online way. It detects potentially lagged collective anomalies as well as point anomalies in streaming data. 
+#' The runtime scales linearly (up to logarithmic factors) in \code{ncol(x)}, \code{max_lag}, and \code{max_seg_len}. This version of \code{capa.uv} has a default value
+#' \code{transform=tierney} which uses sequential estimates for transforming the data prior to analysis. It also returns an S4 class which allows the results to be postprocessed
+#' as if the data had been analysed in an online fashion.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
-#' @param beta A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean"/"robustmean" and maxlag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley, and Fearnhead (2019). If type = "mean"/"robustmean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley, and Fearnhead (2019).
+#' @param beta A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean" and maxlag > 0 it defaults to the penalty regime 2' described in 
+#' Fisch, Eckley and Fearnhead (2019). If type = "mean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.
+#' variance (the default) or "mean" for collective anomalies characterised by changes in mean only.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least the min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Default value is 0.
-#' @param transform A function used to transform the data prior to analysis by \code{\link{capa.mv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data. Importantly, the
-#' untransformed data remains available for post processing results obtained using \code{\link{capa.mv}}. The package includes several methods that are commonly used for
-#' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default value is \code{transform=robust_scale}.
-#' 
-#' @return An instance of an S4 class of type scapa.mv.class. 
+#' @param transform A function used to transform the data prior to analysis by \code{\link{scapa.mv}}. This can, for example, be used to compensate for the effects of autocorrelation in the data. Importantly, the
+#' untransformed data remains available for post processing results obtained using \code{\link{scapa.mv}}. The package includes a method which can be used for
+#' the transform, (see \code{\link{tierney}}, the default), but a user defined (ideally sequential) function can be specified.  
 #'
+#' @return An S4 class of type scapa.mv.class. 
+#' 
 #' @references \insertRef{2019MVCAPA}{anomaly}
 #'
 #' @examples
@@ -1507,10 +1513,13 @@ capa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' res<-scapa.mv(my_x,max_lag=20,type="mean")
 #' 
 #' plot(res)
-#' plot(res,epoch=250)
+#' collective_anomalies(res)
+#' # process results up to time t = 300
+#' plot(res,epoch=300)
+#' collective_anomalies(res,epoch=300)
 #'
 #' @export
-scapa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=robustscale)
+scapa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=tierney)
 {
     # data needs to be in the form of an array
     x<-to_array(x)
@@ -1848,6 +1857,7 @@ setMethod("plot",signature=list("scapa.mv.class"),function(x,subset,variate_name
     }
     return(plot(as(x,"capa.class"),subset=subset,variate_names=variate_names,tile_plot=tile_plot,epoch=epoch))
 })
+
 
 
 
