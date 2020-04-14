@@ -29,7 +29,8 @@
 \arguments{
 \item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}.}
 
-\item{epoch}{Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.}
+\item{epoch}{Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
+of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.}
 
 \item{merged}{Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
 of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.}
@@ -39,20 +40,20 @@ A data frame.
 }
 \description{
 Creates a data frame containing collective anomaly locations, lags and changes in mean and variance as detected by
-\code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{capa}}, \code{\link{pass}}, and \code{\link{sampler}}. 
+\code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}, \code{\link{capa}}, \code{\link{pass}}, and \code{\link{sampler}}. 
 
-For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
+For an object produced by \code{\link{capa.uv}} or \code{\link{scapa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
 due to the anomaly. When \code{type="meanvar"}, the change in variance due to the anomaly is also returned in an additional column.
 
 
-For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the variates 
+For an object produced by \code{\link{capa.mv}} or \code{\link{scapa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the variates 
 affected by the anomaly, as well as their the start and end lags. When \code{type="mean"/"robustmean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
 change in variance are included. If \code{merged=FALSE} (the default), then all the collective anomalies are processed individually even if they are common across multiple variates.
 If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 
 
-For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{capa.uv}} when the data is univariate, or the same results as
-\code{\link{capa.mv}} when the data is multivariate.
+For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, or the same results as
+\code{\link{scapa.mv}} when the data is multivariate.
 
 For an object produced by \code{\link{pass}} or \code{sampler} returns a data frame containing the start, end and strength of the collective anomalies.
 }

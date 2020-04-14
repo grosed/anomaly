@@ -42,7 +42,8 @@ This type of plot is useful when the data contains are large number of variates.
 \item{marginals}{Logical value. If \code{marginals=TRUE} the plot will include visualisations of the marginal probablities of each time point being anomalous.
 The defualt is \code{marginals=FALSE}.}
 
-\item{epoch}{Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.}
+\item{epoch}{Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
+of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.}
 
 \item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.}
 }
@@ -50,7 +51,7 @@ The defualt is \code{marginals=FALSE}.}
 A ggplot object.
 }
 \description{
-Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and \code{\link{pass}}. 
+Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}, \code{\link{pass}}, and \code{\link{sampler}}. 
 
 The plot can either be a line plot or a tile plot, the type produced depending on the options provided to the \code{plot} function and/or the dimensions of the
 data associated with the S4 object.

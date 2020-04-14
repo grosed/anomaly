@@ -23,24 +23,25 @@
 \arguments{
 \item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.}
 
-\item{epoch}{Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.}
+\item{epoch}{Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
+of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.}
 }
 \value{
 A data frame.
 }
 \description{
-Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.
+Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}}.
 
 
-For an object produced by \code{\link{capa.uv}}, the output is a data frame  with columns containing the position and
+For an object produced by \code{\link{capa.uv}} or \code{\link{scapa.uv}}, the output is a data frame  with columns containing the position and
 strength of the anomaly. 
 
-For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate, and
+For an object produced by \code{\link{capa.mv}} or \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate, and
 strength of the anomaly. 
 
 
-For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{capa.uv}} when the data is univariate, and the same results as
-\code{\link{capa.uv}} when the data is multivariate.
+For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, and the same results as
+\code{\link{scapa.mv}} when the data is multivariate.
 }
 \seealso{
 \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}.

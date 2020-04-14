@@ -80,18 +80,18 @@ to_array<-function(X)
 #'
 #' @name point_anomalies
 #'
-#' @description Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.
+#' @description Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, and \code{\link{scapa.mv}}.
 #' 
 #'
-#' For an object produced by \code{\link{capa.uv}}, the output is a data frame  with columns containing the position and
+#' For an object produced by \code{\link{capa.uv}} or \code{\link{scapa.uv}}, the output is a data frame  with columns containing the position and
 #' strength of the anomaly. 
 #' 
-#' For an object produced by \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate, and
+#' For an object produced by \code{\link{capa.mv}} or \code{\link{capa.mv}}, \code{point_anomalies} returns a data frame with columns containing the position, variate, and
 #' strength of the anomaly. 
 #'
 #' 
-#' For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{capa.uv}} when the data is univariate, and the same results as
-#' \code{\link{capa.uv}} when the data is multivariate.
+#' For an object produced by \code{\link{capa}}, \code{point_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, and the same results as
+#' \code{\link{scapa.mv}} when the data is multivariate.
 #'
 #' 
 #' @docType methods
@@ -104,7 +104,8 @@ if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,
 
 #' @name point_anomalies
 #' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.
-#' @param epoch Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.
+#' @param epoch Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
+#' of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.
 #' 
 #' @return A data frame. 
 #'
@@ -295,20 +296,20 @@ merge_collective_anomalies<-function(object,epoch)
 #' @name collective_anomalies
 #'
 #' @description Creates a data frame containing collective anomaly locations, lags and changes in mean and variance as detected by
-#' \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{capa}}, \code{\link{pass}}, and \code{\link{sampler}}. 
+#' \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}, \code{\link{capa}}, \code{\link{pass}}, and \code{\link{sampler}}. 
 #'
-#' For an object produced by \code{\link{capa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
+#' For an object produced by \code{\link{capa.uv}} or \code{\link{scapa.uv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
 #' due to the anomaly. When \code{type="meanvar"}, the change in variance due to the anomaly is also returned in an additional column.
 #' 
 #'
-#' For an object produced by \code{\link{capa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the variates 
+#' For an object produced by \code{\link{capa.mv}} or \code{\link{scapa.mv}}, \code{collective_anomalies} returns a data frame with columns containing the start and end position of the anomaly, the variates 
 #' affected by the anomaly, as well as their the start and end lags. When \code{type="mean"/"robustmean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
 #' change in variance are included. If \code{merged=FALSE} (the default), then all the collective anomalies are processed individually even if they are common across multiple variates.
 #' If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
 #'
 #'
-#' For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{capa.uv}} when the data is univariate, or the same results as
-#' \code{\link{capa.mv}} when the data is multivariate.
+#' For an object produced by \code{\link{capa}}, \code{collective_anomalies} returns the same results as \code{\link{scapa.uv}} when the data is univariate, or the same results as
+#' \code{\link{scapa.mv}} when the data is multivariate.
 #'
 #' For an object produced by \code{\link{pass}} or \code{sampler} returns a data frame containing the start, end and strength of the collective anomalies.
 #'
@@ -321,7 +322,8 @@ if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",functi
 
 #' @name collective_anomalies
 #' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}.
-#' @param epoch Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.
+#' @param epoch Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
+#' of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.
 #' @param merged Boolean value. If \code{merged=TRUE} then collective anomalies that are common across multiple variates are merged together. This is useful when comparing the relative strength
 #' of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.  
 #' 
@@ -521,7 +523,8 @@ setMethod("collective_anomalies",signature=list("scapa.mv.class"),
 #' @docType methods
 #'
 #' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, or \code{\link{pass}}.
-#' @param epoch Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.
+#' @param epoch Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
+#' of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.
 #' @param ... Ignored.
 #' 
 #' @rdname summary-methods
@@ -1290,7 +1293,7 @@ capa.uv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_
 #' library(anomaly)
 #' data(machinetemp)
 #' attach(machinetemp)
-#' res<-capa.uv(temperature,type="mean")
+#' res<-scapa.uv(temperature,type="mean")
 #' canoms<-collective_anomalies(res)
 #' dim(canoms)[1] # over fitted due to autocorrelation
 #' psi<-0.98 # computed using covRob
@@ -1654,7 +1657,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @name plot
 #'
-#' @description Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, and \code{\link{pass}}. 
+#' @description Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{scapa.uv}}, \code{\link{scapa.mv}}, \code{\link{pass}}, and \code{\link{sampler}}. 
 #'
 #' The plot can either be a line plot or a tile plot, the type produced depending on the options provided to the \code{plot} function and/or the dimensions of the
 #' data associated with the S4 object.
@@ -1667,7 +1670,8 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #' as it makes the visualisation easier to interpret. Default value is TRUE.
 #' @param tile_plot Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
 #' This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.
-#' @param epoch Positive integer indicating which epoch to plot to. Default value is the number of observations in the data. 
+#' @param epoch Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
+#' of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.
 #' 
 #' @return A ggplot object.
 #'

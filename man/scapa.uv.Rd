@@ -47,7 +47,7 @@ worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, t
 library(anomaly)
 data(machinetemp)
 attach(machinetemp)
-res<-capa.uv(temperature,type="mean")
+res<-scapa.uv(temperature,type="mean")
 canoms<-collective_anomalies(res)
 dim(canoms)[1] # over fitted due to autocorrelation
 psi<-0.98 # computed using covRob

@@ -25,7 +25,8 @@
 
 \item{...}{Ignored.}
 
-\item{epoch}{Positive integer indicating which epoch to plot to. Default value is the number of observations in the data.}
+\item{epoch}{Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
+of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.}
 }
 \description{
 Summary methods for S4 objects returned by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}},
