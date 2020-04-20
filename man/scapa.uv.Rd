@@ -4,25 +4,19 @@
 \alias{scapa.uv}
 \title{Detection of univariate anomalous segments using SCAPA.}
 \usage{
-scapa.uv(
-  x,
-  beta = NULL,
-  beta_tilde = NULL,
-  type = "meanvar",
-  min_seg_len = 10,
-  max_seg_len = Inf,
-  transform = tierney
-)
+scapa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
+  min_seg_len = 10, max_seg_len = Inf, transform = tierney)
 }
 \arguments{
 \item{x}{A numeric vector containing the data which is to be inspected.}
 
-\item{beta}{A numeric constant indicating the penalty for adding an additional epidemic changepoint. It defaults to a BIC style penalty if no argument is provided.}
+\item{beta}{A numeric vector of length 1 or \code{max_seg_len - min_seg_len + 1} indicating the penalty for adding additional collective anomalies of all possible
+lengths. If an argument of length 1 is provided the same penalty is used for all collective anomalies irrespective of their length. The default value is 4log(n), where n denotes the number of observations.}
 
-\item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.}
+\item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(n), where n is the number of observations.}
 
 \item{type}{A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-variance (the default) or "mean" for collective anomalies characterised by changes in mean only.}
+variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.}
 
 \item{min_seg_len}{An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.}
 

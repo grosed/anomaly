@@ -30,5 +30,5 @@ The output displayed depends on the type of S4 object passed to the method. For 
 multivariate, the number of observations in the data, and the type of change being detected.
 }
 \seealso{
-\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},,\code{\link{pass}},\code{\link{bard}},\code{\link{sampler}}.
+\code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{bard}},\code{\link{sampler}}.
 }

@@ -4,16 +4,9 @@
 \alias{capa.mv}
 \title{Detection of multivariate anomalous segments and points using MVCAPA.}
 \usage{
-capa.mv(
-  x,
-  beta = NULL,
-  beta_tilde = NULL,
-  type = "meanvar",
-  min_seg_len = 10,
-  max_seg_len = Inf,
-  max_lag = 0,
-  transform = robustscale
-)
+capa.mv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
+  min_seg_len = 10, max_seg_len = Inf, max_lag = 0,
+  transform = robustscale)
 }
 \arguments{
 \item{x}{A numeric matrix with n rows and p columns containing the data which is to be inspected.}
@@ -21,7 +14,7 @@ capa.mv(
 \item{beta}{A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean"/"robustmean" and maxlag > 0 it defaults to the penalty regime 2' described in 
 Fisch, Eckley, and Fearnhead (2019). If type = "mean"/"robustmean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley, and Fearnhead (2019).}
 
-\item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to a BIC style penalty if no argument is provided.}
+\item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.}
 
 \item{type}{A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
 variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.}
