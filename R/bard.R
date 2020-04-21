@@ -889,8 +889,12 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
     # NULL out ggplot variables so as to pass CRAN checks
     variable<-prob<-value<-NULL
     tile.plot<-plot(pass.class(x@bard.result@data,x@sampler.result,0,0,0,0))
-    tile.plot<-tile.plot+theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+    tile.plot<-tile.plot+theme_bw()
     tile.plot<-tile.plot+theme(axis.ticks.y=element_blank())
+    tile.plot<-tile.plot+theme(axis.text.y=element_blank(),axis.title=element_blank())
+    tile.plot<-tile.plot+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+    tile.plot<-tile.plot+xlab(label="t") # does not seem to shoe - need to find a fix
+
     if(marginals == FALSE)
     {
         return(tile.plot)
@@ -900,8 +904,11 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
     marginal.prob.plot<-ggplot(df,aes(x=t,y=prob))
     marginal.prob.plot<-marginal.prob.plot+geom_line()
     marginal.prob.plot<-marginal.prob.plot+geom_hline(yintercept=1.0/(1.0+x@gamma),linetype="dashed",color="red")
-    marginal.prob.plot<-marginal.prob.plot + theme(axis.title.y=element_blank())
-    marginal.prob.plot<-marginal.prob.plot + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+    marginal.prob.plot<-marginal.prob.plot+theme_bw()
+    marginal.prob.plot<-marginal.prob.plot+theme(axis.text.y=element_blank())
+    marginal.prob.plot<-marginal.prob.plot+labs(x="t")
+    marginal.prob.plot<-marginal.prob.plot+theme(strip.text.y=element_blank())
+
 
    gen.sample.plot<-function(object)
    {
@@ -926,16 +933,24 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
        molten.data<-melt(cbind(n.df,df),id="n")
        out<-ggplot(molten.data, aes(n,variable))
        out<-out+geom_tile(aes(fill=value))
+       #out<-out + theme(legend.position="none")
+       #out<-out + theme(axis.text.y=element_blank())
+       #out<-out + theme(axis.title.y=element_blank())
+       #out<-out + theme(axis.line.y=element_blank())
+       #out<-out + theme(axis.ticks.y=element_blank())
+       #out<-out + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+       out<-out+theme_bw()
+       out<-out+theme(axis.ticks.y=element_blank())
+       out<-out+theme(axis.text.y=element_blank(),axis.title=element_blank())
+       out<-out+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
        out<-out + theme(legend.position="none")
-       out<-out + theme(axis.text.y=element_blank())
-       out<-out + theme(axis.title.y=element_blank())
-       out<-out + theme(axis.line.y=element_blank())
-       out<-out + theme(axis.ticks.y=element_blank())
-       out<-out + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+       
        return(out)
    }
+   
     sample.plot<-gen.sample.plot(x)
-    return( suppressWarnings(cowplot::plot_grid(tile.plot,sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(0.8, 0.1,0.1))) )
+    return( suppressWarnings(cowplot::plot_grid(tile.plot,sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(1, 1,1))) )
 })
 
 

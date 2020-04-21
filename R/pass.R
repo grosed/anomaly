@@ -27,7 +27,7 @@
 #'                    duration=6,proportions=c(0.04,0.06,0.08))
 #' res<-pass(sim.data)
 #' summary(res)
-#' plot(res,variate_names=FALSE)
+#' plot(res,variate_names=TRUE)
 #'
 #' @export
 
