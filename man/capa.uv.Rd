@@ -4,8 +4,15 @@
 \alias{capa.uv}
 \title{Detection of univariate anomalous segments and points using CAPA.}
 \usage{
-capa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
-  min_seg_len = 10, max_seg_len = Inf, transform = robustscale)
+capa.uv(
+  x,
+  beta = NULL,
+  beta_tilde = NULL,
+  type = "meanvar",
+  min_seg_len = 10,
+  max_seg_len = Inf,
+  transform = robustscale
+)
 }
 \arguments{
 \item{x}{A numeric vector containing the data which is to be inspected.}
