@@ -14,13 +14,11 @@
 
 \S4method{point_anomalies}{capa.uv.class}(object)
 
-\S4method{point_anomalies}{scapa.uv.class}(object,
-  epoch = nrow(object@data))
+\S4method{point_anomalies}{scapa.uv.class}(object, epoch = nrow(object@data))
 
 \S4method{point_anomalies}{capa.mv.class}(object)
 
-\S4method{point_anomalies}{scapa.mv.class}(object,
-  epoch = nrow(object@data))
+\S4method{point_anomalies}{scapa.mv.class}(object, epoch = nrow(object@data))
 }
 \arguments{
 \item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, and \code{\link{capa.mv}}.}

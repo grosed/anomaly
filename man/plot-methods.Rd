@@ -14,21 +14,19 @@
 \alias{plot,pass.class-method}
 \title{Visualisation of data, collective and point anomalies.}
 \usage{
-\S4method{plot}{bard.sampler.class}(x, subset, variate_names, tile_plot,
-  marginals = FALSE)
+\S4method{plot}{bard.sampler.class}(x, subset, variate_names, tile_plot, marginals = FALSE)
 
-\S4method{plot}{capa.class}(x, subset, variate_names, tile_plot,
-  epoch = nrow(x@data))
+\S4method{plot}{capa.class}(x, subset, variate_names = FALSE, tile_plot, epoch = nrow(x@data))
 
-\S4method{plot}{capa.uv.class}(x, variate_name)
+\S4method{plot}{capa.uv.class}(x, variate_name = FALSE)
 
-\S4method{plot}{scapa.uv.class}(x, epoch, variate_name)
+\S4method{plot}{scapa.uv.class}(x, epoch, variate_name = FALSE)
 
-\S4method{plot}{capa.mv.class}(x, subset, variate_names, tile_plot)
+\S4method{plot}{capa.mv.class}(x, subset, variate_names = FALSE, tile_plot)
 
-\S4method{plot}{scapa.mv.class}(x, subset, variate_names, tile_plot, epoch)
+\S4method{plot}{scapa.mv.class}(x, subset, variate_names = FALSE, tile_plot, epoch)
 
-\S4method{plot}{pass.class}(x, subset, variate_names, tile_plot)
+\S4method{plot}{pass.class}(x, subset, variate_names = FALSE, tile_plot)
 }
 \arguments{
 \item{x}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}}.}
@@ -36,7 +34,7 @@
 \item{subset}{A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.}
 
 \item{variate_names}{Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
-as it makes the visualisation easier to interpret. Default value is TRUE.}
+as it makes the visualisation easier to interpret. Default value is FALSE.}
 
 \item{tile_plot}{Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
 This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.}
@@ -47,9 +45,7 @@ The defualt is \code{marginals=FALSE}.}
 \item{epoch}{Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
 of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.}
 
-\item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.}
-
-\item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.}
+\item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate_name=FALSE}.}
 }
 \value{
 A ggplot object.

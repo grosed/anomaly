@@ -4,8 +4,14 @@
 \alias{pass}
 \title{Detection of multivariate anomalous segments using PASS.}
 \usage{
-pass(x, alpha = 2, lambda = NULL, max_seg_len = 10,
-  min_seg_len = 1, transform = robustscale)
+pass(
+  x,
+  alpha = 2,
+  lambda = NULL,
+  max_seg_len = 10,
+  min_seg_len = 1,
+  transform = robustscale
+)
 }
 \arguments{
 \item{x}{An n x p real matrix representing n observations of p variates.}
@@ -38,7 +44,7 @@ sim.data<-simulate(n=500,p=100,mu=2,locations=c(100,200,300),
                    duration=6,proportions=c(0.04,0.06,0.08))
 res<-pass(sim.data)
 summary(res)
-plot(res,variate_names=FALSE)
+plot(res,variate_names=TRUE)
 
 }
 \references{

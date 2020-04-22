@@ -1547,7 +1547,7 @@ scapa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max
 }
 
 
-capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@data),variate_names=TRUE)
+capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@data),variate_names=FALSE)
 {
     # creating null entries for ggplot global variables so as to pass CRAN checks
     x<-value<-ymin<-ymax<-x1<-x2<-y1<-y2<-x1<-x2<-y1<-y2<-NULL
@@ -1561,7 +1561,7 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
     data_df<-melt(data_df,id="x")
     out<-ggplot(data=data_df)
     out<-out+aes(x=x,y=value)
-    out<-out+geom_point()
+    out<-out+geom_point(alpha=0.3)
     # highlight the collective anomalies
     c_anoms<-collective_anomalies(object,epoch=epoch)
     c_anoms<-c_anoms[c_anoms$variate %in% subset,]
@@ -1584,7 +1584,7 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
     if(!any(is.na(p_anoms)) & nrow(p_anoms) > 0)
         {
             p_anoms_data_df<-Reduce(rbind,Map(function(a,b) data_df[data_df$variable==names[a] & data_df$x==b,],p_anoms$variate,p_anoms$location))
-            out<-out+geom_point(data=p_anoms_data_df,colour="red", size=1.5)
+            out<-out+geom_point(data=p_anoms_data_df,colour="red", size=1.5,alpha=0.3)
         }
     out<-out+facet_grid(factor(variable,levels=(names)) ~ .,scales="free_y")
     # grey out the data after epoch
@@ -1593,23 +1593,13 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
 	    d<-data.frame(variable=names[subset],x1=epoch,x2=n,y1=-Inf,y2=Inf)	
             out<-out+geom_rect(data=d,inherit.aes=F,mapping=aes(xmin=x1,xmax=x2,ymin=y1,ymax=y2),fill="yellow",alpha=0.2)
         }
+    out<-out+theme_bw()
+    out<-out+theme(axis.text.y=element_blank())
+    out<-out+labs(x="t")
     if(variate_names==FALSE)
         {
             out<-out+theme(strip.text.y=element_blank())
         }
-    # change background
-    out<-out+theme(
-                   # Hide panel borders and remove grid lines
-                   panel.border = element_blank(),
-                   panel.grid.major = element_blank(),
-                   panel.grid.minor = element_blank(),
-                   # Change axis line
-                   axis.line = element_line(colour = "black"),
-                   # remove y axis line, ticks and values
-                   axis.line.y=element_blank(),
-                   axis.ticks.y=element_blank(),
-                   axis.text.y=element_blank()
-                 )
     return(out)
 }
 
@@ -1644,21 +1634,13 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
             d<-data.frame(x1=epoch,x2=nrow(object@data),y1=-Inf,y2=Inf)
             out<-out+geom_rect(data=d,inherit.aes=F,mapping=aes(xmin=x1,xmax=x2,ymin=y1,ymax=y2),fill="yellow",alpha=0.2)
         }
-    if(variate_names==FALSE)
-    {
-        out<-out+theme(axis.text.y=element_blank(),axis.title=element_blank())
-    }
-    out<-out+theme(
-                 # Hide panel borders and remove grid lines
-                 panel.border = element_blank(),
-                 panel.grid.major = element_blank(),
-                 panel.grid.minor = element_blank(),
-                 # Change axis line
-                 axis.line = element_line(colour = "black"),
-                 # remove y axis and ticks
-                 axis.line.y=element_blank(),
-                 axis.ticks.y=element_blank()
-                 )
+
+    out<-out+theme_bw()
+    out<-out+theme(axis.ticks.y=element_blank())
+    out<-out+theme(axis.text.y=element_blank(),axis.title=element_blank())
+    out<-out+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+    out<-out+xlab(label="t") # does not seem to shoe - need to find a fix
+
     return(out)
 }
 
@@ -1677,7 +1659,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #' @param x An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, or \code{\link{sampler}}. 
 #' @param subset A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.
 #' @param variate_names Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
-#' as it makes the visualisation easier to interpret. Default value is TRUE.
+#' as it makes the visualisation easier to interpret. Default value is FALSE.
 #' @param tile_plot Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
 #' This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.
 #' @param epoch Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
@@ -1692,15 +1674,11 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{sampler}}.
 #'
 #' @export 
-setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,tile_plot,epoch=nrow(x@data))
+setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names=FALSE,tile_plot,epoch=nrow(x@data))
 {
     if(missing(subset))
     {
         subset<-1:ncol(x@data)
-    }
-    if(missing(variate_names))
-    {
-        variate_names<-NULL
     }
     if(epoch < 0)
     {
@@ -1732,22 +1710,11 @@ setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,ti
     }
     if(!is.logical(variate_names))
     {
-        if(is.null(variate_names))
-        {
-            variate_names<-TRUE
-            if(tile_plot==TRUE)
-            {
-                variate_names<-FALSE
-            }
-        }
-        else
-        {
-            stop("variable_names must be of type logical or NULL")
-        }
+       stop("variable_names must be of type logical or NULL")
     }
     if(tile_plot)
     {
-        return(capa_tile_plot(x,variate_names=variate_names,epoch=epoch,subset=subset))
+        return(capa_tile_plot(x,variate_names=FALSE,epoch=epoch,subset=subset))
     }
     else
     {
@@ -1760,19 +1727,15 @@ setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names,ti
 #'
 #' @docType methods
 #'
-#' @param variate_name Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.
+#' @param variate_name Logical value indicating if the variate name should be displayed. Default value is \code{variate_name=FALSE}.
 #' 
 #' @rdname plot-methods
 #'
 #' @aliases plot,capa.uv.class-method
 #'
 #' @export
-setMethod("plot",signature=list("capa.uv.class"),function(x,variate_name)
+setMethod("plot",signature=list("capa.uv.class"),function(x,variate_name=FALSE)
 {
-    if(missing(variate_name))
-    {
-        variate_name<-NULL
-    }
     return(plot(as(x,"capa.class"),variate_names=variate_name))
 })
 
@@ -1781,22 +1744,18 @@ setMethod("plot",signature=list("capa.uv.class"),function(x,variate_name)
 #'
 #' @docType methods
 #'
-#' @param variate_name Logical value indicating if the variate name should be displayed. Default value is \code{variate.name=TRUE}.
+#' @param variate_name Logical value indicating if the variate name should be displayed. Default value is \code{variate_name=FALSE}.
 #' 
 #' @rdname plot-methods
 #'
 #' @aliases plot,scapa.uv.class-method
 #'
 #' @export
-setMethod("plot",signature=list("scapa.uv.class"),function(x,epoch,variate_name)
+setMethod("plot",signature=list("scapa.uv.class"),function(x,epoch,variate_name=FALSE)
 {
     if(missing(epoch))
     {
         epoch<-nrow(x@data)
-    }
-    if(missing(variate_name))
-    {
-        variate_name<-NULL
     }
     return(plot(as(x,"capa.class"),epoch=epoch,variate_names=variate_name))
 })
@@ -1811,15 +1770,11 @@ setMethod("plot",signature=list("scapa.uv.class"),function(x,epoch,variate_name)
 #' @aliases plot,capa.mv.class-method
 #'
 #' @export
-setMethod("plot",signature=list("capa.mv.class"),function(x,subset,variate_names,tile_plot)
+setMethod("plot",signature=list("capa.mv.class"),function(x,subset,variate_names=FALSE,tile_plot)
 {
     if(missing(subset))
     {
         subset<-1:ncol(x@data)
-    }
-    if(missing(variate_names))
-    {
-        variate_names<-NULL
     }
     if(missing(tile_plot))
     {
@@ -1838,7 +1793,7 @@ setMethod("plot",signature=list("capa.mv.class"),function(x,subset,variate_names
 #' @aliases plot,scapa.mv.class-method
 #'
 #' @export
-setMethod("plot",signature=list("scapa.mv.class"),function(x,subset,variate_names,tile_plot,epoch)
+setMethod("plot",signature=list("scapa.mv.class"),function(x,subset,variate_names=FALSE,tile_plot,epoch)
 {
     if(missing(epoch))
     {
@@ -1847,10 +1802,6 @@ setMethod("plot",signature=list("scapa.mv.class"),function(x,subset,variate_name
     if(missing(subset))
     {
         subset<-1:ncol(x@data)
-    }
-    if(missing(variate_names))
-    {
-        variate_names<-NULL
     }
     if(missing(tile_plot))
     {

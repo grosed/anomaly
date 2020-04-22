@@ -4,8 +4,14 @@
 \alias{simulate}
 \title{A function for generating simulated multivariate data}
 \usage{
-simulate(n = 100, p = 10, mu = 1, locations = 40, durations = 20,
-  proportions = 0.1)
+simulate(
+  n = 100,
+  p = 10,
+  mu = 1,
+  locations = 40,
+  durations = 20,
+  proportions = 0.1
+)
 }
 \arguments{
 \item{n}{The number of observations. The default is \code{n=100}.}
