@@ -133,11 +133,11 @@ setMethod("plot",signature=list("scapa.mv.class"),function(x,subset,variate_name
 #' 
 #' res<-scapa.mv(my_x,max_lag=20,type="mean")
 #' 
-#' plot(res)
-#' collective_anomalies(res)
-#' # process results up to time t = 300
-#' plot(res,epoch=300)
-#' collective_anomalies(res,epoch=300)
+#' ### Examine the output at different times and see how the results are updated:
+#' 
+#' plot(res,epoch=155)
+#' plot(res,epoch=170)
+#' plot(res,epoch=210)
 #'
 #' @export
 scapa.mv<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=tierney)

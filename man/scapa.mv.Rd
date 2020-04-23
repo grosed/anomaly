@@ -71,11 +71,11 @@ my_x = cbind(x1,x2,x3,x4)
 
 res<-scapa.mv(my_x,max_lag=20,type="mean")
 
-plot(res)
-collective_anomalies(res)
-# process results up to time t = 300
-plot(res,epoch=300)
-collective_anomalies(res,epoch=300)
+### Examine the output at different times and see how the results are updated:
+
+plot(res,epoch=155)
+plot(res,epoch=170)
+plot(res,epoch=210)
 
 }
 \references{
