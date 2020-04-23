@@ -112,10 +112,10 @@ setMethod("plot",signature=list("scapa.uv.class"),function(x,epoch,variate_name=
 #' library(magrittr)
 #' trans<-.%>%tierney(1000)
 #' res<-scapa.uv(x,transform=trans)
-#' res # print a summary of the results
-#' plot(res) # visualise the results
-#' # visualise the results up to t=1500
-#' plot(res,epoch=1500) 
+#' 
+#' Plot results at two different times and note that anomalies are re-evaluated:
+#' print(plot(res,epoch=3201))
+#' print(plot(res,epoch=3205))
 #' 
 #' 
 #' @export

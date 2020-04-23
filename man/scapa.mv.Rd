@@ -4,16 +4,9 @@
 \alias{scapa.mv}
 \title{Online detection of multivariate anomalous segments and points using SMVCAPA.}
 \usage{
-scapa.mv(
-  x,
-  beta = NULL,
-  beta_tilde = NULL,
-  type = "meanvar",
-  min_seg_len = 10,
-  max_seg_len = Inf,
-  max_lag = 0,
-  transform = tierney
-)
+scapa.mv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
+  min_seg_len = 10, max_seg_len = Inf, max_lag = 0,
+  transform = tierney)
 }
 \arguments{
 \item{x}{A numeric matrix with n rows and p columns containing the data which is to be inspected.}
@@ -47,17 +40,6 @@ as if the data had been analysed in an online fashion.
 }
 \examples{
 library(anomaly)
-
-### generate some multivariate data
-
-set.seed(0)
-sim.data<-simulate(n=500,p=100,mu=2,locations=c(100,200,300),
-                   duration=6,proportions=c(0.04,0.06,0.08))
-                   
-### Apply MVCAPA
-
-res<-scapa.mv(sim.data,type="mean",min_seg_len=2)
-plot(res)
 
 ### generate some multivariate data
 

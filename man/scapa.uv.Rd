@@ -4,15 +4,8 @@
 \alias{scapa.uv}
 \title{Detection of univariate anomalous segments using SCAPA.}
 \usage{
-scapa.uv(
-  x,
-  beta = NULL,
-  beta_tilde = NULL,
-  type = "meanvar",
-  min_seg_len = 10,
-  max_seg_len = Inf,
-  transform = tierney
-)
+scapa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
+  min_seg_len = 10, max_seg_len = Inf, transform = tierney)
 }
 \arguments{
 \item{x}{A numeric vector containing the data which is to be inspected.}
@@ -58,10 +51,10 @@ x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
 library(magrittr)
 trans<-.\%>\%tierney(1000)
 res<-scapa.uv(x,transform=trans)
-res # print a summary of the results
-plot(res) # visualise the results
-# visualise the results up to t=1500
-plot(res,epoch=1500) 
+
+Plot results at two different times and note that anomalies are re-evaluated:
+print(plot(res,epoch=3201))
+print(plot(res,epoch=3205))
 
 
 }
