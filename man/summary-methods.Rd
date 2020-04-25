@@ -13,11 +13,11 @@
 \usage{
 \S4method{summary}{bard.sampler.class}(object, ...)
 
-\S4method{summary}{capa.class}(object, epoch = nrow(object@data), ...)
+\S4method{summary}{capa.class}(object, epoch = nrow(object@data))
 
-\S4method{summary}{capa.mv.class}(object, ...)
+\S4method{summary}{capa.mv.class}(object)
 
-\S4method{summary}{capa.uv.class}(object, ...)
+\S4method{summary}{capa.uv.class}(object)
 
 \S4method{summary}{pass.class}(object, ...)
 }

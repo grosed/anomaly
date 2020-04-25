@@ -29,6 +29,53 @@ to_array<-function(X)
   return(X)
 }
 
+# utility function to process commen features of summary and show
+summary_show_common<-function(object,epoch=nrow(object@data))
+{
+    if(epoch < 0)
+    {
+        stop("epoch should be a positive integer")
+    }
+    if(epoch > nrow(object@data))
+    {
+        stop("epoch cannot be greater than the number of observations in the data")
+    }
+    if(dim(object@data)[2] == 1)
+    {
+       cat("Univariate ",sep="")
+    }
+    else
+    {
+       cat("Multivariate ",sep="")	
+    }
+    cat("CAPA detecting changes in ",sep="")
+    if(object@type == "meanvar")
+    {
+        cat("mean and variance.","\n",sep="") 
+    }
+    if(object@type %in% c("mean","robustmean"))
+    {
+        cat("mean.","\n",sep="") 
+    }
+    cat("observations = ",dim(object@data)[1],sep="")
+    cat("\n",sep="")
+    if(dim(object@data)[2] != 1)
+    {
+       cat("variates = ",dim(object@data)[2],"\n",sep="")
+    }
+    cat("minimum segment length = ",object@min_seg_len,'\n',sep="")
+    cat("maximum segment length = ",object@max_seg_len,'\n',sep="")
+    if(dim(object@data)[2] != 1)
+    {
+       cat("maximum lag = ",object@max_lag[1],'\n',sep="")
+    }
+    if(epoch != nrow(object@data))
+    {
+       cat("epoch = ",epoch,"\n",sep="")
+    }
+}
+
+
 #' Point anomaly location and strength.
 #'
 #' @name point_anomalies
@@ -360,7 +407,7 @@ setMethod("collective_anomalies",signature=list("capa.class"),
 #' @param epoch Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
 #' of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.
 #' @param ... Ignored.
-#' 
+#'
 #' @rdname summary-methods
 #'
 #' @aliases summary,capa.class-method
@@ -368,35 +415,25 @@ setMethod("collective_anomalies",signature=list("capa.class"),
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{sampler}}. 
 #'
 #' @export
-setMethod("summary",signature=list("capa.class"),function(object,epoch=nrow(object@data),...)
+setMethod("summary",signature=list("capa.class"),function(object,epoch=nrow(object@data))
 {
-    if(epoch < 0)
-    {
-        stop("epoch should be a positive integer")
-    }
-    if(epoch > nrow(object@data))
-    {
-        stop("epoch cannot be greater than the number of observations in the data")
-    }
-    cat("CAPA detecting changes in ",sep="")
-    if(object@type == "meanvar")
-    {
-        cat("mean and variance.","\n",sep="") 
-    }
-    if(object@type %in% c("mean","robustmean"))
-    {
-        cat("mean.","\n",sep="") 
-    }
-    cat("observations = ",dim(object@data)[1],sep="")
-    cat("\n",sep="")
-    cat("variates = ",dim(object@data)[2],"\n",sep="")	
-    p_anoms<-point_anomalies(object)
-    c_anoms<-collective_anomalies(object)
-    cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-    cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
-    invisible()
+  summary_show_common(object,epoch)
+  p_anoms<-point_anomalies(object,epoch)
+  c_anoms<-collective_anomalies(object,epoch)
+  cat("\n",sep="")
+  cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
+  if (nrow(p_anoms)>0)
+  {
+     print(p_anoms)
+  }
+  cat("\n",sep="")
+  cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
+  if (nrow(c_anoms)>0)
+  {
+    print(c_anoms)
+  }
+  invisible()
 })
-
 
 
 
@@ -411,7 +448,7 @@ setMethod("summary",signature=list("capa.class"),function(object,epoch=nrow(obje
 #' @docType methods
 #'
 #' @param object An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}}, \code{\link{capa.mv}}, \code{\link{pass}}, \code{\link{bard}}, or \code{\link{sampler}}.
-#' 
+#'
 #' @rdname show-methods
 #'
 #' @aliases show,capa.class-method
@@ -421,32 +458,12 @@ setMethod("summary",signature=list("capa.class"),function(object,epoch=nrow(obje
 #' @export
 setMethod("show",signature=list("capa.class"),function(object)
 {
-  epoch<-nrow(object@data)
-  cat("CAPA detecting changes in ",sep="")
-  if(object@type == "meanvar")
-  {
-    cat("mean and variance.","\n",sep="") 
-  }
-  if(object@type %in% c("mean","robustmean"))
-  {
-    cat("mean.","\n",sep="") 
-  }
-  cat("observations = ",dim(object@data)[1],sep="")
-  cat("\n",sep="")
-  cat("variates = ",dim(object@data)[2],"\n",sep="")	
-  p_anoms<-point_anomalies(object)
-  c_anoms<-collective_anomalies(object)
-  cat("\n",sep="")
-  cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-  if (nrow(p_anoms)>0){
-  print(p_anoms)
-  }
-  cat("\n",sep="")
-  cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
-  if (nrow(c_anoms)>0){
-    print(c_anoms)
-  }
-  invisible()
+    summary_show_common(object)
+    p_anoms<-point_anomalies(object)
+    c_anoms<-collective_anomalies(object)
+    cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
+    cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
+    invisible()
 })
 
 

@@ -56,33 +56,7 @@ setMethod("collective_anomalies",signature=list("capa.uv.class"),
 #' @export
 setMethod("show",signature=list("capa.uv.class"),function(object)
 {
-  cat("Univariate ",sep="")
-  cat("CAPA detecting changes in ",sep="")
-  if(object@type == "meanvar")
-  {
-    cat("mean and variance.","\n",sep="") 
-  }
-  if(object@type %in% c("mean","robustmean"))
-  {
-    cat("mean.","\n",sep="") 
-  }
-  cat("observations = ",dim(object@data)[1],'\n',sep="")
-  cat("variates = ",dim(object@data)[2],'\n',sep="")	
-  cat("minimum segment length = ",object@min_seg_len,'\n',sep="")
-  cat("maximum segment length = ",object@max_seg_len,'\n',sep="")
-  p_anoms<-point_anomalies(object)
-  c_anoms<-collective_anomalies(object)
-  cat("\n",sep="")
-  cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-  if (nrow(p_anoms)>0){
-    print(p_anoms)
-  }
-  cat("\n",sep="")
-  cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
-  if (nrow(c_anoms)>0){
-    print(c_anoms)
-  }
-  invisible()
+  show(as(object,"capa.class"))
 })
 
 #' @name summary
@@ -94,29 +68,10 @@ setMethod("show",signature=list("capa.uv.class"),function(object)
 #' @aliases summary,capa.uv.class-method
 #'
 #' @export
-setMethod("summary",signature=list("capa.uv.class"),function(object,...)
+setMethod("summary",signature=list("capa.uv.class"),function(object)
 {
-    cat("Univariate ",sep="")
-    cat("CAPA detecting changes in ",sep="")
-    if(object@type == "meanvar")
-    {
-        cat("mean and variance.","\n",sep="") 
-    }
-    if(object@type %in% c("mean","robustmean"))
-    {
-        cat("mean.","\n",sep="") 
-    }
-    cat("observations = ",dim(object@data)[1],'\n',sep="")
-    cat("variates = ",dim(object@data)[2],'\n',sep="")	
-    cat("minimum segment length = ",object@min_seg_len,'\n',sep="")
-    cat("maximum segment length = ",object@max_seg_len,'\n',sep="")
-    p_anoms<-point_anomalies(object)
-    c_anoms<-collective_anomalies(object)
-    cat("Point anomalies detected : ",nrow(p_anoms),"\n",sep="")
-    cat("Collective anomalies detected : ",length(unique(c_anoms$start)),"\n",sep="")
-    invisible()
+    summary(as(object,"capa.class"))
 })
-
 
 
 #' @name plot
