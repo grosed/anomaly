@@ -114,8 +114,8 @@ setMethod("plot",signature=list("scapa.uv.class"),function(x,epoch,variate_name=
 #' res<-scapa.uv(x,transform=trans)
 #' 
 #' Plot results at two different times and note that anomalies are re-evaluated:
-#' print(plot(res,epoch=3201))
-#' print(plot(res,epoch=3205))
+#' plot(res,epoch=3201)
+#' plot(res,epoch=3205)
 #' 
 #' 
 #' @export

@@ -53,8 +53,8 @@ trans<-.\%>\%tierney(1000)
 res<-scapa.uv(x,transform=trans)
 
 Plot results at two different times and note that anomalies are re-evaluated:
-print(plot(res,epoch=3201))
-print(plot(res,epoch=3205))
+plot(res,epoch=3201)
+plot(res,epoch=3205)
 
 
 }
