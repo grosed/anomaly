@@ -15,8 +15,7 @@
 \usage{
 \S4method{collective_anomalies}{bard.sampler.class}(object)
 
-\S4method{collective_anomalies}{capa.class}(object,
-  epoch = nrow(object@data), merged = FALSE)
+\S4method{collective_anomalies}{capa.class}(object, epoch = nrow(object@data), merged = FALSE)
 
 \S4method{collective_anomalies}{capa.mv.class}(object)
 
@@ -24,11 +23,9 @@
 
 \S4method{collective_anomalies}{pass.class}(object)
 
-\S4method{collective_anomalies}{scapa.mv.class}(object,
-  epoch = nrow(object@data))
+\S4method{collective_anomalies}{scapa.mv.class}(object, epoch = nrow(object@data))
 
-\S4method{collective_anomalies}{scapa.uv.class}(object,
-  epoch = nrow(object@data))
+\S4method{collective_anomalies}{scapa.uv.class}(object, epoch = nrow(object@data))
 }
 \arguments{
 \item{object}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{capa.uv}} and \code{\link{capa.mv}}.}

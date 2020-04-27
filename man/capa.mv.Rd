@@ -4,9 +4,16 @@
 \alias{capa.mv}
 \title{Detection of multivariate anomalous segments and points using MVCAPA.}
 \usage{
-capa.mv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
-  min_seg_len = 10, max_seg_len = Inf, max_lag = 0,
-  transform = robustscale)
+capa.mv(
+  x,
+  beta = NULL,
+  beta_tilde = NULL,
+  type = "meanvar",
+  min_seg_len = 10,
+  max_seg_len = Inf,
+  max_lag = 0,
+  transform = robustscale
+)
 }
 \arguments{
 \item{x}{A numeric matrix with n rows and p columns containing the data which is to be inspected.}
