@@ -50,17 +50,6 @@ library(anomaly)
 
 ### generate some multivariate data
 
-set.seed(0)
-sim.data<-simulate(n=500,p=100,mu=2,locations=c(100,200,300),
-                   duration=6,proportions=c(0.04,0.06,0.08))
-                   
-### Apply MVCAPA
-
-res<-scapa.mv(sim.data,type="mean",min_seg_len=2)
-plot(res)
-
-### generate some multivariate data
-
 set.seed(2018)
 x1 = rnorm(500)
 x2 = rnorm(500)
@@ -89,11 +78,11 @@ my_x = cbind(x1,x2,x3,x4)
 
 res<-scapa.mv(my_x,max_lag=20,type="mean")
 
-plot(res)
-collective_anomalies(res)
-# process results up to time t = 300
-plot(res,epoch=300)
-collective_anomalies(res,epoch=300)
+### Examine the output at different times and see how the results are updated:
+
+plot(res,epoch=155)
+plot(res,epoch=170)
+plot(res,epoch=210)
 
 }
 \references{

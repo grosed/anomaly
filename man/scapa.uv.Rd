@@ -58,10 +58,10 @@ x[c(1000,2000,3000,4000)] = rnorm(4,0,100)
 library(magrittr)
 trans<-.\%>\%tierney(1000)
 res<-scapa.uv(x,transform=trans)
-res # print a summary of the results
-plot(res) # visualise the results
-# visualise the results up to t=1500
-plot(res,epoch=1500) 
+
+# Plot results at two different times and note that anomalies are re-evaluated:
+plot(res,epoch=3201)
+plot(res,epoch=3205)
 
 
 }
