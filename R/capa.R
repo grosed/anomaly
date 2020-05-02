@@ -887,9 +887,9 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
     {
         df[,i]<-(df[,i]-min(df[,i]))/(max(df[,i])-min(df[,i]))
     }
-    n<-data.frame("n"=seq(1,nrow(df)))
-    molten.data<-melt(cbind(n,df),id="n")
-    out<-ggplot(molten.data, aes(n,variable))
+    t<-data.frame("t"=seq(1,nrow(df)))
+    molten.data<-melt(cbind(t,df),id="t")
+    out<-ggplot(molten.data, aes(t,variable))
     out<-out+geom_tile(aes(fill=value))
     # get any collective anomalies
     c_anoms<-collective_anomalies(object,epoch=epoch)
@@ -908,10 +908,10 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
         }
 
     out<-out+theme_bw()
+    out<-out+theme(axis.text.y=element_blank())
     out<-out+theme(axis.ticks.y=element_blank())
-    out<-out+theme(axis.text.y=element_blank(),axis.title=element_blank())
     out<-out+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
-    out<-out+xlab(label="t") # does not seem to shoe - need to find a fix
+
 
     return(out)
 }
