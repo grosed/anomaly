@@ -4,15 +4,8 @@
 \alias{scapa.uv}
 \title{Detection of univariate anomalous segments using SCAPA.}
 \usage{
-scapa.uv(
-  x,
-  beta = NULL,
-  beta_tilde = NULL,
-  type = "meanvar",
-  min_seg_len = 10,
-  max_seg_len = Inf,
-  transform = tierney
-)
+scapa.uv(x, beta = NULL, beta_tilde = NULL, type = "meanvar",
+  min_seg_len = 10, max_seg_len = Inf, transform = tierney)
 }
 \arguments{
 \item{x}{A numeric vector containing the data which is to be inspected.}

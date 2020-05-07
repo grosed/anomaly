@@ -15,17 +15,21 @@
 \alias{plot,scapa.uv.class-method}
 \title{Visualisation of data, collective and point anomalies.}
 \usage{
-\S4method{plot}{bard.sampler.class}(x, subset, variate_names, tile_plot, marginals = FALSE)
+\S4method{plot}{bard.sampler.class}(x, subset, variate_names, tile_plot,
+  marginals = FALSE)
 
-\S4method{plot}{capa.class}(x, subset, variate_names = FALSE, tile_plot, epoch = nrow(x@data))
+\S4method{plot}{capa.class}(x, subset, variate_names = FALSE, tile_plot,
+  epoch = nrow(x@data))
 
-\S4method{plot}{capa.mv.class}(x, subset, variate_names = FALSE, tile_plot)
+\S4method{plot}{capa.mv.class}(x, subset, variate_names = FALSE,
+  tile_plot)
 
 \S4method{plot}{capa.uv.class}(x, variate_name = FALSE)
 
 \S4method{plot}{pass.class}(x, subset, variate_names = FALSE, tile_plot)
 
-\S4method{plot}{scapa.mv.class}(x, subset, variate_names = FALSE, tile_plot, epoch)
+\S4method{plot}{scapa.mv.class}(x, subset, variate_names = FALSE,
+  tile_plot, epoch)
 
 \S4method{plot}{scapa.uv.class}(x, epoch, variate_name = FALSE)
 }
@@ -45,6 +49,8 @@ The defualt is \code{marginals=FALSE}.}
 
 \item{epoch}{Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
 of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.}
+
+\item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate_name=FALSE}.}
 
 \item{variate_name}{Logical value indicating if the variate name should be displayed. Default value is \code{variate_name=FALSE}.}
 }
