@@ -21,7 +21,7 @@ using namespace anomaly;
 std::vector<int> MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Ronline)
 // SEXP MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength, SEXP Rbetachange, SEXP Rbetaanomaly, SEXP Ronline)
 {
-	 
+  /* 
  	PROTECT(Rx) ; 
  	PROTECT(Rn) ;
 	PROTECT(Rminlength) ;
@@ -29,7 +29,7 @@ std::vector<int> MeanAnomaly(SEXP Rx, SEXP Rn, SEXP Rminlength, SEXP Rmaxlength,
 	PROTECT(Rbetachange) ;
 	PROTECT(Rbetaanomaly) ;
 	PROTECT(Ronline) ;
-	
+  */	
   	int n = 0, minlength = 0, maxlength = 0, error = 0, online = -1, ii = 0;
   	double betaanomaly = 0.0;
   	double* x = NULL, *betachange = NULL, *betavector = NULL ;
@@ -138,7 +138,7 @@ clearup:
 	if(betavector){delete[] betavector;}
 	if(mylist){delete[] mylist;} 
 
-	UNPROTECT(7);
+	// UNPROTECT(7);
 
 	if (error != 0)
 	{

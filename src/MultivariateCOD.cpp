@@ -23,7 +23,7 @@ std::vector<int> MeanVarAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminl
   Rx    : Data
   Rn    : Length of data
   */
-	 
+  /*	 
  	PROTECT(Rx) ; 
  	PROTECT(Rn) ;
  	PROTECT(Rp) ;
@@ -33,7 +33,7 @@ std::vector<int> MeanVarAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminl
 	PROTECT(Rbetaanomaly) ;
 	PROTECT(Rmaxlength) ;
 	PROTECT(Ronline) ;
-	
+  */	
   	int n = 0, p = 0, l = 0, minlength = 0, ii = 0, error = 0, maxlength = 0, online = 0;
   	double betaanomaly = 0.0;
   	double* x = NULL;
@@ -52,7 +52,6 @@ std::vector<int> MeanVarAnomalyMV(SEXP Rx, SEXP Rn, SEXP Rp, SEXP Rl, SEXP Rminl
 
 	std::vector<int> vout;	
 	std::string reason;
-	int *out;
 	struct orderedobservationlist* mylist;
 
 
@@ -174,7 +173,7 @@ clearup:
 
 	if(betachange){ delete[] betachange;}
 
-  	UNPROTECT(9);
+  	// UNPROTCECT(9);
 
 	if (error != 0)
 	{
