@@ -6,7 +6,7 @@ pass.class<-function(data,results,Lmax,Lmin,alpha,lambda)
 }
 
 # not exported
-pass.line.plot<-function(x,subset=1:ncol(x@data),variate_names=TRUE)
+pass.line.plot<-function(x,subset=1:ncol(x@data),variate_names=FALSE)
 {
     # nulling out variables used in ggplot to get the package past CRAN checks
     k<-value<-NULL
@@ -39,7 +39,7 @@ pass.line.plot<-function(x,subset=1:ncol(x@data),variate_names=TRUE)
 }
 
 # not exported
-pass.tile.plot<-function(x,subset=1:ncol(x@data),variate_names=TRUE)
+pass.tile.plot<-function(x,subset=1:ncol(x@data),variate_names=FALSE)
 {
     # nulling out variables used in ggplot to get the package past CRAN checks
     variable<-value<-NULL
@@ -77,15 +77,11 @@ pass.tile.plot<-function(x,subset=1:ncol(x@data),variate_names=TRUE)
 #' @aliases plot,pass.class-method
 #'
 #' @export
-setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names,tile_plot)
+setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names=FALSE,tile_plot)
 {
     if(missing(subset))
     {
         subset<-1:ncol(x@data)
-    }
-    if(missing(variate_names))
-    {
-        variate_names<-NULL
     }
     if(missing(tile_plot))
     {
@@ -108,22 +104,11 @@ setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names,ti
     }
     if(!is.logical(variate_names))
     {
-        if(is.null(variate_names))
-        {
-            variate_names<-TRUE
-            if(tile_plot==TRUE)
-            {
-                variate_names<-FALSE
-            }
-        }
-        else
-        {
             stop("variable_names must be of type logical or NULL")
-        }
     }
     if(tile_plot)
     {
-        p<-pass.tile.plot(x,subset,variate_names)
+        p<-pass.tile.plot(x,subset,variate_names=FALSE)
     }
     else
     {
