@@ -99,6 +99,7 @@ setMethod("plot",signature=list("scapa.mv.class"),function(x,subset,variate_name
 #' @return An S4 class of type scapa.mv.class. 
 #' 
 #' @references \insertRef{2019MVCAPA}{anomaly}
+#' @references \insertRef{alex2020real}{anomaly}
 #'
 #' @examples
 #' library(anomaly)

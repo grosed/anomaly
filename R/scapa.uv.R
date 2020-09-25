@@ -94,6 +94,7 @@ setMethod("plot",signature=list("scapa.uv.class"),function(x,epoch,variate_name=
 #' @return An S4 class of type scapa.uv.class. 
 #'
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
+#' @references \insertRef{alex2020real}{anomaly}
 #' 
 #' @examples
 #' library(anomaly)
