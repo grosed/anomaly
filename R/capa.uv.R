@@ -172,7 +172,7 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' data points, CAPA scales linearly with the number of data points. At
 #' worst, if there are no anomalies at all and \code{max_seg_len} is unspecified, the computational cost of CAPA scales quadratically with the number of data points.
 #'  
-#' @param x A numeric vector containing the data which is to be inspected.
+#' @param x A numeric vector containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.
 #' @param beta A numeric vector of length 1 or \code{max_seg_len - min_seg_len + 1} indicating the penalty for adding additional collective anomalies of all possible
 #' lengths. If an argument of length 1 is provided the same penalty is used for all collective anomalies irrespective of their length. The default value is 4log(n), where n denotes the number of observations.
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(n), where n denotes the number of observations.

@@ -12,6 +12,10 @@ capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
 # utility function to coerce data to an array structure
 to_array<-function(X)
 {
+  if(is.ts(X) || is.xts(X) || is.zoo(X))
+  {
+     X<-unclass(X)
+  }
   if(is.data.frame(X))
   {
      X<-data.matrix(X, rownames.force = NA)
@@ -597,7 +601,7 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @description A technique for detecting anomalous segments and points based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). This is a generic method that can be used for both univariate
 #' and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
 #' 
-#' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
+#' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.  
 #' @param beta A numeric vector of length p, giving the marginal penalties. If p > 1, type ="meanvar" or type = "mean" and max_lag > 0 it defaults to the penalty regime 2' described in 
 #' Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.

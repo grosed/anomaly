@@ -5,7 +5,7 @@
 #' presence or absence of a collective anomaly across the components. It uses Circular Binary Segmentation to detect multiple collective anomalies.
 #' 
 #' 
-#' @param x An n x p real matrix representing n observations of p variates.
+#' @param x An n x p real matrix representing n observations of p variates. The time series data classes ts, xts, and zoo are also supported.
 #' @param alpha A positive integer > 0. This value is used to stabilise the higher criticism based test statistic used by PASS leading to a better finite sample familywise error rate. 
 #' Anomalies affecting fewer than alpha components will however in all likelihood escape detection.
 #' @param lambda A positive real value setting the threshold value for the familywise Type 1 error. The default value
@@ -37,7 +37,7 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     Lmax = max_seg_len
     Lmin = min_seg_len
     # check the data
-    x<-as.array(as.matrix(x))
+    x<-to_array(x)
     if(!is_array(x))
     {
         stop("cannot convert x to an array")
