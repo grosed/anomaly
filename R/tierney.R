@@ -6,7 +6,7 @@
 #' transform argument used by the \code{\link{scapa.uv}} function.
 #' 
 #'
-#' @param X A numeric matrix containing the data to be transformed.
+#' @param X A numeric matrix containing the data to be transformed. The time series data classes ts, xts, and zoo are also supported.
 #' @param burnin Specifies the period used to stabalise the quantile estimates. The default value is 10.
 #' 
 #' @return A numeric matrix containing the transformed data. 
@@ -23,19 +23,24 @@
 #' @export
 tierney<-function(X,burnin=10)
 {
-    if(is.vector(X))
+    X<-to_array(X)
+    tierney_impl <- function(X,burnin)
     {
-        ests<-sequential_ests(X,burnin)
-        return((X-ests[[1]])/ests[[2]])
+       if(is.vector(X))
+       {
+           ests<-sequential_ests(X,burnin)
+           return((X-ests[[1]])/ests[[2]])
+       }
+       else if(is.matrix(X))
+       {
+           return(Reduce(cbind,Map(function(i) array(tierney_impl(X[,i],burnin),c(nrow(X),1)),1:ncol(X))))  
+       }
+       else
+       {
+           # incorrect type - throw an exception
+       }
     }
-    else if(is.matrix(X))
-    {
-        return(Reduce(cbind,Map(function(i) array(tierney(X[,i],burnin),c(nrow(X),1)),1:ncol(X))))  
-    }
-    else
-    {
-        # incorrect type - throw an exception
-    }   
+    return(tierney_impl(X,burnin))
 }
 
 

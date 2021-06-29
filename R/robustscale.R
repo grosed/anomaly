@@ -7,7 +7,8 @@
 #' 
 #'
 #' @param X A numeric matrix containing the data to be transformed. Each column corresponds to a component and each row to an observation.
-#' 
+#' The time series data classes ts, xts, and zoo are also supported.
+#'
 #' @return A numeric matrix containing the transformed data. 
 #' 
 #' @examples
@@ -26,16 +27,21 @@
 #' @export
 robustscale<-function(X)
 {
-    if(is.vector(X))
+    X<-to_array(X)
+    robustscale_impl <- function(X)
     {
-        return((X-median(X))/mad(X))
-    }
-    else if(is.matrix(X))
-    {
-        return(Reduce(cbind,Map(function(i) array(robustscale(X[,i]),c(nrow(X),1)),1:ncol(X))))  
-    }
-    else
-    {
-        # incorrect type - throw an exception
-    }
+	if(is.vector(X))
+    	{
+	   return((X-median(X))/mad(X))
+    	}
+    	else if(is.matrix(X))
+    	{
+	    return(Reduce(cbind,Map(function(i) array(robustscale_impl(X[,i]),c(nrow(X),1)),1:ncol(X))))  
+    	}
+    	else
+    	{
+            # incorrect type - throw an exception
+    	}
+     }
+   return(robustscale_impl(X))  
 }

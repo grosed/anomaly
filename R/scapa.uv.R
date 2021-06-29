@@ -80,6 +80,7 @@ setMethod("plot",signature=list("scapa.uv.class"),function(x,epoch,variate_name=
 #' at different time points as if the data had been analysed in an online fashion up to that point.
 #' 
 #' @param x A numeric vector containing the data which is to be inspected.
+#' The time series data classes ts, xts, and zoo are also supported.
 #' @param beta A numeric vector of length 1 or \code{max_seg_len - min_seg_len + 1} indicating the penalty for adding additional collective anomalies of all possible
 #' lengths. If an argument of length 1 is provided the same penalty is used for all collective anomalies irrespective of their length. The default value is 4log(n), where n denotes the number of observations.
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(n), where n is the number of observations.

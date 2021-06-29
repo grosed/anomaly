@@ -84,6 +84,7 @@ setMethod("plot",signature=list("scapa.mv.class"),function(x,subset,variate_name
 #' as if the data had been analysed in an online fashion.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected.
+#' The time series data classes ts, xts, and zoo are also supported.
 #' @param beta A numeric vector of length p, giving the marginal penalties. If type ="meanvar" or if type = "mean" and maxlag > 0 it defaults to the penalty regime 2' described in 
 #' Fisch, Eckley and Fearnhead (2019). If type = "mean" and maxlag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
 #' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions. 
