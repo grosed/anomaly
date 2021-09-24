@@ -945,7 +945,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @rdname plot-methods
 #'
-#' @aliases plot,capa.class-method
+#' @aliases plot,capa.class,ANY-method
 #' 
 #' @seealso \code{\link{capa}},\code{\link{capa.uv}},\code{\link{capa.mv}},\code{\link{pass}},\code{\link{sampler}}.
 #'

@@ -14,18 +14,13 @@
 #'
 #' @return A numeric matrix of the same dimension as X containing the transformed data.
 #'
-#' @examples
-#' library(anomaly)
-#' # an example
-#' set.seed(0)
-#'
 #' @export
 moving_ac_corrected<-function(X,burnin,window_size)
 {
     f<-function(x)
     {
-       movmed<-runner(temp,k=window_size,f=median)
-       movmad<-runner(temp,k=window_size,f=mad)
+       movmed<-runner(x,k=window_size,f=median)
+       movmad<-runner(x,k=window_size,f=mad)
        movmad[1:2]<-movmad[3]
        burnin_phi<-covRob(matrix(c(x[2:burnin],x[1:(burnin-1)]),ncol=2),corr=TRUE,estim="mcd")$cov[1,2]
        return(sqrt((1-burnin_phi)/(1+burnin_phi))*(x-movmed)/movmad)

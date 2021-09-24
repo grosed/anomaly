@@ -82,7 +82,7 @@ setMethod("summary",signature=list("capa.uv.class"),function(object)
 #' 
 #' @rdname plot-methods
 #'
-#' @aliases plot,capa.uv.class-method
+#' @aliases plot,capa.uv.class,ANY-method
 #'
 #' @export
 setMethod("plot",signature=list("capa.uv.class"),function(x,variate_name=FALSE)

@@ -55,7 +55,7 @@ setMethod("collective_anomalies",signature=list("scapa.uv.class"),
 #' 
 #' @rdname plot-methods
 #'
-#' @aliases plot,scapa.uv.class-method
+#' @aliases plot,scapa.uv.class,ANY-method
 #'
 #' @export
 setMethod("plot",signature=list("scapa.uv.class"),function(x,epoch,variate_name=FALSE)

@@ -80,7 +80,7 @@ setMethod("show",signature=list("capa.mv.class"),function(object)
 #'
 #' @rdname plot-methods
 #'
-#' @aliases plot,capa.mv.class-method
+#' @aliases plot,capa.mv.class,ANY-method
 #'
 #' @export
 setMethod("plot",signature=list("capa.mv.class"),function(x,subset,variate_names=FALSE,tile_plot)
