@@ -826,7 +826,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
 capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@data),variate_names=FALSE)
 {
     # creating null entries for ggplot global variables so as to pass CRAN checks
-    x<-value<-ymin<-ymax<-x1<-x2<-y1<-y2<-x1<-x2<-y1<-y2<-NULL
+    x<-variable<-value<-ymin<-ymax<-x1<-x2<-y1<-y2<-x1<-x2<-y1<-y2<-NULL
     data_df<-as.data.frame(object@data)
     names<-paste("y",1:ncol(object@data),sep="")
     colnames(data_df)<-names
@@ -834,7 +834,7 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
     n<-nrow(data_df)
     p<-ncol(data_df)
     data_df<-cbind(data.frame("x"=1:n),data_df)
-    data_df<-melt(data_df,id="x")
+    data_df<-gather(data_df,variable,value,-x)    
     out<-ggplot(data=data_df)
     out<-out+aes(x=x,y=value)
     out<-out+geom_point(alpha=0.3)
@@ -892,7 +892,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
         df[,i]<-(df[,i]-min(df[,i]))/(max(df[,i])-min(df[,i]))
     }
     t<-data.frame("t"=seq(1,nrow(df)))
-    molten.data<-melt(cbind(t,df),id="t")
+    molten.data<-gather(cbind(t,df),variable,value,-t)
     out<-ggplot(molten.data, aes(t,variable))
     out<-out+geom_tile(aes(fill=value))
     # get any collective anomalies

@@ -930,7 +930,7 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
                   object@sampled.res)
        )
        n.df<-data.frame("n"=seq(1,nrow(df)))
-       molten.data<-melt(cbind(n.df,df),id="n")
+       molten.data<-gather(cbind(n.df,df),variable,value,-n)
        out<-ggplot(molten.data, aes(n,variable))
        out<-out+geom_tile(aes(fill=value))
        #out<-out + theme(legend.position="none")

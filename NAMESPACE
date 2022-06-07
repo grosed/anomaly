@@ -1,4 +1,5 @@
 useDynLib(anomaly)
+import("tidyr")
 import("dplyr")
 import("ggplot2")
 import("reshape2")
