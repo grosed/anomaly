@@ -21,11 +21,11 @@ exoplanet (or an integer fraction thereof) is used as argument for "period", the
 }
 \examples{
 library(anomaly)
-data(Lightcurves)
+data(lightcurves)
 ### Plot the data for Kepler 10965588: No transit apparent
-plot(Lightcurves$Kepler10965588$Day,Lightcurves$Kepler10965588$Brightness,xlab = "Day",pch=".")
+plot(lightcurves$Kepler10965588$Day,lightcurves$Kepler10965588$Brightness,xlab = "Day",pch=".")
 ### Examine a period of 62.9 days for Kepler 10965588
-binned_data = period_average(Lightcurves$Kepler10965588,62.9)
+binned_data = period_average(lightcurves$Kepler10965588,62.9)
 inferred_anomalies = capa.uv(binned_data)
 plot(inferred_anomalies)
 

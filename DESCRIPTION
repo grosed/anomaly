@@ -14,5 +14,5 @@ Imports: dplyr,tidyr,rlang,methods,assertive,Rdpack,ggplot2,reshape2,Rcpp (>= 0.
 LinkingTo: Rcpp,BH
 Depends: R (>= 3.5.0)
 NeedsCompilation: yes
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 RdMacros: Rdpack

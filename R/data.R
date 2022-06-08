@@ -45,13 +45,13 @@ NULL
 #' Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration
 #' Program".
 #'
-#' @name Lightcurves
+#' @name lightcurves
 #' 
 #' @docType data
 #'
 #' @keywords datasets
 #'
-#' @usage data(Lightcurves)
+#' @usage data(lightcurves)
 #'
 #' @rdname lightcurves-data
 #'
