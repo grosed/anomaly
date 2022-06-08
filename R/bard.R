@@ -872,7 +872,7 @@ sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
 }
 
 
-#' @name plot-bard.sampler.class
+#' @name plot
 #'
 #' @docType methods
 #'

@@ -2,10 +2,9 @@
 % Please edit documentation in R/bard.R, R/capa.R, R/capa.mv.R, R/capa.uv.R,
 %   R/pass.class.R, R/scapa.mv.R, R/scapa.uv.R
 \docType{methods}
-\name{plot-bard.sampler.class}
-\alias{plot-bard.sampler.class}
-\alias{plot,bard.sampler.class,ANY-method}
+\name{plot}
 \alias{plot}
+\alias{plot,bard.sampler.class,ANY-method}
 \alias{plot,capa.class,ANY-method}
 \alias{plot,capa.mv.class,ANY-method}
 \alias{plot,capa.uv.class,ANY-method}
