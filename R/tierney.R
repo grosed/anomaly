@@ -2,8 +2,7 @@
 #' 
 #' Transforms the data X by centring and scaling using \eqn{X_{ij}^{'} = \frac{X_{ij}-\mu_{ij}}{\sigma_{ij}}} where \eqn{\mu_{ij}} and \eqn{\sigma_{ij}} are robust quantile based 
 #' sequential estimates for the mean and standard deviation of each variate (column) \eqn{X_{i}} of X calculated up to time j. The estimates \eqn{\mu_{ij}} and \eqn{\sigma_{ij}} are
-#' calculated from sequential estimates for the median and inter-quartile range developed by Tierney et al (1983).  This method is the default value for the
-#' transform argument used by the \code{\link{scapa.uv}} function.
+#' calculated from sequential estimates for the median and inter-quartile range developed by Tierney et al (1983).
 #' 
 #'
 #' @param X A numeric matrix containing the data to be transformed. The time series data classes ts, xts, and zoo are also supported.
