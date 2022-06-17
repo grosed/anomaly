@@ -122,7 +122,7 @@ setMethod("point_anomalies",signature=list("capa.class"),
               # get the anomalies
               anoms<-anomalies(object,epoch)
               # transform data
-              data_dash<-object@transform(object@data)
+              data_dash<-object@data
               p_anoms<-Map(function(x) x[1],Filter(function(x) x[1] == x[2],anoms))
               if(length(p_anoms) > 0)
               {
@@ -279,7 +279,7 @@ setMethod("collective_anomalies",signature=list("capa.class"),
               # get the anomalies
               anoms<-anomalies(object,epoch)
               # transform data
-              data_dash<-object@transform(object@data)
+              data_dash<-object@data
               c_anoms<-Filter(function(x) x[1] != x[2],anoms)
               if(length(c_anoms) == 0)
               {                      
@@ -657,9 +657,6 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.
-#' @param transform A function used to centre the data prior to analysis by \code{\link{capa}}. This can, for example, be used to compensate for the effects of autocorrelation in the data.
-#' Importantly, the untransformed data remains available for post processing results obtained using \code{\link{capa}}. The package includes several methods that are commonly used for
-#' the transform, (see \code{\link{robustscale}} and \code{\link{ac_corrected}}), but a user defined function can be specified. The default values is \code{transform=robust_scale}. 
 #' 
 #' @return An instance of an S4 class of type capa.class. 
 #'
@@ -678,9 +675,8 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' 
 #' @export
 #'
-capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0,transform=robustscale)
+capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
-    # make sure the callable transform object is of type function
     # data needs to be in the form of an array
     x<-to_array(x)
     if(!is_array(x))
@@ -711,34 +707,6 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     if(dim(x)[1] == 1)
     {
         x<-t(x)
-    }
-    # try transforming the data
-    if(!is_function(transform))
-    {
-        stop("transform must be a function")
-    }
-    x_untransformed<-x
-    x<-transform(x)
-    # and check the transformed data
-    if(!is_array(x))
-    {
-        stop("cannot convert the transformed x to an array - check the transform function")
-    }
-    if(!all(is_not_na(x)))
-    {
-        stop("the transformed x contains NA values - check the transform function")
-    }
-    if(!all(is_not_null(x)))
-    {
-        stop("the transformed x contains NULL values - check the transform function")
-    }
-    if(!is_numeric(x))
-    {
-        stop("the transformed x must be of type numeric - check the transform function")
-    }
-    if(length(dim(x)) != 2)
-    {
-        stop("cannot convert transformed x to a two dimensional array - check the transform function")
     }
 
     # check the type 
@@ -846,23 +814,19 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
                 stop("beta_tilde values must be >= 0")
         }
     }
-    # wrap the callable transform object in a function to store in S4 class
-    transform_method<-function(arg){return(transform(arg))}
     # call appropriate helper function
     tryCatch(
     {
         if(univariate)
         {
             res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
-            res@data<-x_untransformed
-            res@transform<-transform_method
+            res@data<-x
             return(res)
         }
         else
         {
             res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
-            res@data<-x_untransformed
-            res@transform<-transform_method
+            res@data<-x
             return(res)
         }
     },error = function(e) {print(e$message);stop();})
