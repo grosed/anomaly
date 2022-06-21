@@ -126,7 +126,7 @@ setMethod("point_anomalies",signature=list("capa.class"),
               p_anoms<-Map(function(x) x[1],Filter(function(x) x[1] == x[2],anoms))
               if(length(p_anoms) > 0)
               {
-                  p_anom_daf = Reduce(rbind,
+                  p_anom_daf <- Reduce(rbind,
                        Map(
                          function(p_anom)
                          {
@@ -143,16 +143,16 @@ setMethod("point_anomalies",signature=list("capa.class"),
                   )
               }
               
-              extra_anoms = data.frame("location"=integer(0),"variate"=integer(0),"strength"=integer(0))
+              extra_anoms <- data.frame("location"=integer(0),"variate"=integer(0),"strength"=integer(0))
               
               if (object@type == "robustmean"){
                 
-                tmp = collective_anomalies(as(object,"capa.class"))
+                tmp <- collective_anomalies(as(object,"capa.class"))
                 
                 if (nrow(tmp)>0)
                 {
                   
-                  extra_anoms = Reduce(rbind,
+                  extra_anoms <- Reduce(rbind,
                                       Map(
                                         function(ii)
                                         {
@@ -192,7 +192,7 @@ setMethod("point_anomalies",signature=list("capa.class"),
               }
               else
               {
-                  out = rbind(p_anom_daf,extra_anoms)
+                  out <- rbind(p_anom_daf,extra_anoms)
                   return(out[order(out$location,out$variate),])
               }
           }
@@ -487,56 +487,56 @@ anomalies<-function(x,epoch=NULL)
 capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
     # configure defaults as required
-    marshaller = marshall_MeanVarAnomalyMV
+    marshaller <- marshall_MeanVarAnomalyMV
     if(type == "mean")
     {
-        marshaller = marshall_MeanAnomalyMV
+        marshaller <- marshall_MeanAnomalyMV
     }
     if(type == "robustmean")
     {
-        marshaller = marshall_RobustMeanAnomalyMV
+        marshaller <- marshall_RobustMeanAnomalyMV
     }
     # process beta
-    n = nrow(x)
-    p = ncol(x)
-    s = 1.5*log(n)
+    n <- nrow(x)
+    p <- ncol(x)
+    s <- 1.5*log(n)
     if (is.null(beta))
     {            
         if(type %in% c("mean","robustmean"))
         {
             if (max_lag == 0)
             {
-                to_be_tried = 1:p
-                a_vector = qchisq(seq(p-1,0)/p, 1)
+                to_be_tried <- 1:p
+                a_vector <- qchisq(seq(p-1,0)/p, 1)
         
-                penalty_1 = 2*s + 2*to_be_tried*log(p)
-                penalty_2 = rep(p + 2*s + 2*sqrt(p*s),p)
+                penalty_1 <- 2*s + 2*to_be_tried*log(p)
+                penalty_2 <- rep(p + 2*s + 2*sqrt(p*s),p)
         
-                penalty_3    = 2*(s+log(p)) + 1:p + 2*p*a_vector*dchisq(a_vector, 1) + 2*sqrt((1:p+2*p*a_vector*dchisq(a_vector, 1))*(s+log(p)))
-                penalty_3[p] = 2*(s+log(p)) + p + 2*sqrt(p*(s+log(p)))
+                penalty_3    <- 2*(s+log(p)) + 1:p + 2*p*a_vector*dchisq(a_vector, 1) + 2*sqrt((1:p+2*p*a_vector*dchisq(a_vector, 1))*(s+log(p)))
+                penalty_3[p] <- 2*(s+log(p)) + p + 2*sqrt(p*(s+log(p)))
         
-                beta = diff( c(0,pmin(penalty_1,penalty_2,penalty_3)))   
+                beta <- diff( c(0,pmin(penalty_1,penalty_2,penalty_3)))   
             }
       
             if (max_lag > 0)
             {
-                beta = rep(2*log(p*(max_lag+1)),p)
-                beta[1] = beta[1] + 2*s
+                beta <- rep(2*log(p*(max_lag+1)),p)
+                beta[1] <- beta[1] + 2*s
             }
         }
         if(type == "meanvar")
         {
-            beta = rep(4*log(p*(max_lag+1)),p)
-            beta[1] = beta[1] + 4*s         
+            beta <- rep(4*log(p*(max_lag+1)),p)
+            beta[1] <- beta[1] + 4*s         
         }
     }
     else if(length(beta) == 1)
     {
-        beta = rep(beta,p)
+        beta <- rep(beta,p)
     }
     if(is.null(beta_tilde))
     {
-        beta_tilde = 3*log(length(x))
+        beta_tilde <- 3*log(length(x))
     }
     
     # call the underlying method
@@ -550,8 +550,8 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
                   as.integer(max_seg_len),
                   as.integer(1))
     # construct the S4 capa class instance
-    S = matrix(S,nrow(x),byrow=T)
-    p = ncol(x)
+    S <- matrix(S,nrow(x),byrow=T)
+    p <- ncol(x)
     return(
         capa.class(x,
                    array(beta,c(length(beta),1)),
@@ -574,38 +574,38 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf)
 {
     # configure defaults as required
-    marshaller = marshall_MeanVarAnomaly
+    marshaller <- marshall_MeanVarAnomaly
     if(type == "mean")
     {
-        marshaller = marshall_MeanAnomaly
+        marshaller <- marshall_MeanAnomaly
     }
     else if(type == "robustmean")
     {
-      marshaller = marshall_RobustMeanAnomaly
+      marshaller <- marshall_RobustMeanAnomaly
     }
     if(is.null(beta))
     {
         if(type %in% c("mean","robustmean"))
         {
-	    beta = 3*log(length(x))
+	    beta <- 3*log(length(x))
         }
         else 
         {
-	    beta = 4*log(length(x))
+	    beta <- 4*log(length(x))
         }
     }
     if(length(beta) > 1 & length(beta) != (max_seg_len - min_seg_len + 1))
     {
         warning("beta has a number of entries larger than 1 but not equal to max_seg_len - min_seg_len + 1. Only the first one is kept.")
-        beta = beta[1]
+        beta <- beta[1]
     }
     if(length(beta) == 1)
     {
-        beta = rep(beta,max_seg_len - min_seg_len + 1)
+        beta <- rep(beta,max_seg_len - min_seg_len + 1)
     }
     if(is.null(beta_tilde))
     {
-	beta_tilde = 3*log(length(x))
+	beta_tilde <- 3*log(length(x))
     }
     S<-marshaller(x,
                   as.integer(length(x)),
@@ -710,7 +710,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     }
 
     # check the type 
-    types=list("mean","robustmean","meanvar")
+    types <- list("mean","robustmean","meanvar")
     if(!(type %in% types))
     {
         stop("type has to be one of mean, robustmean, or meanvar")
