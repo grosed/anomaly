@@ -18,12 +18,12 @@ draw.from.post <- function(logprobs, cpt.locs, types, params){
   STATES <- curr.state
   DRAW <- t
 
-  k_N = params[1]
-  p_N = params[2]
-  k_A = params[3]
-  p_A = params[4]
-  pi_N = params[5]
-  pi_A = 1 - pi_N
+  k_N <- params[1]
+  p_N <- params[2]
+  k_A <- params[3]
+  p_A <- params[4]
+  pi_N <- params[5]
+  pi_A <- 1 - pi_N
 
   while (t > 1){
 
@@ -113,12 +113,12 @@ Rsampler <- function(res, gamma = 1/3, no.draws=1000){
   params <- res$params
   
   # sampler params
-  mu_seq = res$sampler_params$mu_seq
-  N = res$sampler_params$N
-  S = res$sampler_params$S
-  p = res$sampler_params$p
+  mu_seq <- res$sampler_params$mu_seq
+  N <- res$sampler_params$N
+  S <- res$sampler_params$S
+  p <- res$sampler_params$p
   
-  n = length(logprobs)
+  n <- length(logprobs)
   prob.states <- matrix(nrow=no.draws, ncol=n)
   # for the heatmap  
   sampled.res = list()
@@ -142,26 +142,26 @@ Rsampler <- function(res, gamma = 1/3, no.draws=1000){
     
   }
   
-  margprob = apply(prob.states,2,sum)/no.draws
-  segmentation = loss(gamma, margprob)
+  margprob <- apply(prob.states,2,sum)/no.draws
+  segmentation <- loss(gamma, margprob)
   
-  welem = which(segmentation == 1)
+  welem <- which(segmentation == 1)
   if (length(welem) > 0){
     
     # put into data frame
-    df = data.frame("start"=NA, "end"=NA, "LogMargLike"=NA)
-    wdiff = c(0, which(diff(welem) != 1), length(welem))
+    df <- data.frame("start"=NA, "end"=NA, "LogMargLike"=NA)
+    wdiff <- c(0, which(diff(welem) != 1), length(welem))
     for (i in 1:(length(wdiff)-1) ){
-      start = welem[(wdiff[i] + 1)]
-      end = welem[wdiff[(i+1)]]
-      ml = P.A(start, end, mu_seq, N, S, p)
-      tempdf = data.frame("start"=start,
+      start <- welem[(wdiff[i] + 1)]
+      end <- welem[wdiff[(i+1)]]
+      ml <- P.A(start, end, mu_seq, N, S, p)
+      tempdf <- data.frame("start"=start,
                           "end"=end,
                           "LogMargLike"=ml)
-      df = rbind(df, tempdf)
+      df <- rbind(df, tempdf)
     }
-    df = df[-1,]
-    df = df[order(df$LogMargLike, decreasing = T), ]
+    df <- df[-1,]
+    df <- df[order(df$LogMargLike, decreasing = T), ]
     return(list(df,margprob,sampled.res))
     
   }
@@ -198,11 +198,11 @@ resample <- function(to.resample,alpha){
     if ( log.u < to.resample[k] ){
       # u <- u + alpha - w
       # first find log(alpha-w) label as log.alpha.weight
-      temp = c( log.alpha ,  to.resample[k] )
-      c = max(temp)
+      temp <- c( log.alpha ,  to.resample[k] )
+      c <- max(temp)
       log.alpha.weight <- c + log( exp( temp[1] - c ) - exp( temp[2] - c )  )
-      temp = c( log.u , log.alpha.weight )
-      c = max(temp)
+      temp <- c( log.u , log.alpha.weight )
+      c <- max(temp)
       log.u <- c + log( sum( exp( temp - c ) ) )
       to.resample[k] <- log.alpha
     }
@@ -211,7 +211,7 @@ resample <- function(to.resample,alpha){
       # u <- u - w
       # and w is not resampled, given weight 0 (-Inf for log(w))
       temp <- c( log.u , to.resample[k] )
-      c = max(temp)
+      c <- max(temp)
       log.u <- c + log( exp( temp[1] - c ) - exp( temp[2] - c )  )
       to.resample[k] <- - Inf
     
@@ -243,10 +243,10 @@ P.A <- function(s, t, mu_seq, N, S, p){
   # evaluating log of quantity
   for (k in 1:length(mu_seq)){
 
-    Z = mu_seq[k] * (S[(t+1),] - S[s,] - mu_seq[k] * (t-s+1)/2) + log(p) - log(1-p)
-    Q = log( 1 + exp(Z) )
-    wQ = which(Q == Inf)
-    Q[wQ] = Z[wQ]
+    Z <- mu_seq[k] * (S[(t+1),] - S[s,] - mu_seq[k] * (t-s+1)/2) + log(p) - log(1-p)
+    Q <- log( 1 + exp(Z) )
+    wQ <- which(Q == Inf)
+    Q[wQ] <- Z[wQ]
     vec[k] <- N*log(1-p) + sum(Q)
     
   }
@@ -267,13 +267,13 @@ Rbard <- function(data, bardparams, mu_seq, alpha = 1e-4){
     stop("Not enough params should be a vector of length 6.")
   }
 
-  k_N = bardparams[1]
-  p_N = bardparams[2]
-  k_A = bardparams[3]
-  p_A = bardparams[4]
-  pi_N = bardparams[5]
-  affected_dim = bardparams[6]
-  pi_A = 1 - pi_N
+  k_N <- bardparams[1]
+  p_N <- bardparams[2]
+  k_A <- bardparams[3]
+  p_A <- bardparams[4]
+  pi_N <- bardparams[5]
+  affected_dim <- bardparams[6]
+  pi_A <- 1 - pi_N
 
   ## stat distribution qN , qA
   EN <- ( k_N * (1-p_N) )/p_N
@@ -284,8 +284,8 @@ Rbard <- function(data, bardparams, mu_seq, alpha = 1e-4){
   qN <- log(EA) - ldenom
 
   # length and dimension of data
-  n = dim(data)[1]
-  N = dim(data)[2]
+  n <- dim(data)[1]
+  N <- dim(data)[2]
   # data summaries etc
   S <- rbind( rep(0,dim(data)[2]) , apply(data , 2 , cumsum) )
   S_2 <- cumsum( c( 0 , rowSums(data^2) ) )
@@ -478,7 +478,7 @@ Rbard <- function(data, bardparams, mu_seq, alpha = 1e-4){
 
   }
 
-  sampler_params = list("mu_seq"=mu_seq, "N"=N, "S"=S, "p"=p)
+  sampler_params <- list("mu_seq"=mu_seq, "N"=N, "S"=S, "p"=p)
   newList <- list("weights" = weights,
                   "locations" = locations,
                   "type" = type,
@@ -805,31 +805,31 @@ get.states <- function(segs, states, n){
 }
 
 
-format_output = function(R){
+format_output <- function(R){
   
-  n = length(R)
-  weights = vector("list", n) 
-  location = vector("list", n)
-  type = vector("list", n)
+  n <- length(R)
+  weights <- vector("list", n) 
+  location <- vector("list", n)
+  type <- vector("list", n)
   for (i in 1:n){
     
-    m = length(R[[i]])
-    tmpweights = numeric(2*m)
-    tmplocs = numeric(2*m)
-    tmptypes = numeric(2*m)
+    m <- length(R[[i]])
+    tmpweights <- numeric(2*m)
+    tmplocs <- numeric(2*m)
+    tmptypes <- numeric(2*m)
     for (j in 1:m){
-      triple = R[[i]][[j]]
-      tmpweights[(2*j-1):(2*j)] = triple[1:2] 
-      tmplocs[(2*j-1):(2*j)] = as.integer(triple[3])
-      tmptypes[(2*j-1):(2*j)] = c(0,1) 
+      triple <- R[[i]][[j]]
+      tmpweights[(2*j-1):(2*j)] <- triple[1:2] 
+      tmplocs[(2*j-1):(2*j)] <- as.integer(triple[3])
+      tmptypes[(2*j-1):(2*j)] <- c(0,1) 
     }
-    weights[[i]] = tmpweights[tmpweights > -Inf]
-    location[[i]] = tmplocs[tmpweights > -Inf]
-    type[[i]] = tmptypes[tmpweights > -Inf]
+    weights[[i]] <- tmpweights[tmpweights > -Inf]
+    location[[i]] <- tmplocs[tmpweights > -Inf]
+    type[[i]] <- tmptypes[tmpweights > -Inf]
     
   }
   
-  filtering = list("weights"=weights, "locations"=location, "type"=type)
+  filtering <- list("weights"=weights, "locations"=location, "type"=type)
   return(filtering)
   
 }
@@ -1030,23 +1030,23 @@ setMethod("collective_anomalies",signature=list("bard.sampler.class"),function(o
 })
 
 
-check.k = function(input){
+check.k <- function(input){
   
-  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0)
+  res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0)
   return(res)
   
 }
 
-check.p = function(input){
+check.p <- function(input){
   
-  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0) && (input < 1)
+  res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0) && (input < 1)
   return(res)
   
 }
 
-check.lu = function(input){
+check.lu <- function(input){
   
-  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input))
+  res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input))
   return(res)
   
 }
