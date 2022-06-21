@@ -34,8 +34,8 @@
 pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robustscale)
 {
     # reflect renamed variable
-    Lmax = max_seg_len
-    Lmin = min_seg_len
+    Lmax <- max_seg_len
+    Lmin <- min_seg_len
     # check the data
     x<-to_array(x)
     if(!is_array(x))
@@ -83,7 +83,7 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     }
     ## LB ADDED - if number of variates < default alpha (2) -> alpha = 1
     if(dim(x)[2] < alpha){
-      alpha = 1
+      alpha <- 1
     }
     if(is.null(lambda))
     {
@@ -91,7 +91,7 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
       n_cols<-dim(x)[2]
       if (n_cols < 3){
         lambda <- 10
-        message = paste("The data has only N =", n_cols, "variates.", "Since the value of",  "\U03BB", "is based on asymptotic theory as the number of variates, N tends to infinity we suggest using simulations to determine a data-driven threshold to control the number of overselections. A default value of", "\U03BB = 10 has been used here.")
+        message <- paste("The data has only N =", n_cols, "variates.", "Since the value of",  "\U03BB", "is based on asymptotic theory as the number of variates, N tends to infinity we suggest using simulations to determine a data-driven threshold to control the number of overselections. A default value of", "\U03BB = 10 has been used here.")
         warning(message)
       }
       else{
@@ -149,16 +149,16 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
 }
 
 
-check.alpha = function(input){
+check.alpha <- function(input){
   
-  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0) && (!is.infinite(input)) && (input%%1 == 0)
+  res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0) && (!is.infinite(input)) && (input%%1 == 0)
   return(res)
   
 }
 
-check.lambda = function(input){
+check.lambda <- function(input){
   
-  res = (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0)
+  res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0)
   return(res)
   
 }
