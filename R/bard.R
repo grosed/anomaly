@@ -563,13 +563,12 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' This parameter is relatively robust to being mis-specified and is studied empirically in Section 5.1 of \insertCite{bardwell2017;textual}{anomaly}.
 #' @param lower The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. Defaults to \deqn{2\sqrt{\frac{\log(n)}{n}}.}
 #' @param upper The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. 
-#' Defaults to the largest standardised value of x, i.e. \code{max(transform(x))}.
+#' Defaults to the largest value of x.
 #' @param alpha Threshold used to control the resampling in the approximation of the posterior distribution at each time step. A sensible default is 1e-4.
 #' Decreasing alpha increases the accuracy of the posterior distribution but also increases the computational complexity of the algorithm. 
 #' @param h The step size in the numerical integration used to find the marginal likelihood. 
 #' The quadrature points are located from \code{lower} to \code{upper} in steps of \code{h}. Defaults to 0.25. 
 #' Decreasing this parameter increases the accuracy of the calculation for the marginal likelihood but increases computational complexity.   
-#' @param transform A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
 #' 
 #' @section Notes on default hyper-parameters:
 #' This function gives certain default hyper-parameters for the two segment length distributions.
@@ -598,7 +597,7 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' plot(sampler.res,marginals=TRUE)
 #' }
 #' @export
-bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(1-p_A), pi_N = 0.9, paffected = 0.05, lower = 2*sqrt(log(nrow(x))/nrow(x)), upper = max(transform(x)), alpha=1e-4, h=0.25, transform=robustscale)
+bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(1-p_A), pi_N = 0.9, paffected = 0.05, lower = 2*sqrt(log(nrow(x))/nrow(x)), upper = max(x), alpha=1e-4, h=0.25)
 {
     # check the data
     x<-to_array(x)
@@ -622,12 +621,6 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
     {
         stop("x must be of type numeric")
     }
-    if(!is_function(transform))
-    {
-      stop("transform must be a function")
-    }
-    # transform the data
-    x <- transform(x)
     
     # now convert the data to a list of vectors for marshalling to Rcpp
     # data<-Map(function(i) unlist(data[i,]),1:nrow(data))

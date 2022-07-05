@@ -13,10 +13,9 @@ bard(
   pi_N = 0.9,
   paffected = 0.05,
   lower = 2 * sqrt(log(nrow(x))/nrow(x)),
-  upper = max(transform(x)),
+  upper = max(x),
   alpha = 1e-04,
-  h = 0.25,
-  transform = robustscale
+  h = 0.25
 )
 }
 \arguments{
@@ -38,7 +37,7 @@ This parameter is relatively robust to being mis-specified and is studied empiri
 \item{lower}{The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. Defaults to \deqn{2\sqrt{\frac{\log(n)}{n}}.}}
 
 \item{upper}{The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. 
-Defaults to the largest standardised value of x, i.e. \code{max(transform(x))}.}
+Defaults to the largest value of x.}
 
 \item{alpha}{Threshold used to control the resampling in the approximation of the posterior distribution at each time step. A sensible default is 1e-4.
 Decreasing alpha increases the accuracy of the posterior distribution but also increases the computational complexity of the algorithm.}
@@ -46,8 +45,6 @@ Decreasing alpha increases the accuracy of the posterior distribution but also i
 \item{h}{The step size in the numerical integration used to find the marginal likelihood. 
 The quadrature points are located from \code{lower} to \code{upper} in steps of \code{h}. Defaults to 0.25. 
 Decreasing this parameter increases the accuracy of the calculation for the marginal likelihood but increases computational complexity.}
-
-\item{transform}{A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.}
 }
 \value{
 An instance of the S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.

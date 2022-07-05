@@ -13,7 +13,6 @@
 #' @param max_seg_len A positive integer (\code{max_seg_len} > 0) corresponding to the maximum segment length. This parameter corresponds to Lmax in Jeng et al. (2012). The default value is 10. 
 #' @param min_seg_len A positive integer (\code{max_seg_len} >= \code{min_seg_len} > 0) corresponding to the minimum segment length. This parameter corresponds to Lmin in Jeng et al. (2012).
 #' The default value is 1. 
-#' @param transform A function used to transform the data prior to analysis. The default value is to scale the data using the median and the median absolute deviation.
 #'
 #' @return An instance of an S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
 #' 
@@ -31,7 +30,7 @@
 #'
 #' @export
 
-pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robustscale)
+pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1)
 {
     # reflect renamed variable
     Lmax <- max_seg_len
@@ -58,12 +57,7 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1,transform=robu
     {
       stop("x contains Inf values")
     }
-    if(!is_function(transform))
-    {
-      stop("transform must be a function")
-    }
-    # transform data
-    Xi<-transform(x)
+    Xi<-x
     # check dimensions,types and values
     if(!check.alpha(Lmax))
     {

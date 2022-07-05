@@ -9,11 +9,11 @@
 \alias{plot,pass.class,ANY-method}
 \title{Visualisation of data, collective and point anomalies.}
 \usage{
-\S4method{plot}{bard.sampler.class,ANY}(x, subset, variate_names, tile_plot, marginals = FALSE)
+\S4method{plot}{bard.sampler.class}(x, subset, variate_names, tile_plot, marginals = FALSE)
 
-\S4method{plot}{capa.class,ANY}(x, subset, variate_names = FALSE, tile_plot, epoch = nrow(x@data))
+\S4method{plot}{capa.class}(x, subset, variate_names = FALSE, tile_plot, epoch = nrow(x@data))
 
-\S4method{plot}{pass.class,ANY}(x, subset, variate_names = FALSE, tile_plot)
+\S4method{plot}{pass.class}(x, subset, variate_names = FALSE, tile_plot)
 }
 \arguments{
 \item{x}{An instance of an S4 class produced by \code{\link{capa}}, \code{\link{pass}}, or \code{\link{sampler}}.}
