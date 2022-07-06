@@ -69,9 +69,7 @@ These may not be suitable for all problems and the user is encouraged to tune th
 \examples{
 
 library(anomaly)
-set.seed(0)
-sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
-                   duration=6,proportions=c(0.04,0.06,0.08))
+data(simulated)
 # run bard
 bard.res<-bard(sim.data, alpha = 1e-3, h = 0.5)
 sampler.res<-sampler(bard.res)

@@ -22,9 +22,7 @@ Draw samples from the posterior distribution to give the locations of anomalous 
 }
 \examples{
 library(anomaly)
-set.seed(0)
-sim.data<-simulate(n=500,p=50,mu=2,locations=c(100,200,300),
-duration=6,proportions=c(0.04,0.06,0.08))
+data(simulated)
 # run bard
 res<-bard(sim.data, alpha = 1e-3, h = 0.5)
 # sample 

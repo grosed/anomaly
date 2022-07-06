@@ -25,5 +25,4 @@ exportMethods(plot,summary,show,point_anomalies,collective_anomalies)
 export(capa)
 export(bard)
 export(sampler)
-export(simulate)
 
