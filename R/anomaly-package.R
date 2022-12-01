@@ -4,6 +4,7 @@
 #' 
 #' @name anomaly-package
 #' @docType package
+#' @useDynLib anomaly, .registration = TRUE
 #' @importFrom methods new as
 #' @importFrom stats dnbinom pnbinom runif dchisq end is.ts qchisq start var
 #' @importFrom utils tail
