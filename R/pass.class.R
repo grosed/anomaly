@@ -69,13 +69,10 @@ pass.tile.plot<-function(x,subset=1:ncol(x@data),variate_names=FALSE)
     return(p)
 }
 
-#' @name plot-pass.class
-#'
-#' @docType methods
 #'
 #' @rdname plot-methods
 #'
-#' @aliases plot,pass.class,ANY-method
+#' @aliases plot,pass.class
 #'
 #' @export
 setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names=FALSE,tile_plot)
@@ -120,7 +117,7 @@ setMethod("plot",signature=list("pass.class"),function(x,subset,variate_names=FA
 
 #' @name summary
 #'
-#' @docType methods
+# #' @docType methods
 #' 
 #' @rdname summary-methods
 #'
@@ -143,7 +140,7 @@ setMethod("summary",signature=list("pass.class"),function(object,...)
 
 #' @name show
 #'
-#' @docType methods
+# #' @docType methods
 #'
 #' @aliases show,pass.class-method
 #'
@@ -163,14 +160,12 @@ setMethod("show",signature=list("pass.class"),function(object)
 
 #' @name collective_anomalies
 #'
-#' @docType methods
-#'
+# #' @docType methods
+#' @include generics.R
 #' @rdname collective_anomalies-methods
 #'
 #' @aliases collective_anomalies,pass.class-method
 #'
-#' 
-#' 
 #' @export
 setMethod("collective_anomalies",signature=list("pass.class"),function(object)
 {

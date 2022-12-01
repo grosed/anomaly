@@ -861,16 +861,12 @@ sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
 }
 
 
-#' @name plot
-#'
-#' @docType methods
-#'
 #' @param marginals Logical value. If \code{marginals=TRUE} the plot will include visualisations of the marginal probablities of each time point being anomalous.
 #' The defualt is \code{marginals=FALSE}. 
 #' 
 #' @rdname plot-methods
 #'
-#' @aliases plot,bard.sampler.class,ANY-method
+#' @aliases plot,bard.sampler.class
 #'
 #' @export
 setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_names,tile_plot,marginals=FALSE)
@@ -945,7 +941,7 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
 
 #' @name show
 #'
-#' @docType methods
+# #' @docType methods
 #'
 #' @rdname show-methods
 #'
@@ -984,14 +980,13 @@ setMethod("summary",signature=list("bard.sampler.class"),function(object,...)
 
 #' @name show
 #'
-#' @docType methods
+# #' @docType methods
 #'
 #' @rdname show-methods
 #'
 #' @aliases show,bard.sampler.class-method
 #'
 #' @export
-if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",function(object,...) {standardGeneric("collective_anomalies")})}
 setMethod("show",signature=list("bard.sampler.class"),function(object)
 {
     summary(object)
@@ -1004,15 +999,15 @@ setMethod("show",signature=list("bard.sampler.class"),function(object)
 
 #' @name collective_anomalies
 #'
-#' @docType methods
-#'
+# #' @docType methods
+#' @include generics.R
 #' @rdname collective_anomalies-methods
 #'
 #' @aliases collective_anomalies,bard.sampler.class-method
 #'
 #' 
 #' 
-#' @export
+# #' @export
 setMethod("collective_anomalies",signature=list("bard.sampler.class"),function(object)
 {
     return(object@sampler.result)
@@ -1030,7 +1025,6 @@ check.p <- function(input){
   
   res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (!is.infinite(input)) && (input > 0) && (input < 1)
   return(res)
-  
 }
 
 check.lu <- function(input){

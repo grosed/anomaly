@@ -80,29 +80,13 @@ summary_show_common<-function(object,epoch=nrow(object@data))
 }
 
 
-#' Point anomaly location and strength.
-#'
-#' @name point_anomalies
-#'
-#' @description Creates a data frame containing point anomaly locations and strengths as detected by \code{\link{capa}}.
-#'  
-#' Returns a data frame with columns containing the position, strength, and (for multivariate data) the variate number.
-#' 
-#' @docType methods
-#'
-#' @rdname point_anomaly-methods
-#'
-#' @seealso \code{\link{capa}}. 
-#'
-if(!isGeneric("point_anomalies")) {setGeneric("point_anomalies",function(object,...) {standardGeneric("point_anomalies")})}
-
 #' @name point_anomalies
 #' @param object An instance of an S4 class produced by \code{\link{capa}}.
 #' @param epoch Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
 #' of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.
 #' 
 #' @return A data frame. 
-#'
+#' @include generics.R
 #' @rdname point_anomaly-methods
 #'
 #' @aliases point_anomalies,capa.class-method
@@ -224,26 +208,6 @@ merge_collective_anomalies<-function(object,epoch)
 
 
 
-#' Collective anomaly location, lags, and mean/variance changes.
-#'
-#' @name collective_anomalies
-#'
-#' @description Creates a data frame containing collective anomaly locations, lags and changes in mean and variance as detected by \code{\link{capa}}, \code{\link{pass}}, and \code{\link{sampler}}. 
-#'
-#' For an object created by \code{\link{capa}} returns a data frame with columns containing the start and end position of the anomaly, the change in mean
-#' due to the anomaly. For multivariate data a data frame with columns containing the start and end position of the anomaly, the variates 
-#' affected by the anomaly, as well as their the start and end lags. When \code{type="mean"/"robustmean"} only the change in mean is reported. When \code{type="meanvar"} both the change in mean and
-#' change in variance are included. If \code{merged=FALSE} (the default), then all the collective anomalies are processed individually even if they are common across multiple variates.
-#' If \code{merged=TRUE}, then the collective anomalies are grouped together across all variates that they appear in.
-#'
-#' For an object produced by \code{\link{pass}} or \code{sampler} returns a data frame containing the start, end and strength of the collective anomalies.
-#'
-#' 
-#' @docType methods
-#'
-#' @rdname collective_anomalies-methods
-#'
-if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",function(object,...) {standardGeneric("collective_anomalies")})}
 
 #' @name collective_anomalies
 #' @param object An instance of an S4 class produced by \code{\link{capa}}.
@@ -253,7 +217,7 @@ if(!isGeneric("collective_anomalies")) {setGeneric("collective_anomalies",functi
 #' of multivariate collective anomalies. Default value is \code{merged=FALSE}. Note - \code{merged=TRUE} is currently only available when \code{type="mean"}.  
 #' 
 #' @return A data frame.
-#' 
+#' @include generics.R
 #' @rdname collective_anomalies-methods
 #'
 #' @aliases collective_anomalies,capa.class-method
@@ -932,8 +896,6 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 
 #' Visualisation of data, collective and point anomalies.
 #'
-#' @name plot
-#'
 #' @description Plot methods for S4 objects returned by \code{\link{capa}}, \code{\link{pass}}, and \code{\link{sampler}}. 
 #'
 #' The plot can either be a line plot or a tile plot, the type produced depending on the options provided to the \code{plot} function and/or the dimensions of the
@@ -954,7 +916,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #'
 #' @rdname plot-methods
 #'
-#' @aliases plot,capa.class,ANY-method
+#' @aliases plot,capa.class
 #' 
 #' @seealso \code{\link{capa}},\code{\link{pass}},\code{\link{sampler}}.
 #'
