@@ -11,6 +11,8 @@
 \usage{
 \S4method{show}{bard.class}(object)
 
+\S4method{show}{bard.sampler.class}(object)
+
 \S4method{show}{capa.class}(object)
 
 \S4method{show}{pass.class}(object)
