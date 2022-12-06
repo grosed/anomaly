@@ -553,7 +553,7 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' Inference is conducted by solving a set of recursions. To reduce computational and storage costs a resampling 
 #' step is included.
 #' 
-#' @param x An n x p real matrix representing n observations of p variates. The time series data classes ts, xts, and zoo are also supported.
+#' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.
 #' @param p_N Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}.}
 #' @param p_A Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \deqn{\frac{5}{n}.}
 #' @param k_N Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.

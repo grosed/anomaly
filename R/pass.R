@@ -5,9 +5,9 @@
 #' presence or absence of a collective anomaly across the components. It uses Circular Binary Segmentation to detect multiple collective anomalies.
 #' 
 #' 
-#' @param x An n x p real matrix representing n observations of p variates. The time series data classes ts, xts, and zoo are also supported.
+#' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.
 #' @param alpha A positive integer > 0. This value is used to stabilise the higher criticism based test statistic used by PASS leading to a better finite sample familywise error rate. 
-#' Anomalies affecting fewer than alpha components will however in all likelihood escape detection.
+#' Anomalies affecting fewer than alpha components will however in all likelihood escape detection. The default is 2.
 #' @param lambda A positive real value setting the threshold value for the familywise Type 1 error. The default value
 #' is \eqn{(1.1 {\rm log}(n \times max\_seg\_len) +2 {\rm log}({\rm log}(p))) / \sqrt{{\rm log}({\rm log}(p))}}. 
 #' @param max_seg_len A positive integer (\code{max_seg_len} > 0) corresponding to the maximum segment length. This parameter corresponds to Lmax in Jeng et al. (2012). The default value is 10. 
