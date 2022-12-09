@@ -1,5 +1,6 @@
 
-.capa.class<-setClass("capa.class",representation(data="array",beta="array",beta_tilde="vector",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
+
+.capa.class<-setClass("capa.class",representation(data="matrix",beta="vector",beta_tilde="numeric",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
                                                   transform="function",anomaly_types="vector",anomaly_positions="vector",components="array",start_lags="array",end_lags="array"))
 
 capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
@@ -380,46 +381,29 @@ anomalies<-function(x,epoch=NULL)
 }
 
 
- 
 
-# not exported - helper function used by capa function
-capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
-{
-    browser()
-    # configure defaults as required
-    marshaller <- marshall_MeanVarAnomalyMV
-    if(type == "mean")
-    {
-        marshaller <- marshall_MeanAnomalyMV
-    }
-    if(type == "robustmean")
-    {
-        marshaller <- marshall_RobustMeanAnomalyMV
-    }
-    # process beta
-    n <- nrow(x)
-    p <- ncol(x)
-    s <- 1.5*log(n)
-    if (is.null(beta))
-    {            
-        if(type %in% c("mean","robustmean"))
-        {
-            if (max_lag == 0)
-            {
-                to_be_tried <- 1:p
+
+## NOT EXPORTED - helper function for computing beta
+compute_beta <- function(beta,type,n,p,max_lag,max_seg_len,min_seg_len){
+    ## process beta
+    ##n <- nrow(x)
+    ##p <- ncol(x)
+    #browser()
+    ## populate if null
+    if(is.null(beta)){
+        s <- 1.5*log(n)
+        if(type %in% c("mean","robustmean")){
+            if (max_lag == 0){
+                
                 a_vector <- qchisq(seq(p-1,0)/p, 1)
-        
-                penalty_1 <- 2*s + 2*to_be_tried*log(p)
-                penalty_2 <- rep(p + 2*s + 2*sqrt(p*s),p)
-        
-                penalty_3    <- 2*(s+log(p)) + 1:p + 2*p*a_vector*dchisq(a_vector, 1) + 2*sqrt((1:p+2*p*a_vector*dchisq(a_vector, 1))*(s+log(p)))
-                penalty_3[p] <- 2*(s+log(p)) + p + 2*sqrt(p*(s+log(p)))
-        
-                beta <- diff( c(0,pmin(penalty_1,penalty_2,penalty_3)))   
-            }
-      
-            if (max_lag > 0)
-            {
+                tmp <- 2*(s+log(p)) + 1:p + 2*p*a_vector*dchisq(a_vector, 1) +
+                    2*sqrt((1:p+2*p*a_vector*dchisq(a_vector, 1))*(s+log(p)))
+                tmp[p] <- 2*(s+log(p)) + p + 2*sqrt(p*(s+log(p)))
+                beta <- pmin(2*s + 2*(1:p)*log(p),
+                             rep(p + 2*s + 2*sqrt(p*s),p),
+                             tmp)
+                beta <- diff( c(0,beta) )
+            }else{
                 beta <- rep(2*log(p*(max_lag+1)),p)
                 beta[1] <- beta[1] + 2*s
             }
@@ -427,118 +411,182 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
         if(type == "meanvar")
         {
             beta <- rep(4*log(p*(max_lag+1)),p)
-            beta[1] <- beta[1] + 4*s         
+            beta[1] <- beta[1] + 4*s
+            if(p==1){ beta <- beta /1.5 } ## TODO this matches old code bu seems odd is s set wrong??
         }
     }
-    else if(length(beta) == 1)
-    {
-        beta <- rep(beta,p)
+    ## scale to correct dim for C code....
+    if(length(beta) == 1){ beta <- rep(beta,p) }
+    if( (p==1) & length(beta)==1 ){ ## this allows for different penalisation of diffeent lengths in univariate case
+        p <- c(1,max_seg_len - min_seg_len + 1)
+        beta <- rep(beta,p[2])
     }
-    if(is.null(beta_tilde))
-    {
-        beta_tilde <- 3*log(length(x))
+
+    ## check properties
+    if(!(length(beta) %in% p) || !all(is.finite(beta)) || !all(beta>=0) ){
+        stop( paste("beta should be a numeric vector >=0 of length",paste(p,collapse=" or ")) )
     }
     
-    # call the underlying method
-    S<-marshaller(as.vector(x),
-                  as.integer(nrow(x)),
-                  as.integer(ncol(x)),
-                  as.integer(max_lag),
-                  as.integer(min_seg_len),
-                  beta,
-                  beta_tilde,
-                  as.integer(max_seg_len),
-                  as.integer(1))
-    # construct the S4 capa class instance
-    S <- matrix(S,nrow(x),byrow=T)
-    p <- ncol(x)
-    return(
-        capa.class(x,
-                   array(beta,c(length(beta),1)),
-                   array(beta_tilde,c(1,1)),
-                   as.integer(min_seg_len),
-                   as.integer(max_seg_len),
-                   integer(max_lag),
-                   type,
-                   function() return(),
-                   S[,1], 
-                   S[,2],
-                   matrix(S[,2 + 0*p + 1:p],ncol=p),
-                   matrix(S[,2 + 1*p + 1:p],ncol=p),  
-                   matrix(S[,2 + 2*p + 1:p],ncol=p))
-        )
+    return(beta)
 }
 
 
-# not exported - helper function for capa function
-capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf)
-{
-    # configure defaults as required
-    marshaller <- marshall_MeanVarAnomaly
-    if(type == "mean")
-    {
-        marshaller <- marshall_MeanAnomaly
-    }
-    else if(type == "robustmean")
-    {
-      marshaller <- marshall_RobustMeanAnomaly
-    }
-    if(is.null(beta))
-    {
-        if(type %in% c("mean","robustmean"))
-        {
-	    beta <- 3*log(length(x))
-        }
-        else 
-        {
-	    beta <- 4*log(length(x))
-        }
-    }
-    if(length(beta) > 1 & length(beta) != (max_seg_len - min_seg_len + 1))
-    {
-        warning("beta has a number of entries larger than 1 but not equal to max_seg_len - min_seg_len + 1. Only the first one is kept.")
-        beta <- beta[1]
-    }
-    if(length(beta) == 1)
-    {
-        beta <- rep(beta,max_seg_len - min_seg_len + 1)
-    }
-    if(is.null(beta_tilde))
-    {
-	beta_tilde <- 3*log(length(x))
-    }
-    S<-marshaller(x,
-                  as.integer(length(x)),
-                  as.integer(min_seg_len),
-                  as.integer(max_seg_len),
-                  beta,
-                  beta_tilde,
-                  as.integer(1))
-		     blob<-list(x,
-               as.integer(length(x)),
-               as.integer(min_seg_len),
-               as.integer(max_seg_len),
-               beta,
-               beta_tilde,
-               as.integer(1),
-	       S)	       
-    # construct the S4 capa class instance
-    return(
-	capa.class(array(x,c(length(x),1)), 
-		     array(beta,c(length(beta),1)),
-                     array(beta_tilde,c(1,1)),
-                     as.integer(min_seg_len),
-                     as.integer(max_seg_len),
-                     integer(),
-                     type,
-                     function() return(),
-                     S[seq(1,length(S),2)],
-                     S[seq(2,length(S),2)],
-                     array(1,c(length(x),1)), 
-                     array(0,c(length(x),1)), 
-                     array(0,c(length(x),1))) 
-        )
-}
+    
+
+## # not exported - helper function used by capa function
+## capa.mv_call<-function(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
+## {
+    
+##     ## configure defaults as required
+##     marshaller <- switch(type,
+##                          "meanvar" = marshall_MeanVarAnomalyMV,
+##                          "mean" = marshall_MeanAnomalyMV,
+##                          "robustmean" = marshall_RobustMeanAnomalyMV,
+##                          stop("Unknown type"))
+    
+##     beta <- compute_beta(beta,type,nrow(x),ncol(x),max_lag,max_seg_len,min_seg_len)                                                       ## THE code below is left in aid checking compute_beta             
+##     ## }
+##     ## # process beta
+##     ## n <- nrow(x)
+##     ## p <- ncol(x)
+##     ## s <- 1.5*log(n)
+##     ## if (is.null(beta))
+##     ## {            
+##     ##     if(type %in% c("mean","robustmean"))
+##     ##     {
+##     ##         if (max_lag == 0)
+##     ##         {
+##     ##             to_be_tried <- 1:p
+##     ##             a_vector <- qchisq(seq(p-1,0)/p, 1)
+        
+##     ##             penalty_1 <- 2*s + 2*to_be_tried*log(p)
+##     ##             penalty_2 <- rep(p + 2*s + 2*sqrt(p*s),p)
+        
+##     ##             penalty_3    <- 2*(s+log(p)) + 1:p + 2*p*a_vector*dchisq(a_vector, 1) + 2*sqrt((1:p+2*p*a_vector*dchisq(a_vector, 1))*(s+log(p)))
+##     ##             penalty_3[p] <- 2*(s+log(p)) + p + 2*sqrt(p*(s+log(p)))
+        
+##     ##             beta <- diff( c(0,pmin(penalty_1,penalty_2,penalty_3)))   
+##     ##         }
+      
+##     ##         if (max_lag > 0)
+##     ##         {
+##     ##             beta <- rep(2*log(p*(max_lag+1)),p)
+##     ##             beta[1] <- beta[1] + 2*s
+##     ##         }
+##     ##     }
+##     ##     if(type == "meanvar")
+##     ##     {
+##     ##         beta <- rep(4*log(p*(max_lag+1)),p)
+##     ##         beta[1] <- beta[1] + 4*s         
+##     ##     }
+##     ## }
+##     ## else if(length(beta) == 1)
+##     ## {
+##     ##     beta <- rep(beta,p)
+##     ## }
+##     ## if(is.null(beta_tilde))
+##     ## {
+##     ##     beta_tilde <- 3*log(length(x))
+##     ## }
+    
+##     # call the underlying method
+##     S<-marshaller(as.vector(x),
+##                   as.integer(nrow(x)),
+##                   as.integer(ncol(x)),
+##                   as.integer(max_lag),
+##                   as.integer(min_seg_len),
+##                   beta,
+##                   beta_tilde,
+##                   as.integer(max_seg_len),
+##                   as.integer(1))
+##     # construct the S4 capa class instance
+##     S <- matrix(S,nrow(x),byrow=T)
+##     p <- ncol(x)
+##     return(
+##         capa.class(x,
+##                    array(beta,c(length(beta),1)),
+##                    array(beta_tilde,c(1,1)),
+##                    as.integer(min_seg_len),
+##                    as.integer(max_seg_len),
+##                    integer(max_lag),
+##                    type,
+##                    function() return(),
+##                    S[,1], 
+##                    S[,2],
+##                    matrix(S[,2 + 0*p + 1:p],ncol=p),
+##                    matrix(S[,2 + 1*p + 1:p],ncol=p),  
+##                    matrix(S[,2 + 2*p + 1:p],ncol=p))
+##         )
+## }
+
+
+## # not exported - helper function for capa function
+## capa.uv_call<-function(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
+## {
+##     ## configure defaults as required
+##     marshaller <- switch(type,
+##                          "meanvar" = marshall_MeanVarAnomaly,
+##                          "mean" = marshall_MeanAnomaly,
+##                          "robustmean" = marshall_RobustMeanAnomaly,
+##                          stop("Unknown type"))
+##     beta <- compute_beta(beta,type,nrow(x),ncol(x),0,max_seg_len,min_seg_len)
+##     ## THE code below is left in aid checking compute_beta 
+##     ## if(is.null(beta))
+##     ## {
+##     ##     if(type %in% c("mean","robustmean"))
+##     ##     {
+##     ##         beta <- 3*log(length(x))
+##     ##     }
+##     ##     else 
+##     ##     {
+##     ##         beta <- 4*log(length(x))
+##     ##     }
+##     ## }
+##     ## if(length(beta) > 1 & length(beta) != (max_seg_len - min_seg_len + 1))
+##     ## {
+##     ##     warning("beta has a number of entries larger than 1 but not equal to max_seg_len - min_seg_len + 1. Only the first one is kept.")
+##     ##     beta <- beta[1]
+##     ## }
+##     ## if(length(beta) == 1)
+##     ## {
+##     ##     beta <- rep(beta,max_seg_len - min_seg_len + 1)
+##     ## }
+##     ## if(is.null(beta_tilde))
+##     ## {
+##     ##     beta_tilde <- 3*log(length(x))
+##     ## }
+##     S<-marshaller(x,
+##                   as.integer(length(x)),
+##                   as.integer(min_seg_len),
+##                   as.integer(max_seg_len),
+##                   beta,
+##                   beta_tilde,
+##                   as.integer(1))
+## 		     blob<-list(x,
+##                as.integer(length(x)),
+##                as.integer(min_seg_len),
+##                as.integer(max_seg_len),
+##                beta,
+##                beta_tilde,
+##                as.integer(1),
+## 	       S)	       
+##     # construct the S4 capa class instance
+##     return(
+## 	capa.class(array(x,c(length(x),1)), 
+## 		     array(beta,c(length(beta),1)),
+##                      array(beta_tilde,c(1,1)),
+##                      as.integer(min_seg_len),
+##                      as.integer(max_seg_len),
+##                      integer(),
+##                      type,
+##                      function() return(),
+##                      S[seq(1,length(S),2)],
+##                      S[seq(2,length(S),2)],
+##                      array(1,c(length(x),1)), 
+##                      array(0,c(length(x),1)), 
+##                      array(0,c(length(x),1))) 
+##         )
+## }
 
 
 #' A technique for detecting anomalous segments and points based on CAPA.
@@ -575,7 +623,7 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #'
 capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean"),min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
-    browser()
+
     ## data needs to be in the form of an array
     x<-to_array(x)
 
@@ -586,6 +634,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
     max_lag <- int_in_range(max_lag,0,nrow(x),"max_lag")
     if( (ncol(x)==1) & (max_lag != 0)){
         warning("max_lag != 0 redundant for a univariate analysis")
+        max_lag <- 0 ## since used in later code
     }
 
     ## check min_seg_len
@@ -600,55 +649,103 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
     max_seg_len <- int_in_range(min_seg_len,lwr=min_seg_len,upr=nrow(x),lbl="max_seg_len")
     
     ## check beta_tilde
-    if(!is.null(beta_tilde))
-        {
-            if(!is_numeric(beta_tilde))
-            {
-                stop("beta_tilde must be numeric")
-            }
-            if(length(beta_tilde) != 1)
-            {
-                stop("beta_tilde must be a single scalar value")
-            }
-            if(beta_tilde < 0)
-            {
-                stop("beta_tilde must be >= 0")
-            }
-        }
-    # check beta
-    if(!is.null(beta))
-    {
-        if(!is_numeric(beta))
-        {
-            stop("beta must be numeric")
-        }
-        if(!(all(beta >= 0)))
-        {
-                stop("beta values must be >= 0")
-        }
-        if(!(all(beta_tilde >= 0)))
-        {
-                stop("beta_tilde values must be >= 0")
-        }
-    }
-    # call appropriate helper function
-    tryCatch(
-    {
-        if(ncol(x)==1)
-        {
-            res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
-            res@data<-x
-            return(res)
-        }
-        else
-        {
-            res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
-            res@data<-x
-            return(res)
-        }
-    },error = function(e) {print(e$message);stop();})
+    if(is.null(beta_tilde)){ beta_tilde <- 3*log(length(x)) } ## TODO - check same in uni and multivarite cases..
     
+    if( !(length(beta_tilde)==1) || !is.finite(beta_tilde) || (beta_tilde < 0) ){
+        stop("beta_tilde must be numeric value >= 0")
+    }
+    
+    ## check beta
+    beta <- compute_beta(beta,type,nrow(x),ncol(x),max_lag,max_seg_len,min_seg_len)
+
+    ## work out what we are calling and call it
+    ## TODO tidy up when the C code is checked /rewritten
+    if(ncol(x)==1){
+        marshaller <- switch(type,
+                             "meanvar" = marshall_MeanVarAnomaly,
+                             "mean" = marshall_MeanAnomaly,
+                             "robustmean" = marshall_RobustMeanAnomaly,
+                             stop("Unknown type"))
+        S <- marshaller(as.vector(x),
+                        nrow(x),
+                        min_seg_len,
+                        max_seg_len,
+                        beta,
+                        beta_tilde,
+                        as.integer(1))
+        out <- capa.class(x,
+                          beta,
+                          beta_tilde,
+                          min_seg_len,
+                          max_seg_len,
+                          max_lag,
+                          type,
+                          function() return(),
+                          S[seq(1,length(S),2)],
+                          S[seq(2,length(S),2)],
+                          rep(1,nrow(x)),
+                          rep(0,nrow(x)),
+                          rep(0,nrow(x))
+                          )
+    }else{
+        ## configure defaults as required
+        marshaller <- switch(type,
+                             "meanvar" = marshall_MeanVarAnomalyMV,
+                             "mean" = marshall_MeanAnomalyMV,
+                             "robustmean" = marshall_RobustMeanAnomalyMV,
+                             stop("Unknown type"))
+        # call the underlying method
+        S<-marshaller(as.vector(x),
+                      nrow(x),
+                      ncol(x),
+                      max_lag,
+                      min_seg_len,
+                      beta,
+                      beta_tilde,
+                      max_seg_len,
+                      as.integer(1))
+        ## construct the S4 capa class instance
+        S <- matrix(S,nrow(x),byrow=T)
+        p <- ncol(x)
+        out <- capa.class(x,
+                          beta,
+                          beta_tilde,
+                          min_seg_len,
+                          max_seg_len,
+                          max_lag,
+                          type,
+                          function() return(),
+                          S[,1], 
+                          S[,2],
+                          S[,2 + 0*p + 1:p],
+                          S[,2 + 1*p + 1:p],  
+                          S[,2 + 2*p + 1:p])
+    }
+    out@data<-x ## TODO - not sure why this is here - x already passed to the class????
+    return(out)
 }
+
+
+
+##     # call appropriate helper function
+##     tryCatch(
+##     {
+##         if(ncol(x)==1)
+##         {
+##             res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
+##             res@data<-x
+##             return(res)
+##         }
+##         else
+##         {
+##             res<-capa.mv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len,max_lag)
+##             res@data<-x
+##             return(res)
+##         }
+##     },error = function(e) {print(e$message);stop();})
+
+    
+## }
 
 
 capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@data),variate_names=FALSE)
