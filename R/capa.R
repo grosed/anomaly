@@ -385,6 +385,7 @@ anomalies<-function(x,epoch=NULL)
 # not exported - helper function used by capa function
 capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
+    browser()
     # configure defaults as required
     marshaller <- marshall_MeanVarAnomalyMV
     if(type == "mean")
@@ -574,11 +575,12 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #'
 capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean"),min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
+    browser()
     ## data needs to be in the form of an array
     x<-to_array(x)
 
     ## check the type 
-    types <- match.args(type)
+    types <- match.arg(type)
     
     ## check max_lag
     max_lag <- int_in_range(max_lag,0,nrow(x),"max_lag")
@@ -598,10 +600,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
     max_seg_len <- int_in_range(min_seg_len,lwr=min_seg_len,upr=nrow(x),lbl="max_seg_len")
     
     ## check beta_tilde
-    if(is.null(beta_tilde)){
-        
-
-        
+    if(!is.null(beta_tilde))
         {
             if(!is_numeric(beta_tilde))
             {
@@ -635,7 +634,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
     # call appropriate helper function
     tryCatch(
     {
-        if(univariate)
+        if(ncol(x)==1)
         {
             res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
             res@data<-x

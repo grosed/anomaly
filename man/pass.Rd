@@ -7,10 +7,10 @@
 pass(x, alpha = 2, lambda = NULL, max_seg_len = 10, min_seg_len = 1)
 }
 \arguments{
-\item{x}{An n x p real matrix representing n observations of p variates. The time series data classes ts, xts, and zoo are also supported.}
+\item{x}{A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.}
 
 \item{alpha}{A positive integer > 0. This value is used to stabilise the higher criticism based test statistic used by PASS leading to a better finite sample familywise error rate. 
-Anomalies affecting fewer than alpha components will however in all likelihood escape detection.}
+Anomalies affecting fewer than alpha components will however in all likelihood escape detection. The default is 2.}
 
 \item{lambda}{A positive real value setting the threshold value for the familywise Type 1 error. The default value
 is \eqn{(1.1 {\rm log}(n \times max\_seg\_len) +2 {\rm log}({\rm log}(p))) / \sqrt{{\rm log}({\rm log}(p))}}.}

@@ -35,26 +35,6 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1)
     Lmin <- min_seg_len
     # check the data
     x<-to_array(x)
-    if(!is_array(x))
-    {
-        stop("cannot convert x to an array")
-    }
-    if(!all(is_not_na(x)))
-    {
-        stop("x contains NA values")
-    }
-    if(!all(is_not_null(x)))
-    {
-        stop("x contains NULL values")
-    }
-    if(!is_numeric(x))
-    {
-        stop("x must be of type numeric")
-    }        
-    if(any(is.infinite(x)))
-    {
-      stop("x contains Inf values")
-    }
     Xi<-x
     # check dimensions,types and values
     if(!check.alpha(Lmax))

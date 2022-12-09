@@ -26,3 +26,4 @@ Collate:
     'data.R'
     'pass.R'
     'pass.class.R'
+    'utilities.R'
