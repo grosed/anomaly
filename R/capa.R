@@ -1,3 +1,4 @@
+
 .capa.class<-setClass("capa.class",representation(data="array",beta="array",beta_tilde="vector",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
                                                   transform="function",anomaly_types="vector",anomaly_positions="vector",components="array",start_lags="array",end_lags="array"))
 
@@ -9,75 +10,9 @@ capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
 }
 
 
-# utility function to coerce data to an array structure
-to_array<-function(X)
-{
-  if(is.ts(X) || is.xts(X) || is.zoo(X))
-  {
-     X<-unclass(X)
-  }
-  if(is.data.frame(X))
-  {
-     X<-data.matrix(X, rownames.force = NA)
-  }
-  X<-as.array(X)
-  dims<-dim(X)
-  if(length(dims) == 1)
-  {
-    X<-array(X,c(dims,1))
-  }
-  if(length(dims) > 2)
-  {
-    stop("data in array structures with dimension > 2 not supported") 
-  }
-  return(X)
-}
 
-# utility function to process commen features of summary and show
-summary_show_common<-function(object,epoch=nrow(object@data))
-{
-    if(epoch < 0)
-    {
-        stop("epoch should be a positive integer")
-    }
-    if(epoch > nrow(object@data))
-    {
-        stop("epoch cannot be greater than the number of observations in the data")
-    }
-    if(dim(object@data)[2] == 1)
-    {
-       cat("Univariate ",sep="")
-    }
-    else
-    {
-       cat("Multivariate ",sep="")	
-    }
-    cat("CAPA detecting changes in ",sep="")
-    if(object@type == "meanvar")
-    {
-        cat("mean and variance.","\n",sep="") 
-    }
-    if(object@type %in% c("mean","robustmean"))
-    {
-        cat("mean.","\n",sep="") 
-    }
-    cat("observations = ",dim(object@data)[1],sep="")
-    cat("\n",sep="")
-    if(dim(object@data)[2] != 1)
-    {
-       cat("variates = ",dim(object@data)[2],"\n",sep="")
-    }
-    cat("minimum segment length = ",object@min_seg_len,'\n',sep="")
-    cat("maximum segment length = ",object@max_seg_len,'\n',sep="")
-    if(dim(object@data)[2] != 1)
-    {
-       cat("maximum lag = ",object@max_lag[1],'\n',sep="")
-    }
-    if(epoch != nrow(object@data))
-    {
-       cat("epoch = ",epoch,"\n",sep="")
-    }
-}
+
+
 
 
 #' @name point_anomalies
@@ -450,6 +385,7 @@ anomalies<-function(x,epoch=NULL)
 # not exported - helper function used by capa function
 capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
+    browser()
     # configure defaults as required
     marshaller <- marshall_MeanVarAnomalyMV
     if(type == "mean")
@@ -637,114 +573,33 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' 
 #' @export
 #'
-capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
+capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean"),min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
-    # data needs to be in the form of an array
+    browser()
+    ## data needs to be in the form of an array
     x<-to_array(x)
-    if(!is_array(x))
-    {
-        stop("cannot convert x to an array")
-    }
-    if(!all(is_not_na(x)))
-    {
-        stop("x contains NA values")
-    }
-    if(!all(is_not_null(x)))
-    {
-        stop("x contains NULL values")
-    }
-    if(!is_numeric(x))
-    {
-        stop("x must be of type numeric")
-    }
-    if(Reduce("|",x == Inf))
-    {
-        stop("x contains Inf values")
-    }
-    # check dimensions
-    if(length(dim(x)) != 2)
-    {
-        stop("cannot convert x to a two dimensional array")
-    }
-    if(dim(x)[1] == 1)
-    {
-        x<-t(x)
-    }
 
-    # check the type 
-    types <- list("mean","robustmean","meanvar")
-    if(!(type %in% types))
-    {
-        stop("type has to be one of mean, robustmean, or meanvar")
-    }
-
-    # set analysis type
-    univariate<-FALSE
-    if(dim(x)[2] == 1)
-    {
-        univariate<-TRUE
-    }
-
-    # check max_lag
-    if(!is_numeric(max_lag))
-    {
-        stop("max_lag must be numeric")
-    }
-    if(max_lag < 0)
-    {
-        stop("max_lag must be positive or zero")
-    }
-    if(univariate && max_lag != 0)
-    {
+    ## check the type 
+    types <- match.arg(type)
+    
+    ## check max_lag
+    max_lag <- int_in_range(max_lag,0,nrow(x),"max_lag")
+    if( (ncol(x)==1) & (max_lag != 0)){
         warning("max_lag != 0 redundant for a univariate analysis")
     }
 
-    # check min_seg_len
-    if(!is_numeric(min_seg_len))
-    {
-        stop("min_seg_len must be numeric")
-    }
-    if(type %in% c("mean","robustmean") && min_seg_len < 1)
-    {
-        stop("when type=mean or type=robustmean, min_seg_len must be greater than zero")
-    }
-    if(type=="meanvar" && min_seg_len < 2)
-    {
-        stop("when type=meanvar, min_seg_len must be greater than 1")
-    }
-    if(min_seg_len < 1)
-    {
-        stop("min_seg_len must be greater than zero")
-    }
-    if(min_seg_len > dim(x)[1])
-    {
-        stop("min_seg_len must be less tha the number of observations in x")
-    }
-
-    # check max_seg_len
-    if(is.null(max_seg_len))
-    {
-        max_seg_len=dim(x)[1]
-    }
-    if(max_seg_len == Inf)
-    {
-        max_seg_len = length(x)
-    }
-    if(!is_numeric(max_seg_len))
-    {
-        stop("max_seg_len must be numeric")
-    }
-    if(max_seg_len < 1)
-    {
-        stop("max_seg_len must be greater than zero")
-    }
-
-    # check relative values of min and max segment length
-    if(max_seg_len < min_seg_len)
-    {
-        stop("max_seg_len must be greater than min_seg_len")
-    }
-    # check beta_tilde
+    ## check min_seg_len
+    min_seg_len <- switch(type,
+                          "mean" = int_in_range(min_seg_len,lwr=1,upr=nrow(x),lbl="min_seg_len"),
+                          "robustmean" = int_in_range(min_seg_len,lwr=1,upr=nrow(x),lbl="min_seg_len"),
+                          "meanvar" = int_in_range(min_seg_len,lwr=2,upr=nrow(x),lbl="min_seg_len"),
+                          stop("unknownd type"))
+    
+    ## check max_seg_len
+    if(max_seg_len == Inf){ max_seg_len = nrow(x) }
+    max_seg_len <- int_in_range(min_seg_len,lwr=min_seg_len,upr=nrow(x),lbl="max_seg_len")
+    
+    ## check beta_tilde
     if(!is.null(beta_tilde))
         {
             if(!is_numeric(beta_tilde))
@@ -779,7 +634,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg
     # call appropriate helper function
     tryCatch(
     {
-        if(univariate)
+        if(ncol(x)==1)
         {
             res<-capa.uv_call(x,beta,beta_tilde,type,min_seg_len,max_seg_len)
             res@data<-x
