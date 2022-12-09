@@ -30,107 +30,166 @@
 
 pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1)
 {
-    # reflect renamed variable
-    Lmax <- max_seg_len
-    Lmin <- min_seg_len
-    # check the data
-    x<-to_array(x)
-    Xi<-x
-    # check dimensions,types and values
-    if(!check.alpha(Lmax))
-    {
-        stop("max_seg_len must be a positive integer")
+    x <- to_array(x)
+
+    min_seg_len <- int_in_range(min_seg_len,lwr=1,upr=nrow(x),lbl="min_seg_len")
+    max_seg_len <- int_in_range(max_seg_len,lwr=min_seg_len,upr=nrow(x),lbl="max_seg_len")
+    alpha <- int_in_range(alpha,lwr=1,upr=ncol(x)-1,lbl="alpha")
+
+    ## compute and check lambda
+    if(is.null(lambda)){
+        n_rows<-dim(x)[1]
+        n_cols<-dim(x)[2]
+        if (n_cols < 3){
+            lambda <- 10
+            message <- paste("The data has only N =", n_cols, "variates.", "Since the value of",  "\U03BB", "is based on asymptotic theory as the number of variates, N tends to infinity we suggest using simulations to determine a data-driven threshold to control the number of overselections. A default value of", "\U03BB = 10 has been used here.")
+            warning(message)
+        }
+        else{
+            lambda<-(3.0*log(n_rows*max_seg_len) + 2*log(log(n_cols)))/sqrt(2*log(log(n_cols)))
+        }
     }
-    if(!check.alpha(Lmin))
-    {
-        stop("min_seg_len must be a positive integer")
+    if( !(length(lambda)==1) || !is.finite(lambda) || (lambda <= 0) ){
+        stop("lambda must be numeric value >= 0")
     }
-    if(!(Lmax >= Lmin))
-    {
-        stop("max_seg_len must be greater than min_seg_len")
-    }
-    if(!check.alpha(alpha))
-    {
-        stop("alpha must be a positive integer")
-    }
-    ## LB ADDED - if number of variates < default alpha (2) -> alpha = 1
-    if(dim(x)[2] < alpha){
-      alpha <- 1
-    }
-    if(is.null(lambda))
-    {
-      n_rows<-dim(x)[1]
-      n_cols<-dim(x)[2]
-      if (n_cols < 3){
-        lambda <- 10
-        message <- paste("The data has only N =", n_cols, "variates.", "Since the value of",  "\U03BB", "is based on asymptotic theory as the number of variates, N tends to infinity we suggest using simulations to determine a data-driven threshold to control the number of overselections. A default value of", "\U03BB = 10 has been used here.")
-        warning(message)
-      }
-      else{
-        lambda<-(3.0*log(n_rows*Lmax) + 2*log(log(n_cols)))/sqrt(2*log(log(n_cols)))
-      }
-    }
-    else{
-      if(!check.lambda(lambda))
-      {
-        stop("lambda must be a positive real number")
-      }
-    }
-    assert_is_matrix(Xi)
-    assert_is_non_empty(Xi)
-    assert_all_are_real(Xi)
-    if(!is_positive(nrow(Xi) - Lmax))
-    {
-        stop("number of rows (observations) in X must be greater than max_seg_len") 
-    }
-    # if the columns (variates) do not have names - give them default ones
-    if(!has_colnames(Xi))
-    {
-        colnames(Xi)<-unlist(Map(function(i) paste("V",i,sep=""),1:ncol(Xi)))
-    }
-    # analyse data and catch c++ exceptions (NB ctrl-c is handled as an exception)
-    pass.results<-tryCatch(
-    {
-        marshall_pass(Map(function(j) unlist(Xi[,j]),1:ncol(Xi)),Lmax,Lmin,alpha,lambda)
-    },
-    error = function(e) {print(e$message);stop();}
-    )
-    # post process results
-    if(length(pass.results) == 0) # no anomalies
-    {
-        results<-data.frame("start"=integer(0), "end"=integer(0), "xstar"=integer(0))
-        results.S4<-pass.class(Xi,results,Lmax,Lmin,alpha,lambda)
-        return(results.S4)
-    }
-    else
-    {
-        results<-Reduce(rbind,pass.results,data.frame())
-    }
+
+    ## if the columns (variates) do not have names - give them default ones - TODO - is this needed??
+    if(is.null(colnames(x))){ colnames(x) <- paste0("V",1:ncol(x)) }
     
-    colnames(results)<-c("start","end","xstar")
-    results$start<-results$start+1
-    results$end<-results$end+1
-    results.S4<-pass.class(Xi,results,Lmax,Lmin,alpha,lambda)
-    return(results.S4)
+    # analyse data and catch c++ exceptions (NB ctrl-c is handled as an exception)
+    pass.results <- marshall_pass(Map(function(j) unlist(x[,j]),1:ncol(x)),max_seg_len,min_seg_len,alpha,lambda)
 
-    #colnames(results)<-c("left","right","xstar")
-    #results$left<-results$left+1
-    #results$right<-results$right+1
-    #results.S4<-pass.class(Xi,results,Lmax,Lmin,alpha,lambda)
-    #return(results.S4)
+    ## post process results
+    if(length(pass.results) == 0){# no anomalies
+        results <- data.frame("start"=integer(0), "end"=integer(0), "xstar"=integer(0))
+    }else{
+        results <- Reduce(rbind,pass.results,data.frame()) ## TODO - can this be tidied up?
+        colnames(results)<-c("start","end","xstar")
+        results$start<-results$start+1
+        results$end<-results$end+1
+    }
+    out <- pass.class(x,results,max_seg_len,min_seg_len,alpha,lambda)
+    return(out)
 }
 
+##         return(results.S4)
+##     }
+##     else
+##     {
+##         results<-Reduce(rbind,pass.results,data.frame())
+##     }
+    
+##     colnames(results)<-c("start","end","xstar")
+##     results$start<-results$start+1
+##     results$end<-results$end+1
+##     results.S4<-pass.class(Xi,results,Lmax,Lmin,alpha,lambda)
+##     return(results.S4)
+## }
 
-check.alpha <- function(input){
-  
-  res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0) && (!is.infinite(input)) && (input%%1 == 0)
-  return(res)
-  
-}
+    
+##     # reflect renamed variable
+##     Lmax <- max_seg_len
+##     Lmin <- min_seg_len
+##     # check the data
+##     x<-to_array(x)
+    
+##     Xi<-x ## TODO why??
+##     # check dimensions,types and values
+##     if(!check.alpha(Lmax))
+##     {
+##         stop("max_seg_len must be a positive integer")
+##     }
+##     if(!check.alpha(Lmin))
+##     {
+##         stop("min_seg_len must be a positive integer")
+##     }
+##     if(!(Lmax >= Lmin))
+##     {
+##         stop("max_seg_len must be greater than min_seg_len")
+##     }
+##     if(!check.alpha(alpha))
+##     {
+##         stop("alpha must be a positive integer")
+##     }
+##     ## LB ADDED - if number of variates < default alpha (2) -> alpha = 1
+##     if(dim(x)[2] < alpha){
+##       alpha <- 1
+##     }
+##     if(is.null(lambda))
+##     {
+##       n_rows<-dim(x)[1]
+##       n_cols<-dim(x)[2]
+##       if (n_cols < 3){
+##         lambda <- 10
+##         message <- paste("The data has only N =", n_cols, "variates.", "Since the value of",  "\U03BB", "is based on asymptotic theory as the number of variates, N tends to infinity we suggest using simulations to determine a data-driven threshold to control the number of overselections. A default value of", "\U03BB = 10 has been used here.")
+##         warning(message)
+##       }
+##       else{
+##         lambda<-(3.0*log(n_rows*Lmax) + 2*log(log(n_cols)))/sqrt(2*log(log(n_cols)))
+##       }
+##     }
+##     else{
+##       if(!check.lambda(lambda))
+##       {
+##         stop("lambda must be a positive real number")
+##       }
+##     }
+    
+##     assert_is_matrix(Xi)
+##     assert_is_non_empty(Xi)
+##     assert_all_are_real(Xi)
+##     if(!is_positive(nrow(Xi) - Lmax))
+##     {
+##         stop("number of rows (observations) in X must be greater than max_seg_len") 
+##     }
+##     # if the columns (variates) do not have names - give them default ones
+##     if(!has_colnames(Xi))
+##     {
+##         colnames(Xi)<-unlist(Map(function(i) paste("V",i,sep=""),1:ncol(Xi)))
+##     }
+##     # analyse data and catch c++ exceptions (NB ctrl-c is handled as an exception)
+##     pass.results<-tryCatch(
+##     {
+##         marshall_pass(Map(function(j) unlist(Xi[,j]),1:ncol(Xi)),Lmax,Lmin,alpha,lambda)
+##     },
+##     error = function(e) {print(e$message);stop();}
+##     )
+##     # post process results
+##     if(length(pass.results) == 0) # no anomalies
+##     {
+##         results<-data.frame("start"=integer(0), "end"=integer(0), "xstar"=integer(0))
+##         results.S4<-pass.class(Xi,results,Lmax,Lmin,alpha,lambda)
+##         return(results.S4)
+##     }
+##     else
+##     {
+##         results<-Reduce(rbind,pass.results,data.frame())
+##     }
+    
+##     colnames(results)<-c("start","end","xstar")
+##     results$start<-results$start+1
+##     results$end<-results$end+1
+##     results.S4<-pass.class(Xi,results,Lmax,Lmin,alpha,lambda)
+##     return(results.S4)
 
-check.lambda <- function(input){
+##     #colnames(results)<-c("left","right","xstar")
+##     #results$left<-results$left+1
+##     #results$right<-results$right+1
+##     #results.S4<-pass.class(Xi,results,Lmax,Lmin,alpha,lambda)
+##     #return(results.S4)
+## }
+
+
+## check.alpha <- function(input){
   
-  res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0)
-  return(res)
+##   res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0) && (!is.infinite(input)) && (input%%1 == 0)
+##   return(res)
   
-}
+## }
+
+## check.lambda <- function(input){
+  
+##   res <- (length(input) == 1) && (is.numeric(input)) && (!is.nan(input)) && (input > 0)
+##   return(res)
+  
+## }

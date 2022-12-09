@@ -21,7 +21,7 @@ int_in_range <- function(x,lwr=-Inf,upr=Inf,lbl="x"){
     x <- as.integer(x)
     
     if( length(x)!=1 | !is.finite(x) ){
-        stop( paste(lbl,"must be a singel finite integer") )
+        stop( paste(lbl,"must be a single finite integer") )
     }
     if( x<lwr | x>upr ){
         stop( paste(lbl,"must be in (",lwr,",",upr,")") )

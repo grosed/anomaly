@@ -646,7 +646,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
     
     ## check max_seg_len
     if(max_seg_len == Inf){ max_seg_len = nrow(x) }
-    max_seg_len <- int_in_range(min_seg_len,lwr=min_seg_len,upr=nrow(x),lbl="max_seg_len")
+    max_seg_len <- int_in_range(max_seg_len,lwr=min_seg_len,upr=nrow(x),lbl="max_seg_len")
     
     ## check beta_tilde
     if(is.null(beta_tilde)){ beta_tilde <- 3*log(length(x)) } ## TODO - check same in uni and multivarite cases..
