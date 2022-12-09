@@ -1,7 +1,7 @@
 
 
-.capa.class<-setClass("capa.class",representation(data="matrix",beta="vector",beta_tilde="numeric",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
-                                                  transform="function",anomaly_types="vector",anomaly_positions="vector",components="array",start_lags="array",end_lags="array"))
+.capa.class<-setClass("capa.class",representation(data="matrix",beta="numeric",beta_tilde="numeric",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
+                                                  transform="function",anomaly_types="integer",anomaly_positions="integer",components="matrix",start_lags="matrix",end_lags="matrix"))
 
 capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
                      transform,anomaly_types,anomaly_positions,components,start_lags,end_lags,...)
@@ -642,7 +642,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
                           "mean" = int_in_range(min_seg_len,lwr=1,upr=nrow(x),lbl="min_seg_len"),
                           "robustmean" = int_in_range(min_seg_len,lwr=1,upr=nrow(x),lbl="min_seg_len"),
                           "meanvar" = int_in_range(min_seg_len,lwr=2,upr=nrow(x),lbl="min_seg_len"),
-                          stop("unknownd type"))
+                          stop("unknown type"))
     
     ## check max_seg_len
     if(max_seg_len == Inf){ max_seg_len = nrow(x) }
@@ -683,9 +683,9 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
                           function() return(),
                           S[seq(1,length(S),2)],
                           S[seq(2,length(S),2)],
-                          rep(1,nrow(x)),
-                          rep(0,nrow(x)),
-                          rep(0,nrow(x))
+                          matrix(1,nrow(x)),
+                          matrix(0,nrow(x)),
+                          matrix(0,nrow(x))
                           )
     }else{
         ## configure defaults as required
