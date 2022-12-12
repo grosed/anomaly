@@ -19,7 +19,7 @@ bard(
 )
 }
 \arguments{
-\item{x}{An n x p real matrix representing n observations of p variates. The time series data classes ts, xts, and zoo are also supported.}
+\item{x}{A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.}
 
 \item{p_N}{Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}.}}
 

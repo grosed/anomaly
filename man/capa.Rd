@@ -8,7 +8,7 @@ capa(
   x,
   beta = NULL,
   beta_tilde = NULL,
-  type = "meanvar",
+  type = c("meanvar", "mean", "robustmean"),
   min_seg_len = 10,
   max_seg_len = Inf,
   max_lag = 0
