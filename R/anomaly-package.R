@@ -9,7 +9,7 @@
 #' @importFrom stats dnbinom pnbinom runif dchisq end is.ts qchisq start var
 #' @importFrom utils tail
 #' @importFrom zoo is.zoo
-#' @importFrom dplyr group_by mutate
+# #' @importFrom dplyr group_by mutate
 #' @importFrom Rdpack reprompt
 #' @importFrom cowplot plot_grid
 ## TODO - be more selective from the following packages
