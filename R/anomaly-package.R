@@ -15,7 +15,7 @@
 ## TODO - be more selective from the following packages
 #' @import Rcpp
 #' @import ggplot2
-#' @import tidyr
+# #' @import tidyr
 # #' @import assertive
 #' @import xts
 NULL

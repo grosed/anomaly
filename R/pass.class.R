@@ -8,19 +8,24 @@ pass.class<-function(data,results,Lmax,Lmin,alpha,lambda)
 # not exported
 pass.line.plot<-function(x,subset=1:ncol(x@data),variate_names=FALSE)
 {
-    # nulling out variables used in ggplot to get the package past CRAN checks
-    k<-variable<-value<-NULL
-    X<-as.data.frame(x@data[,subset])
-    names<-paste("y",1:ncol(X),sep="")
-    colnames(X)<-names
+    
+    X <- x@data
+    colnames(X) <- paste0("y",1:ncol(X))
+    X <- X[,subset,drop=F]
+    
+    molten.X <- data.frame(k = rep(1:nrow(X),ncol(X)),
+                           variable = rep(colnames(X),each=nrow(X)),
+                           value = as.numeric(X))
     # add in index variable for the time axis
-    X<-cbind("k"=1:nrow(X),X)
-    # melt the data
-    molten.X<-gather(X,variable,value,-k)
+    #X<-cbind("k"=1:nrow(X),X)
+    ## melt the data
+
+    
+    ##molten.X<-gather(X,variable,value,-k)
     
     # generate multiple line plots ...
     p<-ggplot(data=molten.X)
-    p<-p+aes(x=k,y=value)
+    p<-p+aes(x=.data$k,y=.data$value)
     p<-p+geom_line()
     # check to see if there are any anomalies
     #if(!Reduce("||",is.na(x@results)))
@@ -30,7 +35,7 @@ pass.line.plot<-function(x,subset=1:ncol(x@data),variate_names=FALSE)
         p<-p+geom_vline(xintercept=x@results[,2],colour="red")
         p<-p+annotate("rect",xmin=x@results[,1],xmax=x@results[,2],ymin=-Inf,ymax=Inf,alpha=0.2,fill="yellow")
     }
-    p<-p+facet_grid(variable~.,scales="free_y")
+    p<-p+facet_grid(.data$variable~.,scales="free_y")
     # p<-p+facet_grid(factor(variable,levels=rev(names)) ~ .,scales="free_y")
     if(variate_names==FALSE)
     {
@@ -42,18 +47,23 @@ pass.line.plot<-function(x,subset=1:ncol(x@data),variate_names=FALSE)
 # not exported
 pass.tile.plot<-function(x,subset=1:ncol(x@data),variate_names=FALSE)
 {
-    # nulling out variables used in ggplot to get the package past CRAN checks
-    variable<-value<-NULL
     df<-as.data.frame(x@data[,rev(subset)])
     # normalise data
     for(i in 1:ncol(df))
     {
         df[,i]<-(df[,i]-min(df[,i]))/(max(df[,i])-min(df[,i]))
     }
-    n<-data.frame("n"=seq(1,nrow(df)))
-    molten.data<-gather(cbind(n,df),variable,value,-n)
-    p<-ggplot(molten.data, aes(n,variable))
-    p<-p+geom_tile(aes(fill=value))
+
+    
+    ## n<-data.frame("n"=seq(1,nrow(df)))
+    ## molten.data<-gather(cbind(n,df),variable,value,-n)
+
+    molten.data <- data.frame(n = rep(1:nrow(df),ncol(df)),
+                              variable = rep(names(df),each=nrow(df)),
+                              value = unlist(df))
+    
+    p<-ggplot(molten.data, aes(.data$n,.data$variable))
+    p<-p+geom_tile(aes(fill=.data$value))
     ymin<-0
     ymax<-ncol(df)
     # check to see if there are any anomalies
