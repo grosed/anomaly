@@ -8,8 +8,8 @@
 - Corrected mistake in pass documentation.
 - Added more details to the capa documentation.
 - Removed default NULL argument values for beta and beta_tilde.
-- Added tests based on examples in vignettes
-- Added JSS paper draft as vignettes
+- Added tests based on examples in vignettes.
+- Added JSS paper draft as vignettes.
 - Reduced number of variates in simulated data file.
 
 
