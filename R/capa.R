@@ -613,11 +613,13 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.  
-#' @param beta A numeric vector of length p, giving the marginal penalties. If p > 1, type ="meanvar" or type = "mean" and max_lag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
-#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.
+#' @param beta A numeric vector of length p giving the marginal penalties. If beta is missing and p == 1 then beta = 3log(n) when the type is "mean" or "robustmean", and beta = 4log(n) otherwise.
+#' If beta is missing and p > 1, type ="meanvar" or type = "mean" and max_lag > 0 then it defaults to the penalty
+#' regime 2' described in Fisch, Eckley and Fearnhead (2019). If beta is missing and p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes
+#' 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
+#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. If beta_tilda is missing it defaults to 3log(np), where n and p are the data dimensions.
 #' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.
+#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" (only allowed when p = 1) for collective anomalies characterised by changes in mean only which can be polluted by outliers.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.
@@ -637,8 +639,18 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' 
 #' @export
 #'
-capa<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
+capa<-function(x,beta,beta_tilde,type="meanvar",min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
+    # process missing values
+    if(missing(beta))
+    {
+       beta <- NULL
+    }
+    if(missing(beta_tilde))
+    {
+       beta_tilde <- NULL
+    }    
+
     # data needs to be in the form of an array
     x<-to_array(x)
     if(!is_array(x))

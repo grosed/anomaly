@@ -6,8 +6,8 @@
 \usage{
 capa(
   x,
-  beta = NULL,
-  beta_tilde = NULL,
+  beta,
+  beta_tilde,
   type = "meanvar",
   min_seg_len = 10,
   max_seg_len = Inf,
@@ -17,13 +17,15 @@ capa(
 \arguments{
 \item{x}{A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.}
 
-\item{beta}{A numeric vector of length p, giving the marginal penalties. If p > 1, type ="meanvar" or type = "mean" and max_lag > 0 it defaults to the penalty regime 2' described in 
-Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).}
+\item{beta}{A numeric vector of length p giving the marginal penalties. If beta is missing and p == 1 then beta = 3log(n) when the type is "mean" or "robustmean", and beta = 4log(n) otherwise.
+If beta is missing and p > 1, type ="meanvar" or type = "mean" and max_lag > 0 then it defaults to the penalty
+regime 2' described in Fisch, Eckley and Fearnhead (2019). If beta is missing and p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes
+1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).}
 
-\item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.}
+\item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. If beta_tilda is missing it defaults to 3log(np), where n and p are the data dimensions.}
 
 \item{type}{A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.}
+variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" (only allowed when p = 1) for collective anomalies characterised by changes in mean only which can be polluted by outliers.}
 
 \item{min_seg_len}{An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.}
 

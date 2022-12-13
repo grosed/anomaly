@@ -2,46 +2,46 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 marshall_MeanVarAnomaly <- function(a, b, c, d, e, f, g) {
-    .Call('_anomaly_marshall_MeanVarAnomaly', PACKAGE = 'anomaly', a, b, c, d, e, f, g)
+    .Call(`_anomaly_marshall_MeanVarAnomaly`, a, b, c, d, e, f, g)
 }
 
 marshall_MeanAnomaly <- function(a, b, c, d, e, f, g) {
-    .Call('_anomaly_marshall_MeanAnomaly', PACKAGE = 'anomaly', a, b, c, d, e, f, g)
+    .Call(`_anomaly_marshall_MeanAnomaly`, a, b, c, d, e, f, g)
 }
 
 marshall_RobustMeanAnomaly <- function(a, b, c, d, e, f, g) {
-    .Call('_anomaly_marshall_RobustMeanAnomaly', PACKAGE = 'anomaly', a, b, c, d, e, f, g)
+    .Call(`_anomaly_marshall_RobustMeanAnomaly`, a, b, c, d, e, f, g)
 }
 
 marshall_recursive_anomalies <- function(a, b, c) {
-    .Call('_anomaly_marshall_recursive_anomalies', PACKAGE = 'anomaly', a, b, c)
+    .Call(`_anomaly_marshall_recursive_anomalies`, a, b, c)
 }
 
 marshall_recursive_mvanomalies <- function(a, b, c, d, e, f, g) {
-    .Call('_anomaly_marshall_recursive_mvanomalies', PACKAGE = 'anomaly', a, b, c, d, e, f, g)
+    .Call(`_anomaly_marshall_recursive_mvanomalies`, a, b, c, d, e, f, g)
 }
 
 marshall_MeanVarAnomalyMV <- function(a, b, c, d, e, f, g, h, i) {
-    .Call('_anomaly_marshall_MeanVarAnomalyMV', PACKAGE = 'anomaly', a, b, c, d, e, f, g, h, i)
+    .Call(`_anomaly_marshall_MeanVarAnomalyMV`, a, b, c, d, e, f, g, h, i)
 }
 
 marshall_RobustMeanAnomalyMV <- function(a, b, c, d, e, f, g, h, i) {
-    .Call('_anomaly_marshall_RobustMeanAnomalyMV', PACKAGE = 'anomaly', a, b, c, d, e, f, g, h, i)
+    .Call(`_anomaly_marshall_RobustMeanAnomalyMV`, a, b, c, d, e, f, g, h, i)
 }
 
 marshall_MeanAnomalyMV <- function(a, b, c, d, e, f, g, h, i) {
-    .Call('_anomaly_marshall_MeanAnomalyMV', PACKAGE = 'anomaly', a, b, c, d, e, f, g, h, i)
+    .Call(`_anomaly_marshall_MeanAnomalyMV`, a, b, c, d, e, f, g, h, i)
 }
 
 marshall_sequential_ests <- function(data, n, burnin, lqs, lqf0, meds, medf0, uqs, uqf0) {
-    .Call('_anomaly_marshall_sequential_ests', PACKAGE = 'anomaly', data, n, burnin, lqs, lqf0, meds, medf0, uqs, uqf0)
+    .Call(`_anomaly_marshall_sequential_ests`, data, n, burnin, lqs, lqf0, meds, medf0, uqs, uqf0)
 }
 
 marshall_pass <- function(Xi, Lmax, Lmin, alpha, lambda) {
-    .Call('_anomaly_marshall_pass', PACKAGE = 'anomaly', Xi, Lmax, Lmin, alpha, lambda)
+    .Call(`_anomaly_marshall_pass`, Xi, Lmax, Lmin, alpha, lambda)
 }
 
 tukey_mean <- function(x, th) {
-    .Call('_anomaly_tukey_mean', PACKAGE = 'anomaly', x, th)
+    .Call(`_anomaly_tukey_mean`, x, th)
 }
 
