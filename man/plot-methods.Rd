@@ -12,7 +12,7 @@
 \usage{
 \S4method{plot}{bard.sampler.class}(x, subset, variate_names, tile_plot, marginals = FALSE)
 
-\S4method{plot}{capa.class}(x, subset, variate_names = FALSE, tile_plot, epoch = nrow(x@data))
+\S4method{plot}{capa.class}(x, subset, variate_names = FALSE, tile_plot = FALSE, epoch = nrow(x@data))
 
 \S4method{plot}{pass.class}(x, subset, variate_names = FALSE, tile_plot)
 }
@@ -24,7 +24,7 @@
 \item{variate_names}{Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 as it makes the visualisation easier to interpret. Default value is FALSE.}
 
-\item{tile_plot}{Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
+\item{tile_plot}{Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate. A tile plot is always produced if there are more then 20 variates selected
 This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.}
 
 \item{marginals}{Logical value. If \code{marginals=TRUE} the plot will include visualisations of the marginal probablities of each time point being anomalous.
