@@ -26,5 +26,5 @@ Collate:
     'data.R'
     'pass.R'
     'pass.class.R'
-Suggests: tinytest, R.rsp
+Suggests: testthat, R.rsp
 VignetteBuilder: R.rsp
