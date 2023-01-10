@@ -29,20 +29,16 @@ capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
 #'
 #' @export
 setMethod("point_anomalies",signature=list("capa.class"),
-          function(object,epoch=nrow(object@data))
-          {
-              if(epoch < 0)
-              {
-                  stop("epoch should be a positive integer")
-              }
-              if(epoch > nrow(object@data))
-              {
-                  stop("epoch cannot be greater than the number of observations in the data")
-              }
+          function(object,epoch=nrow(object@data)){
+              ## check epoch is valid
+              epoch <- int_in_range(epoch,1,nrow(object@data))
+              
               # get the anomalies
               anoms<-anomalies(object,epoch)
-              # transform data
-              data_dash<-object@data
+
+              X <- object@data
+              
+              
               p_anoms<-Map(function(x) x[1],Filter(function(x) x[1] == x[2],anoms))
               if(length(p_anoms) > 0)
               {
@@ -50,9 +46,9 @@ setMethod("point_anomalies",signature=list("capa.class"),
                        Map(
                          function(p_anom)
                          {
-                           variates<-seq(1,ncol(data_dash))[as.logical(object@components[p_anom[1],])]
+                           variates<-seq(1,ncol(X))[as.logical(object@components[p_anom[1],])]
                            location<-rep(p_anom[1],length(variates))
-                           strength<-abs(data_dash[p_anom[1],variates])
+                           strength<-abs(X[p_anom[1],variates])
                            return(
                              data.frame("location"=location,
                                         "variate"=variates,
@@ -84,7 +80,7 @@ setMethod("point_anomalies",signature=list("capa.class"),
                                             effective_start = relevant_row$start+relevant_row$start.lag
                                             effective_end   = relevant_row$end-relevant_row$start.lag                                      
                                           }
-                                          x_data = data_dash[effective_start:effective_end,relevant_row$variate]
+                                          x_data = X[effective_start:effective_end,relevant_row$variate]
                                           standardised_x_data = x_data - tukey_mean(x_data,sqrt(object@beta_tilde))
                                           
                                           location<-which(abs(standardised_x_data)>sqrt(object@beta_tilde))
@@ -179,7 +175,7 @@ setMethod("collective_anomalies",signature=list("capa.class"),
               # get the anomalies
               anoms<-anomalies(object,epoch)
               # transform data
-              data_dash<-object@data
+              X<-object@data
               c_anoms<-Filter(function(x) x[1] != x[2],anoms)
               if(length(c_anoms) == 0)
               {                      
@@ -189,7 +185,7 @@ setMethod("collective_anomalies",signature=list("capa.class"),
                           Map(
                               function(c_anom)
                               {
-                                  variates<-seq(1,ncol(data_dash))[as.logical(object@components[c_anom[2],])]
+                                  variates<-seq(1,ncol(X))[as.logical(object@components[c_anom[2],])]
                                   start<-rep(c_anom[1],length(variates))
                                   end<-rep(c_anom[2],length(variates))
                                   start_lags<-object@start_lags[c_anom[2],variates]
@@ -211,9 +207,9 @@ setMethod("collective_anomalies",signature=list("capa.class"),
                              Map(
                                  function(variate,start,end,start_lag,end_lag)
                                  {
-                                     variance<-var(data_dash[(start+start_lag):(end-end_lag),variate])
+                                     variance<-var(X[(start+start_lag):(end-end_lag),variate])
                                      variance_change<-sqrt(variance)+1/sqrt(variance)-2
-                                     mean_change<-mean(data_dash[(start+start_lag):(end-end_lag),variate])^2/sqrt(variance)
+                                     mean_change<-mean(X[(start+start_lag):(end-end_lag),variate])^2/sqrt(variance)
                                      return(array(c(mean_change,variance_change),c(1,2)))    
                                  },
                                  res$variate,
@@ -233,10 +229,10 @@ setMethod("collective_anomalies",signature=list("capa.class"),
                                  function(variate,start,end,start_lag,end_lag)
                                  {
                                      if (object@type == "mean"){
-                                          mean_change<-mean(data_dash[(start+start_lag):(end-end_lag),variate])^2
+                                          mean_change<-mean(X[(start+start_lag):(end-end_lag),variate])^2
                                      }
                                      if (object@type == "robustmean"){
-                                          mean_change<-tukey_mean(data_dash[(start+start_lag):(end-end_lag),variate],sqrt(object@beta_tilde))^2
+                                          mean_change<-tukey_mean(X[(start+start_lag):(end-end_lag),variate],sqrt(object@beta_tilde))^2
                                      }
                                      variance_change<-mean_change*((end-end_lag)-(start+start_lag)+1) 
                                      return(array(c(mean_change,variance_change),c(1,2)))
@@ -657,7 +653,7 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
     if(max_seg_len == Inf){ max_seg_len = nrow(x) }
     max_seg_len <- int_in_range(max_seg_len,lwr=min_seg_len,upr=nrow(x),lbl="max_seg_len")
     
-    ## check beta_tilde
+    ## check beta_tilde - penalisation of point anomaly
     if(is.null(beta_tilde)){ beta_tilde <- 3*log(length(x)) } ## TODO - check same in uni and multivarite cases..
     
     if( !(length(beta_tilde)==1) || !is.finite(beta_tilde) || (beta_tilde < 0) ){
@@ -757,22 +753,28 @@ capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean")
 ## }
 
 
-capa_line_plot <- function(object,epoch=dim(object@data)[1],subset=1:ncol(object@data),variate_names=FALSE)
+capa_line_plot <- function(object,variate_names, epoch, subset)
 {
-    data_df <- object@data
-    colnames(data_df) <- paste0("y",1:ncol(data_df)) ## TODO - check and keep original names
-    nms <- colnames(data_df)
     
-    data_df <- data_df[,subset,drop=FALSE]
-    data_df <- data.frame(x = rep(1:nrow(data_df),ncol(data_df)),
-                          variable = rep(colnames(data_df),each=nrow(data_df)),
-                          value = as.numeric(data_df))
+    X <- object@data
+    X <- X[,subset,drop=FALSE]
+
+    if( length(colnames(X)) != ncol(X) ){ variate_names <- FALSE }
+    
+    if(!variate_names){ colnames(X) <- paste(subset) }
+
+    nms <- colnames(X)
+    
+    
+    X <- data.frame(x = rep(1:nrow(X),ncol(X)),
+                          variable = rep(colnames(X),each=nrow(X)),
+                          value = as.numeric(X))
     
     ##data_df$x <- 1:nrow(data_df)
     ##data_df <- tidyr::gather(data_df,variable,value,-x) ## TODO replace this
     
 
-    out <- ggplot(data_df,aes(x=.data$x,y=.data$value)) + geom_point(alpha=0.3)
+    out <- ggplot(X,aes(x=.data$x,y=.data$value)) + geom_point(alpha=0.3)
 
     ## highlight the collective anomalies
     c_anoms <- collective_anomalies(object,epoch=epoch)
@@ -798,7 +800,7 @@ capa_line_plot <- function(object,epoch=dim(object@data)[1],subset=1:ncol(object
     
     if(nrow(p_anoms) > 0){
         p_anoms_df <- do.call(rbind,
-                              Map(function(a,b) data_df[data_df$variate==a & data_df$x==b,],
+                              Map(function(a,b) X[X$variate==a & X$x==b,],
                                   p_anoms$variate,p_anoms$location))
         
         out <- out + geom_point(data=p_anoms_df,colour="red", size=1.5,alpha=0.3)
@@ -880,26 +882,31 @@ capa_line_plot <- function(object,epoch=dim(object@data)[1],subset=1:ncol(object
 ## }
 
 
-capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],subset=1:ncol(object@data))
-{
+capa_tile_plot<-function(object,variate_names,epoch,subset){
     # nulling out variables used in ggplot to get the package past CRAN checks
-    x1<-y1<-x2<-y2<-variable<-value<-NULL
-    df<-as.data.frame(object@data)
-    df<-as.data.frame(df[,rev(subset),drop=FALSE])
-    # normalise data
-    for(i in 1:ncol(df))
-    {
-        df[,i]<-(df[,i]-min(df[,i]))/(max(df[,i])-min(df[,i]))
-    }
+    ## x1<-y1<-x2<-y2<-variable<-value<-NULL
+    ##df<-as.data.frame(object@data)
+    ## df<-as.data.frame(df[,rev(subset),drop=FALSE])
+    X <- object@data[,rev(subset),drop=FALSE]
+    
+    if( length(colnames(X)) != ncol(X) ){ variate_names <- FALSE }
+    if(!variate_names){ colnames(X) <- paste( rev(subset) ) }
+
+    ## normalise data
+    X <- apply(X,2,function(x){ (x-min(x))/(max(x)-min(x)) })
+    ## for(i in 1:ncol(df))
+    ## {
+    ##     df[,i]<-(df[,i]-min(df[,i]))/(max(df[,i])-min(df[,i]))
+    ## }
     
     ## t<-data.frame("t"=seq(1,nrow(df)))
     ## molten.data<-gather(cbind(t,df),variable,value,-t)
-    molten.data <- data.frame(t = rep(1:nrow(df),ncol(df)),
-                              variable = rep(names(df),each=nrow(df)),
-                              value = unlist(df))
+    molten.data <- data.frame(t = rep(1:nrow(X),ncol(X)),
+                              variable = rep(colnames(X),each=nrow(X)),
+                              value = as.numeric(X)) ##unlist(df))
 
-    out<-ggplot(molten.data, aes(t,variable))
-    out<-out+geom_tile(aes(fill=value))
+    out<-ggplot(molten.data, aes(x = .data$t, .data$variable))
+    out<-out+geom_tile(aes(fill=.data$value))
     # get any collective anomalies
     c_anoms<-collective_anomalies(object,epoch=epoch)
     c_anoms<-c_anoms[c_anoms$variate %in% subset,]
@@ -907,13 +914,14 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
     if(!any(is.na(c_anoms)) & nrow(c_anoms) > 0)
     {
         ymin<-0
-        ymax<-ncol(df)
+        ymax<-ncol(X)
         out<-out+annotate("rect",xmin=c_anoms$start,xmax=c_anoms$end,ymin=ymin,ymax=ymax+1,alpha=0.0,color="red",fill="yellow")
     }
     if(epoch != nrow(object@data))
         {
             d<-data.frame(x1=epoch,x2=nrow(object@data),y1=-Inf,y2=Inf)
-            out<-out+geom_rect(data=d,inherit.aes=F,mapping=aes(xmin=x1,xmax=x2,ymin=y1,ymax=y2),fill="yellow",alpha=0.2)
+            out<-out+geom_rect(data=d,inherit.aes=F,mapping=aes(xmin=.data$x1,xmax=.data$x2,ymin=.data$y1,ymax=.data$y2),
+                               fill="yellow",alpha=0.2)
         }
 
     out<-out+theme_bw()
@@ -939,7 +947,7 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #' @param subset A numeric vector specifying a subset of the variates to be displayed. Default value is all of the variates present in the data.
 #' @param variate_names Logical value indicating if variate names should be displayed on the plot. This is useful when a large number of variates are being displayed
 #' as it makes the visualisation easier to interpret. Default value is FALSE.
-#' @param tile_plot Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate.
+#' @param tile_plot Logical value. If TRUE then a tile plot of the data is produced. The data displayed in the tile plot is normalised to values in [0,1] for each variate. A tile plot is always produced if there are more then 20 variates selected
 #' This type of plot is useful when the data contains are large number of variates. The default value is TRUE if the number of variates is greater than 20.
 #' @param epoch Positive integer. CAPA methods are sequential and as such, can generate results up to, and including, any epoch within the data series. This can be controlled by the value
 #' of \code{epoch} and is useful for examining how the inferred anomalies are modified as the data series grows. The default value for \code{epoch} is the length of the data series.
@@ -953,51 +961,42 @@ capa_tile_plot<-function(object,variate_names=FALSE,epoch=dim(object@data)[1],su
 #' @seealso \code{\link{capa}},\code{\link{pass}},\code{\link{sampler}}.
 #'
 #' @export 
-setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names=FALSE,tile_plot,epoch=nrow(x@data))
+setMethod("plot",signature=list("capa.class"),function(x,subset,variate_names=FALSE,tile_plot=FALSE,epoch=nrow(x@data))
 {
-    if(missing(subset))
-    {
-        subset<-1:ncol(x@data)
-    }
-    if(epoch < 0)
-    {
-        stop("epoch should be a positive integer")
-    }
-    if(epoch > nrow(x@data))
-    {
-        stop("epoch cannot be greater than the number of observations in the data")
-    }
-    if(missing(tile_plot))
-    {
-        tile_plot<-NULL
-    }
-    subset<-sort(unique(subset))
-    if(!is.logical(tile_plot))
-    {
-        if(is.null(tile_plot))
-        {
-            tile_plot<-FALSE
-            if(length(subset) > 20)
-            {
-                tile_plot<-TRUE
-            }
-        }
-        else
-        {
-            stop("tile_plot must be of type logical or NULL")
-        }
-    }
-    if(!is.logical(variate_names))
-    {
-       stop("variable_names must be of type logical or NULL")
-    }
+    
+    if(missing(subset)){ subset<-1:ncol(x@data) }
+
+    epoch <- int_in_range(epoch,1,nrow(x@data),"epoch")
+    
+
+    ## if(epoch < 0)
+    ## {
+    ##     stop("epoch should be a positive integer")
+    ## }
+    ## if(epoch > nrow(x@data))
+    ## {
+    ##     stop("epoch cannot be greater than the number of observations in the data")
+    ## }
+
+    subset <- sort(unique(as.integer(subset)))
+    if( !all(subset>0 & subset<=ncol(x@data)) ){ stop(paste("subset values should be between 1 and", ncol(x@data))) }
+
+    variate_names <- as.logical(variate_names)
+    if(is.na(variate_names)){ stop("variate_names should be a logical") }
+    
+    tile_plot <- as.logical(tile_plot)
+    if(is.na(tile_plot)){ stop("tile_plot should be a logical") }
+
+    if(length(subset) > 20){ tile_plot <- TRUE }
+    
+    
     if(tile_plot)
     {
-        return(capa_tile_plot(x,variate_names=FALSE,epoch=epoch,subset=subset))
+        return(capa_tile_plot(x,variate_names,epoch=epoch,subset=subset))
     }
     else
     {
-        return(capa_line_plot(x,variate_names=variate_names,epoch=epoch,subset=subset))
+        return(capa_line_plot(x,variate_names,epoch=epoch,subset=subset))
     }
 })
 
