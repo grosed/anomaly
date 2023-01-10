@@ -11,6 +11,7 @@
 #include "user_interupt.h"
 #include "check_user_interrupt.h"
 
+#include <limits>
 
 namespace anomaly
 {
@@ -127,11 +128,9 @@ void findoptimaloption(int ii, struct orderedobservationlist *list, int minsegle
 
 	squareestimate  = list[ii].observationsquared; 
 
-	if(squareestimate <= DBL_MIN)
-	{
-		squareestimate = DBL_MIN;
-	}
 
+	squareestimate += std::max(std::numeric_limits<double>::min(),exp(-(1.0-penaltyoutlier)));
+	
 	scoreanomalous = list[ii].optimalcostofprevious + 1 + log(squareestimate) + penaltyoutlier;
 	
 	if (scoreanomalous < optimalscore)
