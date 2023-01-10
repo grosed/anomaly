@@ -1,11 +1,11 @@
 .capa.class<-setClass("capa.class",representation(data="array",beta="array",beta_tilde="vector",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
-                                                  transform="function",anomaly_types="vector",anomaly_positions="vector",components="array",start_lags="array",end_lags="array"))
+                                                  anomaly_types="vector",anomaly_positions="vector",components="array",start_lags="array",end_lags="array"))
 
 capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
-                     transform,anomaly_types,anomaly_positions,components,start_lags,end_lags,...)
+                     anomaly_types,anomaly_positions,components,start_lags,end_lags,...)
 {
     .capa.class(data=data,beta=beta,beta_tilde=beta_tilde,min_seg_len=min_seg_len,max_seg_len=max_seg_len,max_lag=max_lag,type=type,
-                transform=transform,anomaly_types=anomaly_types,anomaly_positions=anomaly_positions,components=components,start_lags=start_lags,end_lags=end_lags,...)
+                anomaly_types=anomaly_types,anomaly_positions=anomaly_positions,components=components,start_lags=start_lags,end_lags=end_lags,...)
 }
 
 
@@ -524,7 +524,6 @@ capa.mv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
                    as.integer(max_seg_len),
                    integer(max_lag),
                    type,
-                   function() return(),
                    S[,1], 
                    S[,2],
                    matrix(S[,2 + 0*p + 1:p],ncol=p),
@@ -595,7 +594,6 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
                      as.integer(max_seg_len),
                      integer(),
                      type,
-                     function() return(),
                      S[seq(1,length(S),2)],
                      S[seq(2,length(S),2)],
                      array(1,c(length(x),1)), 

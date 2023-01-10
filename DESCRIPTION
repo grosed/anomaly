@@ -26,5 +26,5 @@ Collate:
     'data.R'
     'pass.R'
     'pass.class.R'
-Suggests: testthat, R.rsp
+Suggests: testthat, R.rsp,robustbase
 VignetteBuilder: R.rsp
