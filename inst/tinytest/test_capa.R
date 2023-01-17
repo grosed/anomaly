@@ -15,7 +15,7 @@ X[100,1] <- 45
 X <- apply(X,2,function(x){ (x-median(x))/mad(x) })
 
 ## read in the results from v4.0.2
-out <- readRDS("capa_results402.rds") ## TODO need changing to remove path
+out <- readRDS("capa_results402_v2.rds") ## TODO need changing to remove path
 
 ## #################################
 ## univariate tests
