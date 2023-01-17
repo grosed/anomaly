@@ -1,13 +1,14 @@
 
 
-.capa.class<-setClass("capa.class",representation(data="matrix",beta="numeric",beta_tilde="numeric",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
-                                                  transform="function",anomaly_types="integer",anomaly_positions="integer",components="matrix",start_lags="matrix",end_lags="matrix"))
 
+.capa.class<-setClass("capa.class",representation(data="matrix",beta="numeric",beta_tilde="numeric",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
+                                                  anomaly_types="integer",anomaly_positions="integer",components="matrix",start_lags="matrix",end_lags="matrix"))
+                                                  
 capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
-                     transform,anomaly_types,anomaly_positions,components,start_lags,end_lags,...)
+                     anomaly_types,anomaly_positions,components,start_lags,end_lags,...)
 {
     .capa.class(data=data,beta=beta,beta_tilde=beta_tilde,min_seg_len=min_seg_len,max_seg_len=max_seg_len,max_lag=max_lag,type=type,
-                transform=transform,anomaly_types=anomaly_types,anomaly_positions=anomaly_positions,components=components,start_lags=start_lags,end_lags=end_lags,...)
+                anomaly_types=anomaly_types,anomaly_positions=anomaly_positions,components=components,start_lags=start_lags,end_lags=end_lags,...)
 }
 
 
@@ -431,7 +432,7 @@ compute_beta <- function(beta,type,n,p,max_lag,max_seg_len,min_seg_len){
     if(!(length(beta) %in% p) || !all(is.finite(beta)) || !all(beta>=0) ){
         stop( paste("beta should be a numeric vector >=0 of length",paste(p,collapse=" or ")) )
     }
-    
+   
     return(beta)
 }
 
@@ -598,15 +599,20 @@ compute_beta <- function(beta,type,n,p,max_lag,max_seg_len,min_seg_len){
 #'
 #' @name capa 
 #'
-#' @description A technique for detecting anomalous segments and points based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). This is a generic method that can be used for both univariate
-#' and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
+#' @description A technique for detecting anomalous segments and points based on CAPA (Collective And Point Anomalies) by Fisch et al. (2022).
+#' This is a generic method that can be used for both univariate and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
+#' The inputted data is either a vector (in the case of a univariate time-series) or a array with p columns (if the the time-series is p-dimensional). The CAPA procedure assumes that each component
+#' of the time-series is standardised so that the non-anomalous segments of each component have mean 0 and variance 1. This may require pre-processing/standardising.
+#' For example, using the median of each component as a robust estimate of its mean, and the mad (median absolute deviation from the median) estimator to get a robust estimate of the variance.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.  
-#' @param beta A numeric vector of length p, giving the marginal penalties. If p > 1, type ="meanvar" or type = "mean" and max_lag > 0 it defaults to the penalty regime 2' described in 
-#' Fisch, Eckley and Fearnhead (2019). If p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes 1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).
-#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. It defaults to 3log(np), where n and p are the data dimensions.
-#' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" for collective anomalies characterised by joint changes in mean and
-#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" for collective anomalies characterised by changes in mean only which can be polluted by outliers.
+#' @param beta A numeric vector of length p giving the marginal penalties. If beta is missing and p == 1 then beta = 3log(n) when the type is "mean" or "robustmean", and beta = 4log(n) otherwise.
+#' If beta is missing and p > 1, type ="meanvar" or type = "mean" and max_lag > 0 then it defaults to the penalty
+#' regime 2' described in Fisch, Eckley and Fearnhead (2022). If beta is missing and p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes
+#' 1, 2, and 3 in Fisch, Eckley and Fearnhead (2022).
+#' @param beta_tilde A numeric constant indicating the penalty for adding an additional point anomaly. If beta_tilda is missing it defaults to 3log(np), where n and p are the data dimensions.
+#' @param type A string indicating which type of deviations from the baseline are considered. Can be "meanvar" (default) for collective anomalies characterised by joint changes in mean and
+#' variance (the default), "mean" for collective anomalies characterised by changes in mean only, or "robustmean" (only allowed when p = 1) for collective anomalies characterised by changes in mean only which can be polluted by outliers.
 #' @param min_seg_len An integer indicating the minimum length of epidemic changes. It must be at least 2 and defaults to 10.
 #' @param max_seg_len An integer indicating the maximum length of epidemic changes. It must be at least min_seg_len and defaults to Inf.
 #' @param max_lag A non-negative integer indicating the maximum start or end lag. Only useful for multivariate data. Default value is 0.
@@ -626,10 +632,19 @@ compute_beta <- function(beta,type,n,p,max_lag,max_seg_len,min_seg_len){
 #' 
 #' @export
 #'
-capa<-function(x,beta=NULL,beta_tilde=NULL,type=c("meanvar","mean","robustmean"),min_seg_len=10,max_seg_len=Inf,max_lag=0)
+capa<-function(x,beta,beta_tilde,type=c("meanvar","mean","robustmean"),min_seg_len=10,max_seg_len=Inf,max_lag=0)
 {
+    # process missing values
+    if(missing(beta))
+    {
+       beta <- NULL
+    }
+    if(missing(beta_tilde))
+    {
+       beta_tilde <- NULL
+    }    
 
-    ## data needs to be in the form of an array
+    # data needs to be in the form of an array
     x<-to_array(x)
 
     ## check the type 

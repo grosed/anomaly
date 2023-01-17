@@ -1,22 +1,23 @@
 Package: anomaly
 Type: Package
 Title: Detecting Anomalies in Data
-Version: 4.0.2.999
-Date: 2022-12-01
+Version: 4.1.0
+Date: 2022-12-13
 Authors@R: c(person("Alex","Fisch",email="a.t.fisch@lancaster.ac.uk",role=c("aut")),
              person("Daniel","Grose",email="dan.grose@lancaster.ac.uk",role=c("aut","cre")),
 	     person("Lawrence","Bardwell",email="l.bardwell@lancaster.ac.uk",role=c("aut","ctb")),	
 	     person("Idris","Eckley",email="i.eckley@lancaster.ac.uk",role=c("aut","ths")),
 	     person("Paul","Fearnhead",email="p.fearnhead@lancaster.ac.uk",role=c("aut","ths")))	
-Description: Implements Collective And Point Anomaly (CAPA) <arXiv:1806.01947>, Multi-Variate Collective And Point Anomaly (MVCAPA) <arXiv:1909.01691>, Proportion Adaptive Segment Selection (PASS) <doi:10.1093/biomet/ass059>, and Bayesian Abnormal Region Detector (BARD) <arXiv:1412.5565> methods for the detection of anomalies in time series data. Also includes sequential versions of CAPA and MVCAPA <arXiv:2009.06670>. 
+Description: Implements Collective And Point Anomaly (CAPA) <doi:10.1002/sam.11586>, Multi-Variate Collective And Point Anomaly (MVCAPA) <doi:10.1080/10618600.2021.1987257>, Proportion Adaptive Segment Selection (PASS) <doi:10.1093/biomet/ass059>, and Bayesian Abnormal Region Detector (BARD) <arXiv:1412.5565> methods for the detection of anomalies in time series data. 
 License: GPL
 Imports: cowplot,methods,ggplot2,Rcpp (>= 0.12.18),xts,zoo, Rdpack
 LinkingTo: Rcpp,BH
 Depends: R (>= 3.5.0)
 NeedsCompilation: yes
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 RdMacros: Rdpack
 Encoding: UTF-8
+Suggests: testthat,R.rsp,robustbase,tinytest
+VignetteBuilder: R.rsp
 Collate: 'RcppExports.R' 'anomaly-package.R' 'generics.R' 'bard.R'
         'capa.R' 'data.R' 'pass.R' 'pass.class.R' 'utilities.R'
-Suggests: tinytest

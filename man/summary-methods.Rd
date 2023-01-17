@@ -3,11 +3,14 @@
 \docType{methods}
 \name{summary}
 \alias{summary}
+\alias{summary,bard.class-method}
 \alias{summary,bard.sampler.class-method}
 \alias{summary,capa.class-method}
 \alias{summary,pass.class-method}
 \title{Summary of collective and point anomalies.}
 \usage{
+\S4method{summary}{bard.class}(object, ...)
+
 \S4method{summary}{bard.sampler.class}(object, ...)
 
 \S4method{summary}{capa.class}(object, epoch = nrow(object@data))

@@ -25,7 +25,7 @@ NULL
 
 #' Simulated data.
 #'
-#' @description A simulated data set for use in the examples and vignettes. The data consists of 500 observations on 200 variates drawn from the standard normal distribution.
+#' @description A simulated data set for use in the examples and vignettes. The data consists of 500 observations on 20 variates drawn from the standard normal distribution.
 #' Within the data there are three multivariate anomalies of length 15 located at t=100, t=200, and t=300 for which the mean changes from 0 to 2. The anomalies affect
 #' variates 1 to 8, 1 to 12 and 1 to 16 respectively.
 #' 
@@ -39,7 +39,7 @@ NULL
 #'
 #' @rdname simulated-data
 #'
-#' @format A matrix with 500 rows and 200 columns.
+#' @format A matrix with 500 rows and 40 columns.
 #' 
 NULL
 

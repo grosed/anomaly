@@ -21,20 +21,20 @@ bard(
 \arguments{
 \item{x}{A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.}
 
-\item{p_N}{Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}.}}
+\item{p_N}{Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \eqn{\frac{1}{n+1}.}}
 
-\item{p_A}{Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \deqn{\frac{5}{n}.}}
+\item{p_A}{Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \eqn{\frac{5}{n}.}}
 
 \item{k_N}{Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.}
 
-\item{k_A}{Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \deqn{\frac{5p_A}{1- p_A}.}}
+\item{k_A}{Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \eqn{\frac{5p_A}{1- p_A}.}}
 
 \item{pi_N}{Probability that an anomalous segment is followed by a non-anomalous segment. Defaults to 0.9.}
 
 \item{paffected}{Proportion of the variates believed to be affected by any given anomalous segment. Defaults to 5\%. 
 This parameter is relatively robust to being mis-specified and is studied empirically in Section 5.1 of \insertCite{bardwell2017;textual}{anomaly}.}
 
-\item{lower}{The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. Defaults to \deqn{2\sqrt{\frac{\log(n)}{n}}.}}
+\item{lower}{The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. Defaults to \eqn{2\sqrt{\frac{\log(n)}{n}}.}}
 
 \item{upper}{The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. 
 Defaults to the largest value of x.}

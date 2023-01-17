@@ -543,6 +543,49 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 }
 
 
+#' @name summary
+#'
+#' @docType methods
+#'
+#' @rdname summary-methods
+#'
+#' @aliases summary,bard.class-method
+#'
+#' @export
+setMethod("summary",signature=list("bard.class"),function(object,...)
+{
+    cat("BARD detecting changes in mean","\n",sep="")
+    cat("observations = ",dim(object@data)[1],sep="")
+    cat("\n",sep="")
+    cat("variates = ",dim(object@data)[2],"\n",sep="")
+    cat("p_N = ",object@p_N,"\n",sep="")
+    cat("p_A = ",object@p_A,"\n",sep="")
+    cat("k_N = ",object@k_N,"\n",sep="")
+    cat("k_A = ",object@k_A,"\n",sep="")
+    cat("pi_N = ",object@pi_N,"\n",sep="")
+    cat("alpha = ",object@alpha,"\n",sep="")
+    cat("paffected = ",object@paffected,"\n",sep="")
+    cat("lower = ",object@lower,"\n",sep="")
+    cat("upper = ",object@upper,"\n",sep="")
+    cat("h = ",object@h,"\n",sep="")
+    invisible()
+})
+
+#' @name show
+#'
+# #' @docType methods
+#'
+#' @rdname show-methods
+#'
+#' @aliases show,bard.class-method
+#'
+#' @export
+setMethod("show",signature=list("bard.class"),function(object)
+{
+    summary(object)
+    invisible()
+})
+
 
 #' Detection of multivariate anomalous segments using BARD.
 #'
@@ -554,14 +597,14 @@ bard.sampler.class<-function(bard.result,gamma,num_draws,sampler.result,marginal
 #' step is included.
 #' 
 #' @param x A numeric matrix with n rows and p columns containing the data which is to be inspected. The time series data classes ts, xts, and zoo are also supported.
-#' @param p_N Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \deqn{\frac{1}{n+1}.}
-#' @param p_A Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \deqn{\frac{5}{n}.}
+#' @param p_N Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (probability of success). Defaults to \eqn{\frac{1}{n+1}.}
+#' @param p_A Hyper-parameter of the negative binomial distribution for the length of anomalous segments (probability of success). Defaults to \eqn{\frac{5}{n}.}
 #' @param k_N Hyper-parameter of the negative binomial distribution for the length of non-anomalous segments (size). Defaults to 1.
-#' @param k_A Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \deqn{\frac{5p_A}{1- p_A}.}
+#' @param k_A Hyper-parameter of the negative binomial distribution for the length of anomalous segments (size). Defaults to \eqn{\frac{5p_A}{1- p_A}.}
 #' @param pi_N Probability that an anomalous segment is followed by a non-anomalous segment. Defaults to 0.9.
 #' @param paffected Proportion of the variates believed to be affected by any given anomalous segment. Defaults to 5\%. 
 #' This parameter is relatively robust to being mis-specified and is studied empirically in Section 5.1 of \insertCite{bardwell2017;textual}{anomaly}.
-#' @param lower The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. Defaults to \deqn{2\sqrt{\frac{\log(n)}{n}}.}
+#' @param lower The lower limit of the the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. Defaults to \eqn{2\sqrt{\frac{\log(n)}{n}}.}
 #' @param upper The upper limit of the prior uniform distribution for the mean of an anomalous segment \eqn{\mu}. 
 #' Defaults to the largest value of x.
 #' @param alpha Threshold used to control the resampling in the approximation of the posterior distribution at each time step. A sensible default is 1e-4.
@@ -916,28 +959,11 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
     }
    
     sample.plot<-gen.sample.plot(x)
-    ## TODO - ouch....
+
+    ## TODO - review use of cowplot - NOTE - this is the only use of it in entire package
     return( suppressWarnings(cowplot::plot_grid(tile.plot,sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(1, 1,1))) )
 })
 
-
-#' @name show
-#'
-# #' @docType methods
-#'
-#' @rdname show-methods
-#'
-#' @aliases show,bard.class-method
-#'
-#' @export
-setMethod("show",signature=list("bard.class"),function(object)
-{
-    cat("BARD detecting changes in mean","\n",sep="")
-    cat("observations = ",dim(object@data)[1],sep="")
-    cat("\n",sep="")
-    cat("variates = ",dim(object@data)[2],"\n",sep="")
-    invisible()
-})
 
 
 #' @name summary
