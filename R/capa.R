@@ -1,6 +1,4 @@
 
-
-
 .capa.class<-setClass("capa.class",representation(data="matrix",beta="numeric",beta_tilde="numeric",min_seg_len="integer",max_seg_len="integer",max_lag="integer",type="character",
                                                   anomaly_types="integer",anomaly_positions="integer",components="matrix",start_lags="matrix",end_lags="matrix"))
                                                   
@@ -10,11 +8,6 @@ capa.class<-function(data,beta,beta_tilde,min_seg_len,max_seg_len,max_lag,type,
     .capa.class(data=data,beta=beta,beta_tilde=beta_tilde,min_seg_len=min_seg_len,max_seg_len=max_seg_len,max_lag=max_lag,type=type,
                 anomaly_types=anomaly_types,anomaly_positions=anomaly_positions,components=components,start_lags=start_lags,end_lags=end_lags,...)
 }
-
-
-
-
-
 
 
 #' @name point_anomalies
@@ -700,7 +693,6 @@ capa<-function(x,beta,beta_tilde,type=c("meanvar","mean","robustmean"),min_seg_l
                           max_seg_len,
                           max_lag,
                           type,
-                          function() return(),
                           S[seq(1,length(S),2)],
                           S[seq(2,length(S),2)],
                           matrix(1,nrow(x)),
@@ -734,7 +726,6 @@ capa<-function(x,beta,beta_tilde,type=c("meanvar","mean","robustmean"),min_seg_l
                           max_seg_len,
                           max_lag,
                           type,
-                          function() return(),
                           S[,1], 
                           S[,2],
                           S[,2 + 0*p + 1:p],
