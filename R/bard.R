@@ -642,29 +642,6 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
 {
     # check the data
     x<-to_array(x)
-    if(!is_array(x))
-    {
-        stop("cannot convert data to an array")
-    }
-    if(!all(is_not_na(x)))
-    {
-        stop("x contains NA values")
-    }
-    if(!all(is_not_null(x)))
-    {
-        stop("x contains NULL values")
-    }
-    if(any(is.infinite(x)))
-    {
-      stop("x contains Inf values")
-    }
-    if(!is_numeric(x))
-    {
-        stop("x must be of type numeric")
-    }
-    
-    # now convert the data to a list of vectors for marshalling to Rcpp
-    # data<-Map(function(i) unlist(data[i,]),1:nrow(data))
 
     # check p_N
     if(!check.p(p_N))
@@ -740,26 +717,26 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
 
 
 
-#  CALL LB's master code !!!!!
-# set up parameters
-bardparams<-c(k_N, p_N, k_A, p_A, pi_N, paffected*dim(x)[2])
-mu_seq<-c(seq(-upper, -lower, by=h), seq(lower, upper, by=h))
-res<-Rbard(x, bardparams, mu_seq, alpha)
-
-return(bard.class(data=x,
-                  p_N=p_N,
-                  p_A=p_A,
-                  k_N=k_N,
-                  k_A=k_A,
-                  pi_N=pi_N,
-                  alpha=alpha,
-                  paffected=paffected,
-                  lower=lower,
-                  upper=upper,
-                  h=h,
-                  Rs=res)
+    ##  CALL LB's master code !!!!!
+    ## set up parameters
+    bardparams<-c(k_N, p_N, k_A, p_A, pi_N, paffected*dim(x)[2])
+    mu_seq<-c(seq(-upper, -lower, by=h), seq(lower, upper, by=h))
+    res<-Rbard(x, bardparams, mu_seq, alpha)
+    
+    return(bard.class(data=x,
+                      p_N=p_N,
+                      p_A=p_A,
+                      k_N=k_N,
+                      k_A=k_A,
+                      pi_N=pi_N,
+                      alpha=alpha,
+                      paffected=paffected,
+                      lower=lower,
+                      upper=upper,
+                      h=h,
+                      Rs=res)
            )
-
+    
 
 
 
@@ -914,7 +891,8 @@ sampler<-function(bard_result, gamma = 1/3, num_draws = 1000)
 #' @export
 setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_names,tile_plot,marginals=FALSE)
 {   # from a plotting perspective the sampled BARD results are identical to those of PASS - cast type to pass.class
-    # NULL out ggplot variables so as to pass CRAN checks
+                                        # NULL out ggplot variables so as to pass CRAN checks
+    
     variable<-prob<-value<-NULL
     tile.plot<-plot(pass.class(x@bard.result@data,x@sampler.result,0,0,0,0))
     tile.plot<-tile.plot+theme_bw()
@@ -938,47 +916,52 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
     marginal.prob.plot<-marginal.prob.plot+theme(strip.text.y=element_blank())
 
 
-   gen.sample.plot<-function(object)
-   {
-       n<-nrow(object@bard.result@data) 
-       df<-Reduce(cbind,
-                  Map(function(locations)
-                  {
-                    x<-rep(0,n)
-                    if (ncol(locations) > 0){
-                      for(j in 1:ncol(locations))
-                      {
-                        s<-locations[1,j]
-                        e<-locations[2,j]	
-                        x[s:e]<-1
-                      } 
-                    }
-                    return(x)
-                  },
-                  object@sampled.res)
-       )
-       n.df<-data.frame("n"=seq(1,nrow(df)))
-       molten.data<-gather(cbind(n.df,df),variable,value,-n)
-       out<-ggplot(molten.data, aes(n,variable))
-       out<-out+geom_tile(aes(fill=value))
-       #out<-out + theme(legend.position="none")
-       #out<-out + theme(axis.text.y=element_blank())
-       #out<-out + theme(axis.title.y=element_blank())
-       #out<-out + theme(axis.line.y=element_blank())
-       #out<-out + theme(axis.ticks.y=element_blank())
-       #out<-out + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+    gen.sample.plot<-function(object)
+    {
+        browser()
+        n<-nrow(object@bard.result@data) 
+        df<-Reduce(cbind,
+                   Map(function(locations)
+                   {
+                       x<-rep(0,n)
+                       if (ncol(locations) > 0){
+                           for(j in 1:ncol(locations))
+                           {
+                               s<-locations[1,j]
+                               e<-locations[2,j]	
+                               x[s:e]<-1
+                           } 
+                       }
+                       return(x)
+                   },
+                   object@sampled.res)
+                   )
+        
+        ##n.df<-data.frame("n"=seq(1,nrow(df)))
+        ##molten.data<-gather(cbind(n.df,df),variable,value,-n)
+        nms <- paste0("V",1:ncol(df)) ## TODO - this gets naming consistent with the original code - why is it needed??
+        nms[nchar(colnames(df))>0] <- colnames(df)[ nchar(colnames(df))>0 ]
+        colnames(df) <- nms
+        molten.data <- data.frame(x = rep(1:nrow(df),ncol(df)),
+                                  variable = rep(colnames(df),each=nrow(df)),
+                                  value = as.numeric(df))
+        
+        out<-ggplot(molten.data, aes(n,variable))
+        out<-out+geom_tile(aes(fill=value))
 
-       out<-out+theme_bw()
-       out<-out+theme(axis.ticks.y=element_blank())
-       out<-out+theme(axis.text.y=element_blank(),axis.title=element_blank())
-       out<-out+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
-       out<-out + theme(legend.position="none")
-       
-       return(out)
-   }
+        out<-out+theme_bw()
+        out<-out+theme(axis.ticks.y=element_blank())
+        out<-out+theme(axis.text.y=element_blank(),axis.title=element_blank())
+        out<-out+theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank())
+        out<-out + theme(legend.position="none")
+        
+        return(out)
+    }
    
     sample.plot<-gen.sample.plot(x)
-    return( suppressWarnings(cowplot::plot_grid(sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(1,1))) )
+
+    ## TODO - review use of cowplot - NOTE - this is the only use of it in entire package
+    return( suppressWarnings(cowplot::plot_grid(tile.plot,sample.plot,marginal.prob.plot, align = "v", ncol = 1, rel_heights = c(1, 1,1))) )
 })
 
 

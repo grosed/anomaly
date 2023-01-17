@@ -6,9 +6,9 @@
 \usage{
 capa(
   x,
-  beta,
-  beta_tilde,
-  type = "meanvar",
+  beta = NULL,
+  beta_tilde = NULL,
+  type = c("meanvar", "mean", "robustmean"),
   min_seg_len = 10,
   max_seg_len = Inf,
   max_lag = 0
