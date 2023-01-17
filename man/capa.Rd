@@ -19,8 +19,8 @@ capa(
 
 \item{beta}{A numeric vector of length p giving the marginal penalties. If beta is missing and p == 1 then beta = 3log(n) when the type is "mean" or "robustmean", and beta = 4log(n) otherwise.
 If beta is missing and p > 1, type ="meanvar" or type = "mean" and max_lag > 0 then it defaults to the penalty
-regime 2' described in Fisch, Eckley and Fearnhead (2019). If beta is missing and p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes
-1, 2, and 3 in Fisch, Eckley and Fearnhead (2019).}
+regime 2' described in Fisch, Eckley and Fearnhead (2022). If beta is missing and p > 1, type = "mean"/"meanvar" and max_lag = 0 it defaults to the pointwise minimum of the penalty regimes
+1, 2, and 3 in Fisch, Eckley and Fearnhead (2022).}
 
 \item{beta_tilde}{A numeric constant indicating the penalty for adding an additional point anomaly. If beta_tilda is missing it defaults to 3log(np), where n and p are the data dimensions.}
 
@@ -37,8 +37,11 @@ variance (the default), "mean" for collective anomalies characterised by changes
 An instance of an S4 class of type capa.class.
 }
 \description{
-A technique for detecting anomalous segments and points based on CAPA (Collective And Point Anomalies) by Fisch et al. (2018). This is a generic method that can be used for both univariate
-and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
+A technique for detecting anomalous segments and points based on CAPA (Collective And Point Anomalies) by Fisch et al. (2022).
+This is a generic method that can be used for both univariate and multivariate data. The specific method that is used for the analysis is deduced by \code{capa} from the dimensions of the data.
+The inputted data is either a vector (in the case of a univariate time-series) or a array with p columns (if the the time-series is p-dimensional). The CAPA procedure assumes that each component
+of the time-series is standardised so that the non-anomalous segments of each component have mean 0 and variance 1. This may require pre-processing/standardising.
+For example, using the median of each component as a robust estimate of its mean, and the mad (median absolute deviation from the median) estimator to get a robust estimate of the variance.
 }
 \examples{
 library(anomaly)
