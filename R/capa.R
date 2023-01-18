@@ -384,10 +384,6 @@ anomalies<-function(x,epoch=NULL)
 
 ## NOT EXPORTED - helper function for computing beta
 compute_beta <- function(beta,type,n,p,max_lag,max_seg_len,min_seg_len){
-    ## process beta
-    ##n <- nrow(x)
-    ##p <- ncol(x)
-    #browser()
     ## populate if null
     if(is.null(beta)){
         s <- 1.5*log(n)
@@ -827,65 +823,6 @@ capa_line_plot <- function(object,variate_names, epoch, subset)
     }
     return(out)
 }
-
-
-## capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@data),variate_names=FALSE)
-## {
-
-##     # creating null entries for ggplot global variables so as to pass CRAN checks
-##     x<-variable<-value<-ymin<-ymax<-x1<-x2<-y1<-y2<-x1<-x2<-y1<-y2<-NULL
-##     data_df<-as.data.frame(object@data)
-##     names<-paste("y",1:ncol(object@data),sep="")
-##     colnames(data_df)<-names
-##     data_df<-as.data.frame(data_df[,subset,drop=FALSE])
-##     n<-nrow(data_df)
-##     p<-ncol(data_df)
-##     data_df<-cbind(data.frame("x"=1:n),data_df)
-##     browser()
-##     data_df<-gather(data_df,variable,value,-x)    
-##     out<-ggplot(data=data_df)
-##     out<-out+aes(x=x,y=value)
-##     out<-out+geom_point(alpha=0.3)
-##     # highlight the collective anomalies
-##     c_anoms<-collective_anomalies(object,epoch=epoch)
-##     c_anoms<-c_anoms[c_anoms$variate %in% subset,]
-##     if(!any(is.na(c_anoms)) & nrow(c_anoms) > 0)
-##     {
-##         c_anoms_data_df<-c_anoms[,1:3]
-##         names(c_anoms_data_df)<-c(names(c_anoms_data_df)[1:2],"variable")
-##         c_anoms_data_df$variable<-names[c_anoms_data_df$variable]
-##         c_anoms_data_df$ymin<--Inf
-##         c_anoms_data_df$ymax<-Inf
-##         out<-out+geom_rect(data=c_anoms_data_df,inherit.aes = F,mapping=aes(xmin=start,xmax=end,ymin=ymin,ymax=ymax),fill="blue",alpha=0.2)
-##         c_anoms_data_df$start<-c_anoms_data_df$start+c_anoms$start.lag
-##         c_anoms_data_df$end<-c_anoms_data_df$end-c_anoms$end.lag
-##         out<-out+geom_rect(data=c_anoms_data_df,inherit.aes = F,mapping=aes(xmin=start,xmax=end,ymin=ymin,ymax=ymax),fill="blue",alpha=0.5)
-##     }
-##     # out<-out+facet_grid(variable~.,scales="free_y")
-##     # highlight the point anomalies
-##     p_anoms<-point_anomalies(object,epoch)
-##     p_anoms<-p_anoms[p_anoms$variate %in% subset,]
-##     if(!any(is.na(p_anoms)) & nrow(p_anoms) > 0)
-##         {
-##             p_anoms_data_df<-Reduce(rbind,Map(function(a,b) data_df[data_df$variable==names[a] & data_df$x==b,],p_anoms$variate,p_anoms$location))
-##             out<-out+geom_point(data=p_anoms_data_df,colour="red", size=1.5,alpha=0.3)
-##         }
-##     out<-out+facet_grid(factor(variable,levels=(names)) ~ .,scales="free_y")
-##     # grey out the data after epoch
-##     if(epoch != nrow(object@data))
-##         {
-## 	    d<-data.frame(variable=names[subset],x1=epoch,x2=n,y1=-Inf,y2=Inf)	
-##             out<-out+geom_rect(data=d,inherit.aes=F,mapping=aes(xmin=x1,xmax=x2,ymin=y1,ymax=y2),fill="yellow",alpha=0.2)
-##         }
-##     out<-out+theme_bw()
-##     out<-out+theme(axis.text.y=element_blank())
-##     out<-out+labs(x="t")
-##     if(variate_names==FALSE)
-##         {
-##             out<-out+theme(strip.text.y=element_blank())
-##         }
-##     return(out)
-## }
 
 
 capa_tile_plot<-function(object,variate_names,epoch,subset){

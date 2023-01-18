@@ -918,7 +918,6 @@ setMethod("plot",signature=list("bard.sampler.class"),function(x,subset,variate_
 
     gen.sample.plot<-function(object)
     {
-        browser()
         n<-nrow(object@bard.result@data) 
         df<-Reduce(cbind,
                    Map(function(locations)
