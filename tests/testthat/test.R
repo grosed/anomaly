@@ -3,7 +3,7 @@ load("test_objects.RData")
 
 library(anomaly)
 
-test_that("Example 1 and 2 from vignettes",
+test_that("Example 1, 2, and 2a from vignettes",
 {
 	set.seed(0)
 	x <- rnorm(5000)
@@ -31,6 +31,16 @@ test_that("Example 1 and 2 from vignettes",
 		expect_equal(anomaly_paper_example_2_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_2_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_2_point_plot,plot(res),ignore_attr=TRUE)
+  	}
+
+	# Example 2a
+	{
+                res <- capa(1 + 2 * x, type = "mean")
+		
+		expect_equal(anomaly_paper_example_2_a_result,res,ignore_attr=TRUE)
+		expect_equal(anomaly_paper_example_2_a_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
+		expect_equal(anomaly_paper_example_2_a_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
+		expect_equal(anomaly_paper_example_2_a_point_plot,plot(res),ignore_attr=TRUE)
   	}
 })
 
