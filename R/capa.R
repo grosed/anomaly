@@ -641,8 +641,8 @@ capa<-function(x,beta,beta_tilde,type=c("meanvar","mean","robustmean"),min_seg_l
     x<-to_array(x)
 
     ## check the type 
-    types <- match.arg(type)
-    
+    type <- match.arg(type)
+       
     ## check max_lag
     max_lag <- int_in_range(max_lag,0,nrow(x),"max_lag")
     if( (ncol(x)==1) & (max_lag != 0)){

@@ -135,7 +135,7 @@ out$multi_10_robustmean = list( point = NA, ## This fails in current package....
                              collective = collective_anomalies(res) )
 
 
-saveRDS(out,"inst/tinytest/capa_results402.rds")
+saveRDS(out,"inst/tinytest/capa_results402_v2.rds")
 
 ## #################################################################
 ## test output for bard
