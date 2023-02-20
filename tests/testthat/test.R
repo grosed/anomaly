@@ -5,6 +5,7 @@ library(anomaly)
 
 test_that("Example 1, 2, and 2a from vignettes",
 {
+    local_edition(3)
 	set.seed(0)
 	x <- rnorm(5000)
 	x[401:500] <- rnorm(100, 4, 1)
@@ -47,6 +48,7 @@ test_that("Example 1, 2, and 2a from vignettes",
 
 test_that("Example 4 from vignettes",
 {
+    local_edition(3)
 	data("machinetemp")
 	attach(machinetemp)
 	x <- (temperature - median(temperature)) / mad(temperature)
@@ -81,6 +83,7 @@ test_that("Example 4 from vignettes",
 
 test_that("Example 5 from vignettes",
 {
+    local_edition(3)
 	data(simulated)
 
 	# Part 2
@@ -110,6 +113,7 @@ test_that("Example 5 from vignettes",
 
 test_that("Example 6 from vignettes",
 {
+    local_edition(3)
 	set.seed(0)
 	x1 <- rnorm(500)
 	x2 <- rnorm(500)
@@ -139,6 +143,7 @@ test_that("Example 6 from vignettes",
 
 test_that("Example 7 from vignettes",
 {
+    local_edition(3)
 	data(simulated)
 	res <- pass(sim.data, max_seg_len = 20, alpha = 3)
 	
@@ -149,6 +154,7 @@ test_that("Example 7 from vignettes",
 
 test_that("Example 8 from vignettes",
 {
+    local_edition(3)
 	data(simulated)
 	bard.res <- bard(sim.data)
 	sampler.res <- sampler(bard.res, gamma = 1/3, num_draws = 1000)
