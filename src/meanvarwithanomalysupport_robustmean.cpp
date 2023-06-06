@@ -11,6 +11,8 @@
 #include "user_interupt.h"
 #include "check_user_interrupt.h"
 
+#include <limits>
+
 namespace anomaly
 {
 
@@ -109,13 +111,15 @@ void findoptimaloption_robustmean(int ii, struct orderedobservationlist_robustme
 	struct orderedobservationlist_robustmean *bestcut = NULL;
 	double optimalscore = 0, scoreanomalous = 0, squareestimate = 0;
 	
-	optimalscore = list[ii].optimalcostofprevious;
+	optimalscore = list[ii].optimalcostofprevious; // this means other costs are computed as saving relative to N(0,1)
 	bestcut= &(list[ii-1]);
 	option = 0;
 
+	// compute cost of adding a point anomaly
 	squareestimate  = list[ii].observation * list[ii].observation;
+	double gamma = std::max(std::numeric_limits<double>::min(),exp(-(1.0 + penaltyoutlier)));
+	scoreanomalous = list[ii].optimalcostofprevious + 1.0 + log(gamma + squareestimate) - squareestimate + penaltyoutlier;
 
-	scoreanomalous = list[ii].optimalcostofprevious - squareestimate + penaltyoutlier;
 	
 	if (scoreanomalous < optimalscore)
 	{

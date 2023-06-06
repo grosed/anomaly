@@ -130,7 +130,7 @@ void findoptimaloption(int ii, struct orderedobservationlist *list, int minsegle
 	
 	squareestimate += std::max(std::numeric_limits<double>::min(),exp(-(1.0 + penaltyoutlier)));
 	
-	scoreanomalous = list[ii].optimalcostofprevious + 1 + log(squareestimate) + penaltyoutlier;
+	scoreanomalous = list[ii].optimalcostofprevious + 1.0 + log(squareestimate) + penaltyoutlier;
 	
 	if (scoreanomalous < optimalscore)
 	{
