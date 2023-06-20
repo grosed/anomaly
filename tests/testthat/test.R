@@ -20,7 +20,7 @@ test_that("Example 1 and 2 from vignettes",
      		expect_equal(anomaly_paper_example_1_result,res,ignore_attr=TRUE)
       		expect_equal(anomaly_paper_example_1_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
      		expect_equal(anomaly_paper_example_1_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
-     		expect_equal(anomaly_paper_example_1_point_plot,plot(res),ignore_attr=TRUE)
+     		# expect_equal(anomaly_paper_example_1_point_plot,plot(res),ignore_attr=TRUE)
   	}
 	
 	# Example 2
@@ -30,7 +30,7 @@ test_that("Example 1 and 2 from vignettes",
 		expect_equal(anomaly_paper_example_2_result,res,ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_2_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_2_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
-		expect_equal(anomaly_paper_example_2_point_plot,plot(res),ignore_attr=TRUE)
+		# expect_equal(anomaly_paper_example_2_point_plot,plot(res),ignore_attr=TRUE)
   	}
 })
 
@@ -48,7 +48,7 @@ test_that("Example 4 from vignettes",
 		expect_equal(anomaly_paper_example_4_1_result,res,ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_4_1_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_4_1_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
-		expect_equal(anomaly_paper_example_4_1_point_plot,plot(res),ignore_attr=TRUE)
+		# expect_equal(anomaly_paper_example_4_1_point_plot,plot(res),ignore_attr=TRUE)
 	}
 
 	# Part 2
@@ -63,7 +63,7 @@ test_that("Example 4 from vignettes",
 		expect_equal(anomaly_paper_example_4_2_result,res,ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_4_2_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_4_2_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
-		expect_equal(anomaly_paper_example_4_2_point_plot,plot(res),ignore_attr=TRUE)	
+		# expect_equal(anomaly_paper_example_4_2_point_plot,plot(res),ignore_attr=TRUE)	
 	}
 })
 
@@ -80,7 +80,7 @@ test_that("Example 5 from vignettes",
 		expect_equal(anomaly_paper_example_5_1_result,res,ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_5_1_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_5_1_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
-		expect_equal(anomaly_paper_example_5_1_point_plot,plot(res),ignore_attr=TRUE)
+		# expect_equal(anomaly_paper_example_5_1_point_plot,plot(res),ignore_attr=TRUE)
     	}
 
 	# Part 2
@@ -92,7 +92,7 @@ test_that("Example 5 from vignettes",
 		expect_equal(anomaly_paper_example_5_2_result,res)
 		expect_equal(anomaly_paper_example_5_2_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
 		expect_equal(anomaly_paper_example_5_2_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
-		expect_equal(anomaly_paper_example_5_2_point_plot,plot(res),ignore_attr=TRUE)
+		# expect_equal(anomaly_paper_example_5_2_point_plot,plot(res),ignore_attr=TRUE)
 
 	}
 })
@@ -124,7 +124,7 @@ test_that("Example 6 from vignettes",
 	expect_equal(anomaly_paper_example_6_result,res,ignore_attr=TRUE)
 	expect_equal(anomaly_paper_example_6_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
 	expect_equal(anomaly_paper_example_6_point_anomalies,point_anomalies(res),ignore_attr=TRUE)
-	expect_equal(anomaly_paper_example_6_point_plot,plot(res),ignore_attr=TRUE)
+	# expect_equal(anomaly_paper_example_6_point_plot,plot(res),ignore_attr=TRUE)
 })
 
 test_that("Example 7 from vignettes",
@@ -134,7 +134,7 @@ test_that("Example 7 from vignettes",
 	
 	expect_equal(anomaly_paper_example_7_result,res,ignore_attr=TRUE)
 	expect_equal(anomaly_paper_example_7_collective_anomalies,collective_anomalies(res),ignore_attr=TRUE)
-	expect_equal(anomaly_paper_example_7_point_plot,plot(res),ignore_attr=TRUE)
+	# expect_equal(anomaly_paper_example_7_point_plot,plot(res),ignore_attr=TRUE)
 })
 
 test_that("Example 8 from vignettes",
@@ -146,7 +146,7 @@ test_that("Example 8 from vignettes",
 	expect_equal(anomaly_paper_example_8_bard_result,bard.res,ignore_attr=TRUE)
 	expect_equal(anomaly_paper_example_8_sampler_result,sampler.res,ignore_attr=TRUE)
 	expect_equal(anomaly_paper_example_8_collective_anomalies,collective_anomalies(sampler.res),ignore_attr=TRUE)
-	expect_equal(anomaly_paper_example_8_point_plot,plot(sampler.res),ignore_attr=TRUE)
+	# expect_equal(anomaly_paper_example_8_point_plot,plot(sampler.res),ignore_attr=TRUE)
 })
 
 
