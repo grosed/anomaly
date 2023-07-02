@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <float.h>
 #include "Functions.h"
+#include <limits>
+#include <cmath>
+
 
 namespace anomalymv
 {
@@ -16,13 +19,8 @@ void point_anom_parameters(struct orderedobservationlist *list, int ii, int p, d
 	{
 
 		obs = list[ii].observationsquared[jj];
-
-		if (obs <= DBL_MIN)
-		{
-			obs = DBL_MIN;
-		}
-
-		extra = penaltyanomaly + log(obs) + 1 - obs;
+		double gamma = std::max(std::numeric_limits<double>::min(),std::exp(-(1.0 + penaltyanomaly)));
+		extra = penaltyanomaly + log(gamma + obs) + 1 - obs;
 
 		if (extra < 0)
 		{
