@@ -846,7 +846,7 @@ capa_line_plot<-function(object,epoch=dim(object@data)[1],subset=1:ncol(object@d
     if(!any(is.na(p_anoms)) & nrow(p_anoms) > 0)
         {
             p_anoms_data_df<-Reduce(rbind,Map(function(a,b) data_df[data_df$variable==names[a] & data_df$x==b,],p_anoms$variate,p_anoms$location))
-            out<-out+geom_point(data=p_anoms_data_df,colour="red", size=1.5,alpha=0.3)
+            out<-out+geom_point(data=p_anoms_data_df,colour="red", size=1.5,alpha=0.8)
         }
     out<-out+facet_grid(factor(variable,levels=(names)) ~ .,scales="free_y")
     # grey out the data after epoch
