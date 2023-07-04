@@ -10,7 +10,9 @@
 - Removed default NULL argument values for beta and beta_tilde.
 - Added tests based on examples in vignettes.
 - Added JSS paper draft as vignettes.
-- Reduced number of variates in simulated data file.
+- Added missing gamma correction factor from mean/variance point anomaly cost function.
+- Changed transparency level of various plot elements.
+- Updated references.
 
 
 
