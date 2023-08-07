@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #include "Functions_robustmean.h"
 #include <R.h>
 #include <Rinternals.h>

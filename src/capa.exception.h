@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 
 #ifndef ___CAPA_EXCEPTION_H___
 #define ___CAPA_EXCEPTION_H___

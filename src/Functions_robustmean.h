@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #include <stdbool.h>
 #include "Online_tukey.h"
 

@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #include <iostream>
 #include <tuple>
 #include <vector>

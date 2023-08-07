@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 
 #ifndef ___PASS_H___
 #define ___PASS_H___

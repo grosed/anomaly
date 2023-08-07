@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #ifndef ___USER_INTERUPT_H___
 #define ___USER_INTERUPT_H___
 

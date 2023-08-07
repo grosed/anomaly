@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #ifndef ___RECURSIVE_MVANOMALIES_H___
 #define ___RECURSIVE_MVANOMALIES_H___
 

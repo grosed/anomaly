@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #ifndef ___MULTIVARIATECOD_H___
 #define ___MULTIVARIATECOD_H___
 

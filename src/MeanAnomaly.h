@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #ifndef ___MEANANOMALY_H___
 #define ___MEANANOMALY_H___
 

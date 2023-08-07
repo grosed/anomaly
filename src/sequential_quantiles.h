@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #ifndef ___SEQUENTIAL_QUANTILES_H___
 #define ___SEQUENTIAL_QUANTILES_H___
 

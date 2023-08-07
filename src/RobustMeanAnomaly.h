@@ -1,3 +1,4 @@
+#include "R_NO_REMAP.h"
 #ifndef ___ROBUSTMEANANOMALY_H___
 #define ___ROBUSTMEANANOMALY_H___
 
