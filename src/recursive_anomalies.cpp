@@ -48,7 +48,7 @@ std::vector<int> recursive_anomalies(SEXP RPrevious, SEXP ROptions, SEXP Rn)
 	}
 
 	SEXP Rout;
-	PROTECT(Rout = allocVector(INTSXP, 3*number_of_anomalies));
+	PROTECT(Rout = Rf_allocVector(INTSXP, 3*number_of_anomalies));
 
 
 	

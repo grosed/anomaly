@@ -44,7 +44,7 @@ std::vector<int> recursive_mvanomalies(SEXP RPrevious, SEXP ROptions, SEXP Rcomp
 
 	SEXP Rout;
 
-	PROTECT(Rout = allocVector(INTSXP, (3 + 3*p)*number_of_anomalies));
+	PROTECT(Rout = Rf_allocVector(INTSXP, (3 + 3*p)*number_of_anomalies));
 	
 	int *out;
   	out  = INTEGER(Rout);
