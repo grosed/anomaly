@@ -1,14 +1,16 @@
 #include "Functions_mean.h"
-#include <R.h>
-#include <Rinternals.h>
-#include <Rmath.h>
-#include <math.h>
-#include <stdlib.h>
+//#include <R.h>
+//#include <Rinternals.h>
+//#include <Rmath.h>
+// #include <math.h>
+// #include <stdlib.h>
+#include <cstddef>
+#include <cstdlib>
 #include <vector>
-#include <stdio.h>
-#include <stdbool.h>
+//#include <stdio.h>
+//#include <stdbool.h>
 #include "user_interupt.h"
-#include "check_user_interrupt.h"
+// #include "check_user_interrupt.h"
 
 namespace anomalymv
 {

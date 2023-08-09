@@ -1,5 +1,6 @@
-#include <R.h>
-#include <Rinternals.h>
+#include <Rcpp.h>
+// #include <R.h>
+// #include <Rinternals.h>
 
 static void check_user_interrupt_handler(void* dummy) {R_CheckUserInterrupt();}
 

@@ -3,4 +3,6 @@
 
 struct user_interupt{};
 
+bool check_user_interrupt();
+
 #endif

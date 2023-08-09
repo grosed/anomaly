@@ -1,9 +1,11 @@
 
-#include <R.h>
-#include <Rinternals.h>
-#include <Rmath.h>
-#include <math.h>
-#include <stdlib.h>
+#include <Rcpp.h>
+
+//#include <R.h>
+//#include <Rinternals.h>
+//#include <Rmath.h>
+//#include <math.h>
+//#include <stdlib.h>
 
 #include "Functions.h"
 

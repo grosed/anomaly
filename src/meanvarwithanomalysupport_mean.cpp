@@ -1,15 +1,16 @@
-#include <R.h>
-#include <Rinternals.h>
-#include <Rmath.h> 
-#include <math.h> 
-#include <stdlib.h>
-#include <float.h>
-#include <stdbool.h>
+//#include <R.h>
+//#include <Rinternals.h>
+//#include <Rmath.h> 
+//#include <math.h> 
+//#include <stdlib.h>
+//#include <float.h>
+//#include <stdbool.h>
 
+#include <cstddef>
 #include "Functions.h"
 
 #include "user_interupt.h"
-#include "check_user_interrupt.h"
+//#include "check_user_interrupt.h"
 
 namespace anomaly
 {

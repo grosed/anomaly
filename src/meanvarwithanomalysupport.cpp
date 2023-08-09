@@ -1,17 +1,22 @@
-#include <R.h>
-#include <Rinternals.h>
-#include <Rmath.h> 
-#include <math.h> 
-#include <stdlib.h>
-#include <float.h>
-#include <stdbool.h>
+
+
+//#include <R.h>
+//#include <Rinternals.h>
+//#include <Rmath.h> 
+//#include <math.h> 
+//#include <stdlib.h>
+//#include <float.h>
+//#include <stdbool.h>
 
 #include "Functions.h"
 
 #include "user_interupt.h"
 #include "check_user_interrupt.h"
 
+#include <cfloat>
 #include <limits>
+#include <cmath>
+
 
 namespace anomaly
 {
@@ -134,9 +139,9 @@ void findoptimaloption(int ii, struct orderedobservationlist *list, int minsegle
 	//  }
 	
 	
-	squareestimate += std::max(std::numeric_limits<double>::min(),exp(-(1.0 + penaltyoutlier)));
+	squareestimate += std::max(std::numeric_limits<double>::min(),std::exp(-(1.0 + penaltyoutlier)));
 	
-	scoreanomalous = list[ii].optimalcostofprevious + 1 + log(squareestimate) + penaltyoutlier;
+	scoreanomalous = list[ii].optimalcostofprevious + 1 + std::log(squareestimate) + penaltyoutlier;
 	
 	if (scoreanomalous < optimalscore)
 	{

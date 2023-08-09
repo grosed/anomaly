@@ -1,19 +1,21 @@
 
-#include <math.h>
-#include <stdlib.h>
+#include <Rcpp.h>
+
+//#include <math.h>
+//#include <stdlib.h>
 
 #include "Functions.h"
 #include "user_interupt.h"
 
-#include <iostream>
+//#include <iostream>
+#include <cstddef>
 #include <vector>
-
 #include <string>
 #include "capa.exception.h"
 
-#include <R.h>
-#include <Rinternals.h>
-#include <Rmath.h>
+//#include <R.h>
+//#include <Rinternals.h>
+//#include <Rmath.h>
 
 
 using namespace anomaly;

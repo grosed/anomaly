@@ -1,13 +1,16 @@
 #include "Functions_robustmean.h"
-#include <R.h>
-#include <Rinternals.h>
-#include <Rmath.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include <cstddef>
+#include <cstdlib>
+#include <cmath>
+//#include <R.h>
+//#include <Rinternals.h>
+//#include <Rmath.h>
+//#include <math.h>
+//#include <stdlib.h>
+//#include <stdio.h>
+//#include <stdbool.h>
 #include "user_interupt.h"
-#include "check_user_interrupt.h"
+//#include "check_user_interrupt.h"
 
 namespace anomalymv
 {
@@ -43,7 +46,7 @@ void solveorderedobservationlist_robustmean(struct orderedobservationlist_robust
 
 	}
 
-	sqrt_penaltyanomaly = sqrt(penaltyanomaly);
+	sqrt_penaltyanomaly = std::sqrt(penaltyanomaly);
 
 	
 	for (ii = 1; ii < n+1; ii++)
