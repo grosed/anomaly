@@ -1,8 +1,8 @@
 Package: anomaly
 Type: Package
 Title: Detecting Anomalies in Data
-Version: 4.3.0
-Date: 2023-08-09
+Version: 4.3.1
+Date: 2023-10-30
 Authors@R: c(person("Alex","Fisch",email="a.t.fisch@lancaster.ac.uk",role=c("aut")),
              person("Daniel","Grose",email="dan.grose@lancaster.ac.uk",role=c("aut","cre")),
 	     person("Lawrence","Bardwell",email="l.bardwell@lancaster.ac.uk",role=c("aut","ctb")),	
@@ -10,7 +10,7 @@ Authors@R: c(person("Alex","Fisch",email="a.t.fisch@lancaster.ac.uk",role=c("aut
 	     person("Paul","Fearnhead",email="p.fearnhead@lancaster.ac.uk",role=c("aut","ths")))
 Description: Implements Collective And Point Anomaly (CAPA) Fisch, Eckley, and Fearnhead (2022) <doi:10.1002/sam.11586>, Multi-Variate Collective And Point Anomaly (MVCAPA) Fisch, Eckley, and Fearnhead (2021) <doi:10.1080/10618600.2021.1987257>, Proportion Adaptive Segment Selection (PASS) Jeng, Cai, and Li (2012) <doi:10.1093/biomet/ass059>, and Bayesian Abnormal Region Detector (BARD) Bardwell and Fearnhead (2015) <arXiv:1412.5565>. These methods are for the detection of anomalies in time series data. 
 License: GPL
-Imports: dplyr,tidyr,methods,assertive,ggplot2,Rcpp (>= 0.12.18),xts,zoo,Rdpack
+Imports: dplyr,tidyr,methods,ggplot2,Rcpp (>= 0.12.18),xts,zoo,Rdpack,cowplot
 LinkingTo: Rcpp,BH
 Depends: R (>= 3.5.0)
 NeedsCompilation: yes

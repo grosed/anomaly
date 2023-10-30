@@ -35,26 +35,6 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1)
     Lmin <- min_seg_len
     # check the data
     x<-to_array(x)
-    if(!is_array(x))
-    {
-        stop("cannot convert x to an array")
-    }
-    if(!all(is_not_na(x)))
-    {
-        stop("x contains NA values")
-    }
-    if(!all(is_not_null(x)))
-    {
-        stop("x contains NULL values")
-    }
-    if(!is_numeric(x))
-    {
-        stop("x must be of type numeric")
-    }        
-    if(any(is.infinite(x)))
-    {
-      stop("x contains Inf values")
-    }
     Xi<-x
     # check dimensions,types and values
     if(!check.alpha(Lmax))
@@ -96,19 +76,6 @@ pass<-function(x,alpha=2,lambda=NULL,max_seg_len=10,min_seg_len=1)
         stop("lambda must be a positive real number")
       }
     }
-    assert_is_matrix(Xi)
-    assert_is_non_empty(Xi)
-    assert_all_are_real(Xi)
-    if(!is_positive(nrow(Xi) - Lmax))
-    {
-        stop("number of rows (observations) in X must be greater than max_seg_len") 
-    }
-    # if the columns (variates) do not have names - give them default ones
-    if(!has_colnames(Xi))
-    {
-        colnames(Xi)<-unlist(Map(function(i) paste("V",i,sep=""),1:ncol(Xi)))
-    }
-    # analyse data and catch c++ exceptions (NB ctrl-c is handled as an exception)
     pass.results<-tryCatch(
     {
         marshall_pass(Map(function(j) unlist(Xi[,j]),1:ncol(Xi)),Lmax,Lmin,alpha,lambda)

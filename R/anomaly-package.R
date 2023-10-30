@@ -15,6 +15,5 @@
 #' @import Rcpp
 #' @import ggplot2
 #' @import tidyr
-#' @import assertive
 #' @import xts
 NULL

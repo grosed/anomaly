@@ -642,29 +642,11 @@ bard<-function(x, p_N = 1/(nrow(x)+1), p_A = 5/nrow(x), k_N = 1, k_A = (5*p_A)/(
 {
     # check the data
     x<-to_array(x)
-    if(!is_array(x))
-    {
-        stop("cannot convert data to an array")
-    }
-    if(!all(is_not_na(x)))
-    {
-        stop("x contains NA values")
-    }
-    if(!all(is_not_null(x)))
-    {
-        stop("x contains NULL values")
-    }
     if(any(is.infinite(x)))
     {
       stop("x contains Inf values")
     }
-    if(!is_numeric(x))
-    {
-        stop("x must be of type numeric")
-    }
-    
-    # now convert the data to a list of vectors for marshalling to Rcpp
-    # data<-Map(function(i) unlist(data[i,]),1:nrow(data))
+
 
     # check p_N
     if(!check.p(p_N))

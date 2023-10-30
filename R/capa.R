@@ -654,22 +654,6 @@ capa<-function(x,beta,beta_tilde,type="meanvar",min_seg_len=10,max_seg_len=Inf,m
 
     # data needs to be in the form of an array
     x<-to_array(x)
-    if(!is_array(x))
-    {
-        stop("cannot convert x to an array")
-    }
-    if(!all(is_not_na(x)))
-    {
-        stop("x contains NA values")
-    }
-    if(!all(is_not_null(x)))
-    {
-        stop("x contains NULL values")
-    }
-    if(!is_numeric(x))
-    {
-        stop("x must be of type numeric")
-    }
     if(Reduce("|",x == Inf))
     {
         stop("x contains Inf values")
@@ -699,10 +683,6 @@ capa<-function(x,beta,beta_tilde,type="meanvar",min_seg_len=10,max_seg_len=Inf,m
     }
 
     # check max_lag
-    if(!is_numeric(max_lag))
-    {
-        stop("max_lag must be numeric")
-    }
     if(max_lag < 0)
     {
         stop("max_lag must be positive or zero")
@@ -710,12 +690,6 @@ capa<-function(x,beta,beta_tilde,type="meanvar",min_seg_len=10,max_seg_len=Inf,m
     if(univariate && max_lag != 0)
     {
         warning("max_lag != 0 redundant for a univariate analysis")
-    }
-
-    # check min_seg_len
-    if(!is_numeric(min_seg_len))
-    {
-        stop("min_seg_len must be numeric")
     }
     if(type %in% c("mean","robustmean") && min_seg_len < 1)
     {
@@ -743,10 +717,6 @@ capa<-function(x,beta,beta_tilde,type="meanvar",min_seg_len=10,max_seg_len=Inf,m
     {
         max_seg_len = length(x)
     }
-    if(!is_numeric(max_seg_len))
-    {
-        stop("max_seg_len must be numeric")
-    }
     if(max_seg_len < 1)
     {
         stop("max_seg_len must be greater than zero")
@@ -760,10 +730,6 @@ capa<-function(x,beta,beta_tilde,type="meanvar",min_seg_len=10,max_seg_len=Inf,m
     # check beta_tilde
     if(!is.null(beta_tilde))
         {
-            if(!is_numeric(beta_tilde))
-            {
-                stop("beta_tilde must be numeric")
-            }
             if(length(beta_tilde) != 1)
             {
                 stop("beta_tilde must be a single scalar value")
@@ -776,10 +742,6 @@ capa<-function(x,beta,beta_tilde,type="meanvar",min_seg_len=10,max_seg_len=Inf,m
     # check beta
     if(!is.null(beta))
     {
-        if(!is_numeric(beta))
-        {
-            stop("beta must be numeric")
-        }
         if(!(all(beta >= 0)))
         {
                 stop("beta values must be >= 0")
