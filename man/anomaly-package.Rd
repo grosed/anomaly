@@ -82,7 +82,7 @@ res <- pass(sim.data, max_seg_len = 20, alpha = 3)
 collective_anomalies(res)
 # visualise results
 plot(res)
-
+\donttest{
 # Use BARD to analyse simulated mutivariate data
 library("anomaly")
 data("simulated")
@@ -93,6 +93,7 @@ sampler.res <- sampler(bard.res, gamma = 1/3, num_draws = 1000)
 show(sampler.res)
 # visualise results
 plot(sampler.res, marginals = TRUE)
+}
 }
 
 
