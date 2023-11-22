@@ -15,9 +15,9 @@ Anomalies affecting fewer than alpha components will however in all likelihood e
 \item{lambda}{A positive real value setting the threshold value for the familywise Type 1 error. The default value
 is \eqn{(1.1 {\rm log}(n \times max\_seg\_len) +2 {\rm log}({\rm log}(p))) / \sqrt{{\rm log}({\rm log}(p))}}.}
 
-\item{max_seg_len}{A positive integer (\code{max_seg_len} > 0) corresponding to the maximum segment length. This parameter corresponds to Lmax in Jeng et al. (2012). The default value is 10.}
+\item{max_seg_len}{A positive integer (\code{max_seg_len} > 0) corresponding to the maximum interval length. This parameter corresponds to L in Jeng et al. (2012). The default value is 10.}
 
-\item{min_seg_len}{A positive integer (\code{max_seg_len} >= \code{min_seg_len} > 0) corresponding to the minimum segment length. This parameter corresponds to Lmin in Jeng et al. (2012).
+\item{min_seg_len}{A positive integer (\code{max_seg_len} >= \code{min_seg_len} > 0) corresponding to the minimum segment length.
 The default value is 1.}
 }
 \value{
