@@ -1,5 +1,22 @@
 #  **News**
 
+Latest version on CRAN is 4.3.2. This version is also
+available [here](https://github.com/grosed/anomaly/tree/4.3).
+
+## anomaly 4.3
+
+- Updated documentation
+- Replaced maggritr style %>% with base |>
+- Removed dependency on maggritr
+
+## anomaly 4.2.0
+
+- Removed vignettes due to CRAN package size issues.
+- Fixed issues regarding tests and CRAN win-builder
+- Decreased transparency of point anomalies in plots.
+- Resolved conflicts between Rcpp and .Call mechanisms which were causing problems with the clang compiler.
+- Added gamma correction to multivariate methods
+
 ## anomaly 4.1.0
 
 - Amalgamated capa.uv, capa.mv, scapa.uv, and scapa.mv into a single capa method.
@@ -13,6 +30,11 @@
 - Added missing gamma correction factor from mean/variance point anomaly cost function.
 - Changed transparency level of various plot elements.
 - Updated references.
+
+
+
+
+
 
 
 
