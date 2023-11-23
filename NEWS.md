@@ -7,7 +7,7 @@ available [here](https://github.com/grosed/anomaly/tree/4.3).
 
 - Updated documentation
 - Replaced maggritr style %>% with base |>
-- Removed dependency on maggritr
+- Removed dependency on magrittr
 
 ## anomaly 4.2.0
 
