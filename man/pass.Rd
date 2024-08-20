@@ -38,4 +38,6 @@ plot(res,variate_names=TRUE)
 }
 \references{
 \insertRef{10.1093/biomet/ass059}{anomaly}
+
+\insertRef{JSS-anomaly-paper-final}{anomaly}
 }

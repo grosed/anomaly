@@ -623,6 +623,7 @@ setMethod("show",signature=list("bard.class"),function(object)
 #' @return An instance of the S4 object of type \code{.bard.class} containing the data \code{x}, procedure parameter values, and the results.
 #'
 #' @references  \insertRef{bardwell2017}{anomaly}
+#' @references  \insertRef{JSS-anomaly-paper-final}{anomaly}
 #'
 #' @seealso \code{\link{sampler}}
 #'
@@ -867,6 +868,8 @@ format_output <- function(R){
 #' @return Returns an S4 class of type \code{bard.sampler.class}.  
 #'
 #' @references  \insertRef{bardwell2017}{anomaly}
+#' @references  \insertRef{JSS-anomaly-paper-final}{anomaly}
+#'
 #' @seealso \code{\link{bard}}
 #'
 #'

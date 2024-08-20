@@ -80,6 +80,8 @@ plot(sampler.res,marginals=TRUE)
 }
 \references{
 \insertRef{bardwell2017}{anomaly}
+
+\insertRef{JSS-anomaly-paper-final}{anomaly}
 }
 \seealso{
 \code{\link{sampler}}

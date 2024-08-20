@@ -628,6 +628,7 @@ capa.uv_call<-function(x,beta=NULL,beta_tilde=NULL,type="meanvar",min_seg_len=10
 #' @return An instance of an S4 class of type capa.class. 
 #'
 #' @references \insertRef{2018arXiv180601947F}{anomaly}
+#' @references \insertRef{JSS-anomaly-paper-final}{anomaly}
 #'
 #'
 #' @examples

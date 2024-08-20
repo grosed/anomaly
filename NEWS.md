@@ -1,7 +1,10 @@
 #  **News**
 
-Latest version on CRAN is 4.3.2. This version is also
+Latest version on CRAN is 4.3.3. This version is also
 available [here](https://github.com/grosed/anomaly/tree/4.3).
+
+## anomaly 4.3.3
+- Updated several references in DESCRIPTION file and documentation.
 
 ## anomaly 4.3
 

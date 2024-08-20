@@ -34,6 +34,8 @@ allow for quantifying uncertainty about the anomalies.
 
 
 \references{
+\insertRef{JSS-anomaly-paper-final}{anomaly}
+
 \insertRef{2018arXiv180601947F_a}{anomaly}
   
 \insertRef{2019MVCAPA_b}{anomaly}

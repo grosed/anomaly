@@ -1,20 +1,20 @@
 Package: anomaly
 Type: Package
 Title: Detecting Anomalies in Data
-Version: 4.3.2
-Date: 2023-11-23
+Version: 4.3.3
+Date: 2024-08-19
 Authors@R: c(person("Alex","Fisch",email="a.t.fisch@lancaster.ac.uk",role=c("aut")),
              person("Daniel","Grose",email="dan.grose@lancaster.ac.uk",role=c("aut","cre")),
 	     person("Lawrence","Bardwell",email="l.bardwell@lancaster.ac.uk",role=c("aut","ctb")),	
 	     person("Idris","Eckley",email="i.eckley@lancaster.ac.uk",role=c("aut","ths")),
 	     person("Paul","Fearnhead",email="p.fearnhead@lancaster.ac.uk",role=c("aut","ths")))
-Description: Implements Collective And Point Anomaly (CAPA) Fisch, Eckley, and Fearnhead (2022) <doi:10.1002/sam.11586>, Multi-Variate Collective And Point Anomaly (MVCAPA) Fisch, Eckley, and Fearnhead (2021) <doi:10.1080/10618600.2021.1987257>, Proportion Adaptive Segment Selection (PASS) Jeng, Cai, and Li (2012) <doi:10.1093/biomet/ass059>, and Bayesian Abnormal Region Detector (BARD) Bardwell and Fearnhead (2015) <arXiv:1412.5565>. These methods are for the detection of anomalies in time series data. 
+Description: Implements Collective And Point Anomaly (CAPA) Fisch, Eckley, and Fearnhead (2022) <doi:10.1002/sam.11586>, Multi-Variate Collective And Point Anomaly (MVCAPA) Fisch, Eckley, and Fearnhead (2021) <doi:10.1080/10618600.2021.1987257>, Proportion Adaptive Segment Selection (PASS) Jeng, Cai, and Li (2012) <doi:10.1093/biomet/ass059>, and Bayesian Abnormal Region Detector (BARD) Bardwell and Fearnhead (2015) <doi:10.1214/16-BA998>. These methods are for the detection of anomalies in time series data. Further information regarding the use of this package along with detailed examples can be found in Fisch, Grose, Eckley, Fearnhead, and Bardwell (2024) <doi:10.18637/jss.v110.i01>.
 License: GPL
 Imports: dplyr,tidyr,methods,ggplot2,Rcpp (>= 0.12.18),xts,zoo,Rdpack,cowplot
 LinkingTo: Rcpp,BH
 Depends: R (>= 3.5.0)
 NeedsCompilation: yes
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 RdMacros: Rdpack
 Encoding: UTF-8
 Collate: 

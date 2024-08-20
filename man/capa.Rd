@@ -54,4 +54,6 @@ plot(res)
 }
 \references{
 \insertRef{2018arXiv180601947F}{anomaly}
+
+\insertRef{JSS-anomaly-paper-final}{anomaly}
 }

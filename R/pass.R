@@ -17,6 +17,7 @@
 #' @return An instance of an S4 object of type \code{.pass.class} containing the data \code{X}, procedure parameter values, and the results.
 #' 
 #' @references \insertRef{10.1093/biomet/ass059}{anomaly}
+#' @references \insertRef{JSS-anomaly-paper-final}{anomaly}
 #' 
 #' @examples
 #' library(anomaly)
